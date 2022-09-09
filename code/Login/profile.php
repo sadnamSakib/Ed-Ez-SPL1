@@ -19,9 +19,19 @@
     }
     $email = $_REQUEST['email'];
     $password = $_REQUEST['password'];
+    $button_radio=$_REQUEST['btnradio'];
     $password=hash('md5',$password);
-    $existence_name = "SELECT * FROM teacher WHERE email = '$email' AND password = '$password'";
+    if($button_radio==='teacher'){
+        //$sql = "INSERT INTO teacher VALUES ('$name', '$email','$password','$dob','$gender','$institutions')";
+        $existence_name = "SELECT * FROM teacher WHERE email = '$email' AND password = '$password'";
+    }
+    else{
+        //$sql = "INSERT INTO teacher VALUES ('$name', '$email','$password','$dob','$gender','$institutions')";
+        $existence_name = "SELECT * FROM student WHERE email = '$email' AND password = '$password'";
+    }
+    //$existence_name = "SELECT * FROM teacher WHERE email = '$email' AND password = '$password'";
     $result= $conn->query($existence_name);
+
 
     if ($result->num_rows > 0) {
         // output data of each row

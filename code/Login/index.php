@@ -26,12 +26,22 @@
         
                     </div>
                     <div class="form-group">
+                    <div class="btn-group col" role="group" aria-label="Basic radio toggle button group">
+
+                        <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked value="teacher">
+                        <label class="btn btn-outline-primary" for="btnradio1">As Teacher</label>
+
+                        <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" value="student">
+                        <label class="btn btn-outline-primary" for="btnradio2">As Student</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <i class="fas fa-envelope"> </i>
                         <input class="myInput" placeholder="Email" type="text" id="email" name="email" required>
                         <div class="invalid-feedback">Please fill out this field.</div>
                     </div>
                     <div class="form-group">
-                        <i class="fas fa-lock"> </i>
+                    <i class="fas fa-lock"> </i>
                         <input class="myInput" placeholder="Password" type="password" name="password" id="password">
                     </div>
                     <button type="submit" class="butt">Login</button>             
