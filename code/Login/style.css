@@ -8,8 +8,8 @@ body{
 }
 .container{
     position :absolute;
-    max-width:800px;
-    height: 400px;
+    max-width:600px;
+    height: 450px;
     margin:auto;
     top : 50%;
     left : 50%;
@@ -17,6 +17,17 @@ body{
 }
 .form-group{
     padding: 7px;
+    
+}
+
+.btn-group{
+    padding:0% 0% 5% 0%;
+    border-radius:25px;
+}
+.btn.btn-outline-primary{
+    --bs-btn-active-bg:#4596be;
+    --bs-btn-border-radius: 15px;
+    --bs-btn-hover-bg:#2e6a88;
 }
 
 .myLeftCtn{
@@ -51,10 +62,11 @@ body{
     margin-bottom: 100px;
 }
 .myLeftCtn .myInput{
-    width:230px;
+    width:80%;
     border-radius:25px;
     padding:10px;
     padding-left:50px;
+    height : 100%;
     border :none;
     -webkit-box-shadow :0px 10px 49px -14px rgba(0,0,0,0.3);
     -moz-box-shadow :0px 10px 49px -10px rgba(0,0,0,0.3);
@@ -70,7 +82,7 @@ body{
 .myLeftCtn .butt{
     color: #fff;
     background-color: #4596be;
-    width: 230px;
+    width: 50%;
     border: none;
     border-radius: 25px;
     padding: 10px;
@@ -88,7 +100,9 @@ body{
 .myLeftCtn .fas{
     position: relative;
     color: #bb36fd;
+
 }
+
 .butt_out{
     background: transparent;
     color: #fff;

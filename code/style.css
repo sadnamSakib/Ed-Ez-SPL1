@@ -1,11 +1,11 @@
 html, body{
-    background-color: #97D2EC;
+    background-color: #ffffff;
     height: 100%;
     width: 100%;
 }
 .navbar{
     background-color: #4596be;
-    padding: 1% 0;
+    padding: 0% 0;
     font-size: 1.2em;
     height: 10%;
 }
@@ -29,19 +29,47 @@ html, body{
     position: relative;
     width: 100%;
     background-size: cover;
+    
+    
 }
+
 .landing-text{
     display: table-cell;
     text-align: center ;
-    vertical-align:middle;
+    vertical-align: middle;
+    padding-top: 5%;
+    
+}
+.flex-container{
+    margin-left :8%;
+    display:flex;
+    flex-wrap: wrap;
+}
+.cards{
+    display: flex;
+    flex-wrap: wrap;
+}
+.card-body{
+    background-color: #4596be;
+    position :relative    
+}
+
+
+.card{
+    display: flex;
+    flex-wrap: wrap;
+}
+.heading{
+    margin-top: 5%;
+    
 }
 .landing-text h1{
     color: #16213E;
-    font-size: 500%;
+    font-size: 700%;
     font-weight: 700;
 }
 .landing text h3{
-    color: #16213E;
+    color: #334167;
 }
 
 .padding{
@@ -51,7 +79,7 @@ html, body{
     width: 100%;
 }
 #fixed{
-    backgroud: url(img/background.jpg) no-repeat center center fixed;
+    
     display: table;
     height: 60%;
     position: relative;
