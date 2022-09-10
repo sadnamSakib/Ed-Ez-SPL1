@@ -21,15 +21,7 @@ form.addEventListener('submit', (e) => {
         errorElement.innerText=messages.join(', ')
 
     }
-    LoginSubmit();
 })
-
-function LoginSubmit(){
-    var hashObj=new jsSHA("SHA-512", "TEXT", {numRounds: 1})
-    hashObj.update(password.value)
-    var hash=hashObj.getHash("HEX")
-    password.value=hash
-}
 
 function ValidateEmail(inputText)
 {

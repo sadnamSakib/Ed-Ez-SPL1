@@ -60,20 +60,12 @@ form.addEventListener('submit', (e) => {
         e.preventDefault()
         errorElement.innerText=messages.join(', ')
     }
-    else{
-        hashPass();
-    }
 })
 
 function setMaxDate(obj){
     var today=new Date()
     var dateString=today.toLocaleDateString('en-ca')
     this.setAttribute("max",dateString)
-}
-
-function hashPass(){
-    LoginSubmit();
-    LoginSubmitConfirm();
 }
 
 function LoginSubmit(){

@@ -12,16 +12,18 @@ if (isset($_POST['submit'])) {
     $institutions = $_POST['institution'];
     $button_radio=$_POST['btnradio'];
     $confirm= $_POST['cfpassword'];
-    $password=hash('md5',$password);
+    $password=hash('sha512',$password);
+    $password=password_hash($password,PASSWORD_BCRYPT);
     $error=$_REQUEST['error'];
+    $tableName='';
     if($button_radio==='teacher'){
-        $sql = "INSERT INTO teacher VALUES ('$name', '$email','$password','$dob','$gender','$institutions')";
-        $existence_name = "SELECT * FROM teacher WHERE email = '$email'";
+        $tableName='teacher';
     }
     else{
-        $sql = "INSERT INTO student VALUES ('$name', '$email','$password','$dob','$gender','$institutions')";
-        $existence_name = "SELECT * FROM student WHERE email = '$email'";
+        $tableName='student';
     }
+    $sql = "INSERT INTO $tableName VALUES ('$name', '$email','$password','$dob','$gender','$institutions')";
+        $existence_name = "SELECT * FROM $tableName WHERE email = '$email'";
     $result = mysqli_query($conn, $existence_name);
     if ($result->num_rows > 0) {
         $email='';
@@ -36,16 +38,6 @@ if (isset($_POST['submit'])) {
 		$_SESSION['username'] = $row['username'];
 		header("Location: ../Profile/index.php");
     }   
-}
-
-if(isset($_SESSION['Error'])){
-    echo "<script>
-    const errorElement=document.getElementById('error');
-    errorElement.innerHtml=\"<p>Email is invalid</p>\";
-    </script>
-    ";
-    $_SESSION['Error']=false;
-    $Error=false;
 }
 ?>
 

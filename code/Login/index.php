@@ -8,7 +8,7 @@ if (isset($_REQUEST['submit'])) {
 	$email = $_REQUEST['email'];
     $password = $_REQUEST['password'];
     $button_radio=$_REQUEST['btnradio'];
-    $password=hash('md5',$password);
+    $password=hash('sha512',$password);
     $tableName;
     if($button_radio==='teacher'){
         $tableName="teacher";
@@ -16,22 +16,23 @@ if (isset($_REQUEST['submit'])) {
     else{
         $tableName="student";
     }
-    $existence_name = "SELECT * FROM $tableName WHERE email = '$email' AND password = '$password'";
+    $existence_name = "SELECT * FROM $tableName WHERE email = '$email'";
     $result = mysqli_query($conn, $existence_name);
-	if ($result->num_rows > 0) {
+	if ($result->num_rows > 0) 
+    {
 		$row = mysqli_fetch_assoc($result);
-		$_SESSION['username'] = $row['username'];
-		header("Location: ../Profile/index.php");
-	} else {
-        $sql2="SELECT * FROM $tableName WHERE email = '$email'";
-        $email_check=mysqli_query($conn, $sql2);
-        if($email_check->num_rows > 0){
-            $error='Password is incorrect';
+		if(password_verify($password,$row['password'])){
+            $_SESSION['username'] = $row['username'];
+		    header("Location: ../Profile/index.php");
         }
         else{
-            $error='Login details is incorrect';
-            $email='';
+            $error='Password is incorrect ';
         }
+	} 
+    else 
+    {
+        $error='Login details is incorrect';
+        $email='';
         $password='';
         $_REQUEST['password']='';
 	}
