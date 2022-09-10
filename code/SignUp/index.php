@@ -1,3 +1,42 @@
+<?php 
+
+include '../config.php';
+
+
+if (isset($_POST['submit'])) {
+    $Error=false;
+	$name =  $_POST['username'];
+    $email = $_POST['email'];
+    $password = $_POST['password'];
+    $gender = $_POST['gender'];
+    $dob = $_POST['dob'];
+    $institutions = $_POST['institution'];
+    $button_radio=$_POST['btnradio'];
+    $confirm= $_POST['cfpassword'];
+    $password=hash('md5',$password);
+    if($button_radio==='teacher'){
+        $sql = "INSERT INTO teacher VALUES ('$name', '$email','$password','$dob','$gender','$institutions')";
+        $existence_name = "SELECT * FROM teacher WHERE email = '$email'";
+    }
+    else{
+        $sql = "INSERT INTO student VALUES ('$name', '$email','$password','$dob','$gender','$institutions')";
+        $existence_name = "SELECT * FROM student WHERE email = '$email'";
+    }
+    $result = mysqli_query($conn, $existence_name);
+    if ($result->num_rows > 0) {
+        $_SESSION['Error']=true;
+        $Error=true;
+    }
+    else{
+        $addToTable=mysqli_query($conn,$sql);
+        $row_fetch = mysqli_query($conn, $existence_name);
+        $row = mysqli_fetch_assoc($row_fetch);
+		$_SESSION['username'] = $row['username'];
+		header("Location: ../Profile/index.php");
+    }   
+}
+?>
+
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -21,7 +60,7 @@
     <div class="row">
         <div class="col-md">
             <div class="myLeftCtn">
-                <form id="form" class="myForm text-center" action="insert.php" method="POST">
+                <form id="form" class="myForm text-center" action="" method="POST">
                     <header>Create New Account</header>
                     <div id="error" class="form-group" style="color:red">
                         
@@ -29,39 +68,39 @@
                     <div class="form-group">
                         <div class="btn-group col" role="group" aria-label="Basic radio toggle button group">
 
-                            <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked value="teacher">
+                            <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked value="<?php $button_radio="teacher";echo $button_radio; ?>">
                             <label class="btn btn-outline-primary" for="btnradio1">As Teacher</label>
                           
-                            <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" value="student">
+                            <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" value="<?php $button_radio="student";echo $button_radio; ?>">
                             <label class="btn btn-outline-primary" for="btnradio2">As Student</label>
                           </div>
                     </div>
                     <div class="form-group">
                         <i class="fas fa-user"> </i>
-                        <input class="myInput" type="text" placeholder="Username" name="username" id="username" required>
+                        <input class="myInput" type="text" placeholder="Username" name="username" id="username" required value="<?php echo $username; ?>">
                         <div class="invalid-feedback">Please fill out this field.</div>
                     </div>
                     <div class="form-group">
                         <i class="fas fa-envelope"> </i>
-                        <input class="myInput" placeholder="Email" name="email" type="text" id="email" required>
+                        <input class="myInput" placeholder="Email" name="email" type="text" id="email" required value="<?php echo $email; ?>">
                         <div class="invalid-feedback">Please fill out this field.</div>
                     </div>
                     <div class="form-group">
                     <i class="fas fa-graduation-cap"></i>
-                        <input class="myInput" type="text" name="institution" placeholder="Institution" id="institution" required>
+                        <input class="myInput" type="text" name="institution" placeholder="Institution" id="institution" required value="<?php echo $institutions; ?>">
                         <div class="invalid-feedback">Please fill out this field.</div>
                     </div>
                     <div class="form-group">
                         <i class="fas fa-lock"> </i>
-                        <input class="myInput" placeholder="Password" type="password" id="password" name="password" required>
+                        <input class="myInput" placeholder="Password" type="password" id="password" name="password" required value="<?php echo $_POST['password']; ?>">
                     </div>
                     <div class="form-group">
                         <i class="fas fa-lock"> </i>
-                        <input class="myInput" placeholder="Confirm Password" type="password" id="cfpassword" name="cfpassword" required>
+                        <input class="myInput" placeholder="Confirm Password" type="password" id="cfpassword" name="cfpassword" required value="<?php echo $_POST['cfpassword']; ?>">
                     </div>
                     <div class="form-group">
                         <i class="fas fa-venus"></i>
-                            <select class="myInput" name="gender" id="gender">
+                            <select class="myInput" name="gender" id="gender" value="<?php echo $gender; ?>">
                                 <option value="select">Select Gender</option>
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
@@ -74,7 +113,7 @@
                         <span class="hovertext" data-hover="Enter Date Of Birth">
                             <input class="myInput" type="date" name="dob" id="dob" onclick="
                             var dateString=new Date().toLocaleDateString('en-ca');
-                            this.setAttribute('max',dateString);" required>
+                            this.setAttribute('max',dateString);" required value="<?php echo $dob ?>">
                         </span>
                     </div>
                     
@@ -88,7 +127,7 @@
                         <div class="invalid-feedback">You must check the box.</div>
                         </label>
                     </div>
-                    <input type="submit" value="Submit" class="butt">             
+                    <input type="submit" value="Submit" class="butt" name="submit">             
                 </form>
             </div>
         </div>
