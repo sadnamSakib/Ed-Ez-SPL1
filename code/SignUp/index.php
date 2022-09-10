@@ -1,10 +1,9 @@
 <?php 
 
 include '../config.php';
-
+$error='';
 
 if (isset($_POST['submit'])) {
-    $Error=false;
 	$name =  $_POST['username'];
     $email = $_POST['email'];
     $password = $_POST['password'];
@@ -14,6 +13,7 @@ if (isset($_POST['submit'])) {
     $button_radio=$_POST['btnradio'];
     $confirm= $_POST['cfpassword'];
     $password=hash('md5',$password);
+    $error=$_REQUEST['error'];
     if($button_radio==='teacher'){
         $sql = "INSERT INTO teacher VALUES ('$name', '$email','$password','$dob','$gender','$institutions')";
         $existence_name = "SELECT * FROM teacher WHERE email = '$email'";
@@ -24,8 +24,10 @@ if (isset($_POST['submit'])) {
     }
     $result = mysqli_query($conn, $existence_name);
     if ($result->num_rows > 0) {
-        $_SESSION['Error']=true;
-        $Error=true;
+        $email='';
+        $password='';
+        $_REQUEST['password']='';
+        $error="An account already exists with this email";
     }
     else{
         $addToTable=mysqli_query($conn,$sql);
@@ -35,6 +37,16 @@ if (isset($_POST['submit'])) {
 		header("Location: ../Profile/index.php");
     }   
 }
+
+if(isset($_SESSION['Error'])){
+    echo "<script>
+    const errorElement=document.getElementById('error');
+    errorElement.innerHtml=\"<p>Email is invalid</p>\";
+    </script>
+    ";
+    $_SESSION['Error']=false;
+    $Error=false;
+}
 ?>
 
 <!DOCTYPE HTML>
@@ -43,7 +55,7 @@ if (isset($_POST['submit'])) {
 <title>
     SignUp
 </title>
-<link rel="icon" href="/EdEz/logo4.jpg" />
+<link rel="icon" href="../logo4.jpg" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="style.css" />
 <link rel="stylesheet" href="css/bootstrap.css" />
@@ -62,9 +74,6 @@ if (isset($_POST['submit'])) {
             <div class="myLeftCtn">
                 <form id="form" class="myForm text-center" action="" method="POST">
                     <header>Create New Account</header>
-                    <div id="error" class="form-group" style="color:red">
-                        
-                    </div>
                     <div class="form-group">
                         <div class="btn-group col" role="group" aria-label="Basic radio toggle button group">
 
@@ -74,6 +83,9 @@ if (isset($_POST['submit'])) {
                             <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" value="<?php $button_radio="student";echo $button_radio; ?>">
                             <label class="btn btn-outline-primary" for="btnradio2">As Student</label>
                           </div>
+                    </div>
+                    <div class="form-group" id="error" style="color:red">
+                            <p><?php echo $error ?></p>
                     </div>
                     <div class="form-group">
                         <i class="fas fa-user"> </i>
@@ -126,6 +138,9 @@ if (isset($_POST['submit'])) {
                             </small>
                         <div class="invalid-feedback">You must check the box.</div>
                         </label>
+                    </div>
+                    <div class="form-group">
+                        <p>Already have an account? <a href="../Login/index.php">LOGIN</a></p>  
                     </div>
                     <input type="submit" value="Submit" class="butt" name="submit">             
                 </form>

@@ -12,16 +12,17 @@ form.addEventListener('submit', (e) => {
     if(password.value!==cfpassword.value) {
         messages.push('Passwords do not match')
     }
-    else if(password.value.length>=6 && password.value.length<=20){
-        let charPresent=false
+    else if(password.value.length>=8){
+        let charPresentSmall=false
+        let charPresentBig=false
         let numPresent=false
         let symbolPresent=false
         for(let i=0;i<password.value.length;i++){
             if(password.value.charAt(i)>='A' && password.value.charAt(i)<='Z'){
-                charPresent=true
+                charPresentBig=true
             }
             else if(password.value.charAt(i)>='a' && password.value.charAt(i)<='z'){
-                charPresent=true
+                charPresentSmall=true
             }
             else if(password.value.charAt(i)>='0' && password.value.charAt(i)<='9'){
                 numPresent=true
@@ -33,13 +34,13 @@ form.addEventListener('submit', (e) => {
                 continue
             }
         }
-        if(charPresent===false || numPresent===false || symbolPresent===false){
-            messages.push("Password does not meet the constraints")
+        if(charPresentSmall===false || charPresentBig===false || numPresent===false || symbolPresent===false){
+            messages.push("Password must contain numbers, letters of both cases and symbols")
         }
 
     }
     else{
-        messages.push('Password size is incorrect')
+        messages.push('Password must be greater than 8 characters long')
     }
     if(gender.value==="select"){
         messages.push("Please select gender")

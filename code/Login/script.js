@@ -2,54 +2,16 @@ const email=document.getElementById('email')
 var password=document.getElementById('password')
 const form=document.getElementById('form')
 const errorElement=document.getElementById('error')
-// form.addEventListener('submit', (e) => {
-//     let messages=[]
-//     if(email.value==='' || email.value==null){
-//         messages.push('Name is required')
-//     }
-
-//     if(messages.length()>0){
-//         e.preventDefault()
-//         errorElement.innerText = messages.join(', ')
-//     }
-// })
-
 
 form.addEventListener('submit', (e) => {
     let messages = []
-    if(password.value.length>=6 && password.value.length<=20){
-        let charPresent=false
-        let numPresent=false
-        let symbolPresent=false
-        for(let i=0;i<password.value.length;i++){
-            if(password.value.charAt(i)>='A' && password.value.charAt(i)<='Z'){
-                charPresent=true
-            }
-            else if(password.value.charAt(i)>='a' && password.value.charAt(i)<='z'){
-                charPresent=true
-            }
-            else if(password.value.charAt(i)>='0' && password.value.charAt(i)<='9'){
-                numPresent=true
-            }
-            else if(password.value.charAt(i)>=' ' && password.value.charAt(i)<='/'){
-                symbolPresent=true
-            }
-            else{
-                continue
-            }
-        }
-        if(charPresent===false || numPresent===false || symbolPresent===false){
-            messages.push("Password does not meet the constraints")
-        }
-        else{
-            LoginSubmit()
-        }
-
+    if(email.value==='' || email.value==null){
+        messages.push("Please enter your email");
     }
-    else{
-        messages.push('Password size is incorrect')
+    if(password.value==='' || password.value==null){
+        messages.push('Please enter your password');
     }
-
+    
     if(!ValidateEmail(document.getElementById("email"))){
         messages.push("Email is invalid")
     }
@@ -59,6 +21,7 @@ form.addEventListener('submit', (e) => {
         errorElement.innerText=messages.join(', ')
 
     }
+    LoginSubmit();
 })
 
 function LoginSubmit(){

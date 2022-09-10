@@ -2,26 +2,36 @@
 
 include '../config.php';
 
+$error='';
+
 if (isset($_REQUEST['submit'])) {
 	$email = $_REQUEST['email'];
     $password = $_REQUEST['password'];
     $button_radio=$_REQUEST['btnradio'];
     $password=hash('md5',$password);
+    $tableName;
     if($button_radio==='teacher'){
-        //$sql = "INSERT INTO teacher VALUES ('$name', '$email','$password','$dob','$gender','$institutions')";
-        $existence_name = "SELECT * FROM teacher WHERE email = '$email' AND password = '$password'";
+        $tableName="teacher";
     }
     else{
-        //$sql = "INSERT INTO teacher VALUES ('$name', '$email','$password','$dob','$gender','$institutions')";
-        $existence_name = "SELECT * FROM student WHERE email = '$email' AND password = '$password'";
+        $tableName="student";
     }
+    $existence_name = "SELECT * FROM $tableName WHERE email = '$email' AND password = '$password'";
     $result = mysqli_query($conn, $existence_name);
 	if ($result->num_rows > 0) {
 		$row = mysqli_fetch_assoc($result);
 		$_SESSION['username'] = $row['username'];
 		header("Location: ../Profile/index.php");
 	} else {
-        $email='';
+        $sql2="SELECT * FROM $tableName WHERE email = '$email'";
+        $email_check=mysqli_query($conn, $sql2);
+        if($email_check->num_rows > 0){
+            $error='Password is incorrect';
+        }
+        else{
+            $error='Login details is incorrect';
+            $email='';
+        }
         $password='';
         $_REQUEST['password']='';
 	}
@@ -31,7 +41,7 @@ if (isset($_REQUEST['submit'])) {
 <!DOCTYPE HTML>
 <html>
 <head>
-<link rel="icon" href="/EdEz/logo4.jpg" />
+<link rel="icon" href="../logo4.jpg" />
 <title>
     Login
 </title>
@@ -53,8 +63,8 @@ if (isset($_REQUEST['submit'])) {
             <div class="myLeftCtn">
                 <form id="form" class="myForm text-center" action="" method="POST">
                     <header>Have an account? Log in!</header>
-                    <div id="error" style="color:red">
-        
+                    <div class="form-group" id="error" style="color:red">
+                            <p><?php echo $error ?></p>
                     </div>
                     <div class="form-group">
                     <div class="btn-group col" role="group" aria-label="Basic radio toggle button group">
@@ -76,7 +86,10 @@ if (isset($_REQUEST['submit'])) {
                         <input class="myInput" placeholder="Password" type="password" name="password" id="password" value="<?php echo $_REQUEST['password']; ?>" required>
                         <div class="invalid-feedback">Please fill out this field.</div>
                     </div>
-                    <button type="submit" class="butt" name="submit">Login</button>             
+                    <div class="form-group">
+                        <p>Don't have an account? <a href="../SignUp/index.php">REGISTER NOW!!!</a></p>  
+                    </div>
+                    <button type="submit" class="butt" name="submit">Login</button>   
                 </form>
             </div>
         </div>
