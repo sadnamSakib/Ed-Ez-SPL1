@@ -24,9 +24,16 @@
     $gender = $_REQUEST['gender'];
     $dob = $_REQUEST['dob'];
     $institutions = $_REQUEST['institution'];
+    $button_radio=$_REQUEST['btnradio'];
     $confirm= $_REQUEST['cfpassword'];
-    $sql = "INSERT INTO teacher VALUES ('$name', '$email','$password','$dob','$gender','$institutions')";
-    $existence_name = "SELECT * FROM teacher WHERE email = '$email'";
+    if($button_radio==='teacher'){
+        $sql = "INSERT INTO teacher VALUES ('$name', '$email','$password','$dob','$gender','$institutions')";
+        $existence_name = "SELECT * FROM teacher WHERE email = '$email'";
+    }
+    else{
+        $sql = "INSERT INTO student VALUES ('$name', '$email','$password','$dob','$gender','$institutions')";
+        $existence_name = "SELECT * FROM student WHERE email = '$email'";
+    }
     $result= $conn->query($existence_name);
 
     if ($result->num_rows > 0) {
@@ -50,7 +57,7 @@
             . " Please browse your localhost php my admin"
             . " to view the updated data</h3>";
 
-        echo nl2br("\n$name\n $password\n $confirm ");
+        echo nl2br("\n$name\n $password\n $confirm \n$button_radio ");
     } else {
     echo "Error: " . $sql . "<br>" . $conn->error;
     }
