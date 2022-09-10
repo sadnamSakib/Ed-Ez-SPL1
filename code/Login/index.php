@@ -89,6 +89,9 @@ if (isset($_REQUEST['submit'])) {
                     <div class="form-group">
                         <p>Don't have an account? <a href="../SignUp/index.php">REGISTER NOW!!!</a></p>  
                     </div>
+                    <div class="form-group">
+                        <p><a href="../SignUp/index.php">FORGOT PASSWORD?</a></p>  
+                    </div>
                     <button type="submit" class="butt" name="submit">Login</button>   
                 </form>
             </div>
