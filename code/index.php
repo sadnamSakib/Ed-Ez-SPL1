@@ -1,10 +1,22 @@
+<?php 
+
+include 'config.php';
+
+session_start();
+
+error_reporting(0);
+
+if (isset($_SESSION['username'])) {
+    header("Location: Profile/index.php");
+}
+?>
 <!DOCTYPE HTML>
 <html>
 <head>
 <title> 
     Ed-Ez
 </title>
-<link rel="icon" href="/EdEz/logo4.jpg" />
+<link rel="icon" href="logo4.jpg" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="style.css" />
 <link rel="stylesheet" href="css/bootstrap.css" />
