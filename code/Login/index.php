@@ -1,7 +1,48 @@
+<?php 
+
+include '../config.php';
+
+$error='';
+
+if (isset($_REQUEST['submit'])) {
+	$email = $_REQUEST['email'];
+    $password = $_REQUEST['password'];
+    $button_radio=$_REQUEST['btnradio'];
+    $password=hash('sha512',$password);
+    $tableName;
+    if($button_radio==='teacher'){
+        $tableName="teacher";
+    }
+    else{
+        $tableName="student";
+    }
+    $existence_name = "SELECT * FROM $tableName WHERE email = '$email'";
+    $result = mysqli_query($conn, $existence_name);
+	if ($result->num_rows > 0) 
+    {
+		$row = mysqli_fetch_assoc($result);
+		if(password_verify($password,$row['password'])){
+            $_SESSION['username'] = $row['username'];
+		    header("Location: ../Profile/index.php");
+        }
+        else{
+            $error='Password is incorrect ';
+        }
+	} 
+    else 
+    {
+        $error='Login details is incorrect';
+        $email='';
+        $password='';
+        $_REQUEST['password']='';
+	}
+}
+?>
+
 <!DOCTYPE HTML>
 <html>
 <head>
-<link rel="icon" href="/EdEz/logo4.jpg" />
+<link rel="icon" href="../logo4.jpg" />
 <title>
     Login
 </title>
@@ -21,31 +62,38 @@
     <div class="row">
         <div class="col-md">
             <div class="myLeftCtn">
-                <form id="form" class="myForm text-center" action="profile.php" method="POST">
+                <form id="form" class="myForm text-center" action="" method="POST">
                     <header>Have an account? Log in!</header>
-                    <div id="error" style="color:red">
-        
+                    <div class="form-group" id="error" style="color:red">
+                            <p><?php echo $error ?></p>
                     </div>
                     <div class="form-group">
                     <div class="btn-group col" role="group" aria-label="Basic radio toggle button group">
 
-                        <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked value="teacher">
-                        <label class="btn btn-outline-primary" for="btnradio1">As Teacher</label>
-
-                        <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" value="student">
-                        <label class="btn btn-outline-primary" for="btnradio2">As Student</label>
-                        </div>
+                            <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked value="<?php $button_radio="teacher";echo $button_radio; ?>">
+                            <label class="btn btn-outline-primary" for="btnradio1">As Teacher</label>
+                          
+                            <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" value="<?php $button_radio="student";echo $button_radio; ?>">
+                            <label class="btn btn-outline-primary" for="btnradio2">As Student</label>
+                          </div>
                     </div>
                     <div class="form-group">
                         <i class="fas fa-envelope"> </i>
-                        <input class="myInput" placeholder="Email" type="text" id="email" name="email" required>
+                        <input class="myInput" placeholder="Email" type="text" id="email" name="email" value="<?php echo $email; ?>" required>
                         <div class="invalid-feedback">Please fill out this field.</div>
                     </div>
                     <div class="form-group">
                     <i class="fas fa-lock"> </i>
-                        <input class="myInput" placeholder="Password" type="password" name="password" id="password">
+                        <input class="myInput" placeholder="Password" type="password" name="password" id="password" value="<?php echo $_REQUEST['password']; ?>" required>
+                        <div class="invalid-feedback">Please fill out this field.</div>
                     </div>
-                    <button type="submit" class="butt">Login</button>             
+                    <div class="form-group">
+                        <p>Don't have an account? <a href="../SignUp/index.php">REGISTER NOW!!!</a></p>  
+                    </div>
+                    <div class="form-group">
+                        <p><a href="../SignUp/index.php">FORGOT PASSWORD?</a></p>  
+                    </div>
+                    <button type="submit" class="butt" name="submit">Login</button>   
                 </form>
             </div>
         </div>
