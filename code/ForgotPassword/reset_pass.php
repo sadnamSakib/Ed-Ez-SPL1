@@ -131,6 +131,7 @@ else{
     if(isset($_POST['email'])){
             $error="An Email Has Been Sent, Check Your Registered Email Address. If you didn't receive the email within 5 minutes, Try Again";
             $email=$_POST['email'];
+            $temp=$email;
             $email=hash('sha512',$email);
             $button_radio=$_POST['btnradio'];
             if($button_radio==="teacher"){
@@ -151,14 +152,13 @@ else{
                     $mail->isSMTP();                                            
                     $mail->Host       = 'smtp-relay.sendinblue.com;';                    
                     $mail->SMTPAuth   = true;                             
-                    $mail->Username   = 'mirzaazwad@iut-dhaka.edu';                 
-                    $mail->Password   = 'T8pmkNJfyItWhKYG';                        
+                    $mail->Username   = '##################';                 
+                    $mail->Password   = '#################';                        
                     $mail->SMTPSecure = 'tls';                              
                     $mail->Port       = 587;  
                 
                     $mail->setFrom('edez23931@gmail.com', 'EdEz');           
-                    $mail->addAddress('mirzaazwad8@gmail.com');
-                    
+                    $mail->addAddress(''.$temp.'');
                     $mail->isHTML(true);                                  
                     $mail->Subject = 'Reset Password';
                     $mail->Body    = 'Please click here to reset your password '.$link.' ';
