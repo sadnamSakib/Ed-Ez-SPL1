@@ -6,6 +6,7 @@ $error='';
 
 if (isset($_REQUEST['submit'])) {
 	$email = $_REQUEST['email'];
+    $temp=$email;
     $password = $_REQUEST['password'];
     $button_radio=$_REQUEST['btnradio'];
     $password=hash('sha512',$password);
@@ -24,6 +25,7 @@ if (isset($_REQUEST['submit'])) {
 		$row = mysqli_fetch_assoc($result);
 		if(password_verify($password,$row['password'])){
             $_SESSION['username'] = $row['username'];
+            $_SESSION['email'] = $temp;
 		    header("Location: ../Profile/index.php");
         }
         else{

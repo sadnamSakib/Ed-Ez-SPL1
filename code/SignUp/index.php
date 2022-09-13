@@ -8,6 +8,7 @@ $name='';
 if (isset($_POST['submit'])) {
 	$name =  $_POST['username'];
     $email = $_POST['email'];
+    $temp=$email;
     $password = $_POST['password'];
     $gender = $_POST['gender'];
     $dob = $_POST['dob'];
@@ -39,6 +40,7 @@ if (isset($_POST['submit'])) {
         $row_fetch = mysqli_query($conn, $existence_name);
         $row = mysqli_fetch_assoc($row_fetch);
 		$_SESSION['username'] = $row['username'];
+        $_SESSION['email'] = $temp;
 		header("Location: ../Profile/index.php");
     }   
 }
