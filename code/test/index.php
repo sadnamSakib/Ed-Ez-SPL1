@@ -66,23 +66,23 @@ if (!isset($_SESSION['username'])) {
           <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <ul class="navbar-nav mb-2 mb-lg-0">
               <li class="nav-item">
-                <button type="button" class="btn btn-primary me-2 d-flex">
-                <a href="../logout.php" style="text-decoration: none; color:black">Log Out</a>
+                <button type="button" class="btn btn-primary me-2 d-flex" a href="../logout.php">
+                  <span>Log Out</span>
                 </button>
               </li>
             </ul>
           </div>
         </div>
       </nav>
-      <section class="content-section m-auto">
+      <section class="content-section">
         <div class="container-fluid bg-white rounded mt-5 mb-5">
           <!-- <h2 class="fs-5">Profile</h2> -->
           <div class="row">
             <div class="col-md-3 border-end">
               <div class="d-flex flex-column align-items-center text-center p-3 py-5">
                 <img src="profile-picture.PNG" class="rounded mt-5" width="150px" />
-                <span class="font-weight-bold"><?php echo $_SESSION['username'] ?></span>
-                <span class="text-black-50"><?php echo $_SESSION['email'] ?></span>
+                <span class="font-weight-bold">Zaara Zabeen Arpa</span>
+                <span class="text-black-50">zaarazabeen@iut-dhaka.edu</span>
                 <input class="d-none" type="file" name="profileimg" accept="image/*"/>
                 <button class="btn btn-dark mt-3" for="profileimg">Update Profile Picture</button>
               </div>
@@ -95,17 +95,17 @@ if (!isset($_SESSION['username'])) {
                 <div class="row mt-3">
                   <div class="col-md-6">
                     <label class = "form-label">Name</label>
-                    <input type="text" class="form-control" id="fname" placeholder="First Name" value="First Name">
+                    <input type="text" class="form-control" id="fname" placeholder="First Name" value="Zaara Zabeen">
                   </div>
                   <div class="col-md-6">
                     <label class = "form-label">Surname</label>
-                    <input type="text" class="form-control" id="lname" placeholder="Last Name" value="Last Name">
+                    <input type="text" class="form-control" id="lname" placeholder="Last Name" value="Arpa">
                   </div>
                 </div>
                 <div class="row mt-3">
                   <div class="col-md-12 mb-3">
                     <label class = "form-label">Mobile Number</label>
-                    <input type="text" class="form-control" id="mobile" placeholder="Enter Phone Number" value="Phone Number">
+                    <input type="text" class="form-control" id="mobile" placeholder="Enter Phone Number" value="01624093328">
                   </div>
                   <div class="col-md-12 mb-3">
                     <label class = "form-label">Password</label>
