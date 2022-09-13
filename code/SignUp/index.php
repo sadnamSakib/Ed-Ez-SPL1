@@ -2,6 +2,8 @@
 
 include '../config.php';
 $error='';
+$name='';
+
 
 if (isset($_POST['submit'])) {
 	$name =  $_POST['username'];
@@ -13,6 +15,7 @@ if (isset($_POST['submit'])) {
     $button_radio=$_POST['btnradio'];
     $confirm= $_POST['cfpassword'];
     $password=hash('sha512',$password);
+    $email=hash('sha512',$email);
     $password=password_hash($password,PASSWORD_BCRYPT);
     $error=$_REQUEST['error'];
     $tableName='';
@@ -81,12 +84,12 @@ if (isset($_POST['submit'])) {
                     </div>
                     <div class="form-group">
                         <i class="fas fa-user"> </i>
-                        <input class="myInput" type="text" placeholder="Username" name="username" id="username" required value="<?php echo $username; ?>">
+                        <input class="myInput" type="text" placeholder="Username" name="username" id="username" required>
                         <div class="invalid-feedback">Please fill out this field.</div>
                     </div>
                     <div class="form-group">
                         <i class="fas fa-envelope"> </i>
-                        <input class="myInput" placeholder="Email" name="email" type="text" id="email" required value="<?php echo $email; ?>">
+                        <input class="myInput" placeholder="Email" name="email" type="text" id="email" required value="<?php echo $_REQUEST['email']; ?>">
                         <div class="invalid-feedback">Please fill out this field.</div>
                     </div>
                     <div class="form-group">

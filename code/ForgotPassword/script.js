@@ -1,14 +1,9 @@
-const username=document.getElementById('username')
-var password=document.getElementById('password')
-var cfpassword=document.getElementById('cfpassword')
 const form=document.getElementById('form')
-const dob=document.getElementById('dob')
-const errorElement=document.getElementById('error')
-const gender=document.getElementById('gender')
-var dateString=new Date().toLocaleDateString('en-ca');
-
 form.addEventListener('submit', (e) => {
+    const errorElement=document.getElementById('error')
     let messages = []
+    var password=document.getElementById('password')
+    var cfpassword=document.getElementById('cfpassword')
     if(password.value!==cfpassword.value) {
         messages.push('Passwords do not match')
     }
@@ -42,55 +37,8 @@ form.addEventListener('submit', (e) => {
     else{
         messages.push('Password must be greater than 8 characters long')
     }
-    if(gender.value==="select"){
-        messages.push("Please select gender")
-    }
- 
-    var db=new Date(dob.value)
-    var today=new Date()
-    if(db>=today){
-        messages.push("Date is invalid")
-    }
-    delete db;
-    delete today;
-    if(!ValidateEmail(document.getElementById("email"))){
-        messages.push("Email is invalid")
-    }
     if(messages.length>0){
         e.preventDefault()
         errorElement.innerText=messages.join(', ')
     }
 })
-
-function setMaxDate(obj){
-    var today=new Date()
-    var dateString=today.toLocaleDateString('en-ca')
-    this.setAttribute("max",dateString)
-}
-
-function LoginSubmit(){
-    var hashObj=new jsSHA("SHA-512", "TEXT", {numRounds: 1})
-    hashObj.update(password.value)
-    var hash=hashObj.getHash("HEX")
-    password.value=hash
-}
-
-function LoginSubmitConfirm(){
-    var hashObj=new jsSHA("SHA-512", "TEXT", {numRounds: 1})
-    hashObj.update(cfpassword.value)
-    var hash=hashObj.getHash("HEX")
-    cfpassword.value=hash
-}
-
-function ValidateEmail(inputText)
-{
-var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-if(inputText.value.match(mailformat))
-{
-return true;
-}
-else
-{
-return false;
-}
-}

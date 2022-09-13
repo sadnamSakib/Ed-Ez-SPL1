@@ -9,6 +9,7 @@ if (isset($_REQUEST['submit'])) {
     $password = $_REQUEST['password'];
     $button_radio=$_REQUEST['btnradio'];
     $password=hash('sha512',$password);
+    $email=hash('sha512',$email);
     $tableName;
     if($button_radio==='teacher'){
         $tableName="teacher";
@@ -79,7 +80,7 @@ if (isset($_REQUEST['submit'])) {
                     </div>
                     <div class="form-group">
                         <i class="fas fa-envelope"> </i>
-                        <input class="myInput" placeholder="Email" type="text" id="email" name="email" value="<?php echo $email; ?>" required>
+                        <input class="myInput" placeholder="Email" type="text" id="email" name="email" value="<?php echo $_REQUEST['email']; ?>" required>
                         <div class="invalid-feedback">Please fill out this field.</div>
                     </div>
                     <div class="form-group">
@@ -88,10 +89,10 @@ if (isset($_REQUEST['submit'])) {
                         <div class="invalid-feedback">Please fill out this field.</div>
                     </div>
                     <div class="form-group">
-                        <p>Don't have an account? <a href="../SignUp/index.php">REGISTER NOW!!!</a></p>  
+                        <p>Don't have an account? <a href="../SignUp/index.php">REGISTER NOW!</a></p>  
                     </div>
                     <div class="form-group">
-                        <p><a href="../SignUp/index.php">FORGOT PASSWORD?</a></p>  
+                        <p><a href="../ForgotPassword/reset_pass.php">FORGOT PASSWORD?</a></p>  
                     </div>
                     <button type="submit" class="butt" name="submit">Login</button>   
                 </form>
