@@ -26,6 +26,7 @@ if (isset($_REQUEST['submit'])) {
 		if(password_verify($password,$row['password'])){
             $_SESSION['username'] = $row['username'];
             $_SESSION['email'] = $temp;
+            $_SESSION['tableName']=$tableName;
 		    header("Location: ../Profile/index.php");
         }
         else{
