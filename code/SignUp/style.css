@@ -9,7 +9,7 @@ body{
 .container{
     position :absolute;
     max-width:800px;
-    height: 700px;
+    height: auto;
     margin:auto;
     top : 50%;
     left : 50%;

@@ -4,15 +4,16 @@ var cfpassword=document.getElementById('cfpassword')
 const form=document.getElementById('form')
 const dob=document.getElementById('dob')
 const errorElement=document.getElementById('error')
+const errorElementEmail=document.getElementById('errorEmail')
+const errorPassword=document.getElementById('passwordError')
+const errorConfirmPassword=document.getElementById('confirmPasswordError')
+const errorGender=document.getElementById('genderError')
 const gender=document.getElementById('gender')
 var dateString=new Date().toLocaleDateString('en-ca');
 
-form.addEventListener('submit', (e) => {
-    let messages = []
-    if(password.value!==cfpassword.value) {
-        messages.push('Passwords do not match')
-    }
-    else if(password.value.length>=8){
+function passwordVerification(){
+    let password_message=[]
+    if(password.value.length>=8){
         let charPresentSmall=false
         let charPresentBig=false
         let numPresent=false
@@ -35,30 +36,61 @@ form.addEventListener('submit', (e) => {
             }
         }
         if(charPresentSmall===false || charPresentBig===false || numPresent===false || symbolPresent===false){
-            messages.push("Password must contain numbers, letters of both cases and symbols")
+            password_message.push("Password must contain numbers, letters of both cases and symbols")
         }
 
     }
     else{
-        messages.push('Password must be greater than 8 characters long')
+        password_message.push('Password must contain atleast 8 characters')
     }
+    if(password_message.length>0){
+        errorPassword.style.display="block"
+        errorPassword.innerText=password_message.join(', ')
+        return true;
+    }
+    return false;
+
+}
+
+function passwordConfirmation(){
+
+    if(password.value!==cfpassword.value) {
+        errorConfirmPassword.style.display="block"
+        errorConfirmPassword.innerText="Passwords do not match"
+        return true;
+    }
+    else{
+        return false;
+    }
+
+}
+
+form.addEventListener('submit', (e) => {
+
     if(gender.value==="select"){
-        messages.push("Please select gender")
+        e.preventDefault()
+        errorGender.style.display="block"
+        errorGender.innerText="Please select a gender"
     }
  
     var db=new Date(dob.value)
     var today=new Date()
-    if(db>=today){
-        messages.push("Date is invalid")
-    }
     delete db;
     delete today;
     if(!ValidateEmail(document.getElementById("email"))){
-        messages.push("Email is invalid")
-    }
-    if(messages.length>0){
         e.preventDefault()
-        errorElement.innerText=messages.join(', ')
+        errorElement.style.display="block"
+        errorElement.innerText="Email is invalid"
+    }
+    // if(messages.length>0){
+    //     e.preventDefault()
+    //     errorElement.innerText=messages.join(', ')
+    // }
+    if(passwordVerification()){
+        e.preventDefault()
+    }
+    if(passwordConfirmation()){
+        e.preventDefault()
     }
 })
 
@@ -67,6 +99,7 @@ function setMaxDate(obj){
     var dateString=today.toLocaleDateString('en-ca')
     this.setAttribute("max",dateString)
 }
+
 
 function LoginSubmit(){
     var hashObj=new jsSHA("SHA-512", "TEXT", {numRounds: 1})

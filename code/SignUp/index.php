@@ -64,7 +64,7 @@ if (isset($_POST['submit'])) {
 </head>
 <body>
 <script src="js/bootstrap.js"></script>
-<div class="container col-md-4">
+<div class="container col-md-4 mb-5 mt-5">
     <div class="myCard">
     <div class="row">
         <div class="col-md">
@@ -81,13 +81,13 @@ if (isset($_POST['submit'])) {
                             <label class="btn btn-outline-primary" for="btnradio2">As Student</label>
                           </div>
                     </div>
-                    <div class="form-group" id="error" style="color:red">
-                            <p><?php echo $error ?></p>
-                    </div>
                     <div class="form-group">
                         <i class="fas fa-user"> </i>
                         <input class="myInput" type="text" placeholder="Username" name="username" id="username" required>
                         <div class="invalid-feedback">Please fill out this field.</div>
+                    </div>
+                    <div class="form-group" id="error" style="color:red;display:none">
+                            <p><?php echo $error ?></p>
                     </div>
                     <div class="form-group">
                         <i class="fas fa-envelope"> </i>
@@ -99,14 +99,24 @@ if (isset($_POST['submit'])) {
                         <input class="myInput" type="text" name="institution" placeholder="Institution" id="institution" required value="<?php echo $institutions; ?>">
                         <div class="invalid-feedback">Please fill out this field.</div>
                     </div>
+                    <div id="passwordError" class="form-group" style="color:red;display:none">
+
+                        </div>
                     <div class="form-group">
                         <i class="fas fa-lock"> </i>
+                        
                         <input class="myInput" placeholder="Password" type="password" id="password" name="password" required value="<?php echo $_POST['password']; ?>">
                     </div>
+                    <div id="confirmPasswordError" class="form-group" style="color:red;display:none">
+
+                        </div>
                     <div class="form-group">
                         <i class="fas fa-lock"> </i>
                         <input class="myInput" placeholder="Confirm Password" type="password" id="cfpassword" name="cfpassword" required value="<?php echo $_POST['cfpassword']; ?>">
                     </div>
+                    <div id="genderError" class="form-group" style="color:red;display:none">
+
+                        </div>
                     <div class="form-group">
                         <i class="fas fa-venus"></i>
                             <select class="myInput" name="gender" id="gender" value="<?php echo $gender; ?>">
