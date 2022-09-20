@@ -128,8 +128,8 @@ if (!isset($_SESSION['username'])) {
                     <input type="text" class="form-control" id="department" placeholder="Enter department" value="#">
                   </div>
                   <div class="col-md-12 mb-3">
-                    <label class = "form-label">Semester</label>
-                    <input type="number" class="form-control" id="semester" placeholder="Enter Your Semester" value="#">
+                    <label class = "form-label">Designation</label>
+                    <input type="number" class="form-control" id="designation" placeholder="Enter Your Designation" value="#">
                   </div>
                   <div class="col-md-12 mb-3">
                     <label class = "form-label">Country</label>
