@@ -43,7 +43,7 @@ if(isset($_POST['UpdateProfile'])){
   $_SESSION['username']=$username;
   
   $Department=$_REQUEST['department'];
-  $Designation=$_REQUEST['Designation'];
+  $Semester=$_REQUEST['semester'];
   $country=$_REQUEST['country'];
   $password=$_REQUEST['password'];
   $password=hash('sha512',$password);
@@ -58,7 +58,10 @@ if(isset($_POST['UpdateProfile'])){
   }
   
   if(password_verify($password,$row['password'])){
-    $sql="UPDATE $tableName SET username='$username',MobileNumber='$MobileNumber',Country='$country',Department='$Department',Designation='$Designation' WHERE email='$temp'";
+    if($Semester==''){
+      $Semester=-1;
+    }
+    $sql="UPDATE $tableName SET username='$username',MobileNumber='$MobileNumber',Country='$country',Department='$Department',Semester='$Semester' WHERE email='$temp'";
     $res=mysqli_query($conn,$sql);
   }
   else{
@@ -84,8 +87,11 @@ $username=$row['username'];
 $MobileNumber=$row['MobileNumber'];
 $instituion=$row['institution'];
 $Department=$row['Department'];
-$Designation=$row['Designation'];
+$Semester=$row['Semester'];
 $Country=$row['Country'];
+if($Semester==-1){
+  $Semester='';
+}
 ?>
 
 <!DOCTYPE html>
@@ -180,7 +186,7 @@ $Country=$row['Country'];
             <div class="col-md-5 border-end">
               <div class="p-3 py-5">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                  <h4>Teacher Profile</h4>
+                  <h4>Student Profile</h4>
                 </div>
                 <form id='form' action="" method="POST">
                 <div id="errorPass form-label" style="color:<?php echo $errorColor ?>"><?php echo $error ?></div>
@@ -213,8 +219,8 @@ $Country=$row['Country'];
                     <input type="text" class="form-control" id="department" name="department" value="<?php echo $Department?>">
                   </div>
                   <div class="col-md-12 mb-3">
-                    <label class = "form-label">Designation</label>
-                    <input type="text" class="form-control" id="designation" name="Designation" placeholder="Enter Your Designation" value="<?php echo $Designation?>">
+                    <label class = "form-label">Semester</label>
+                    <input type="number" class="form-control" id="semester" name="semester" value="<?php echo $Semester?>">
                   </div>
                   <div class="col-md-12 mb-3">
                     <label class = "form-label">Country</label>
@@ -239,5 +245,3 @@ $Country=$row['Country'];
 </body>
 
 </html>
-
-

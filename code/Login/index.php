@@ -27,7 +27,12 @@ if (isset($_REQUEST['submit'])) {
             $_SESSION['username'] = $row['username'];
             $_SESSION['email'] = $temp;
             $_SESSION['tableName']=$tableName;
-		    header("Location: ../Profile/index.php");
+		    if($tableName=='teacher'){
+                header("Location: ../TeacherProfile/index.php");
+            }
+            else{
+                header("Location: ../StudentProfile/index.php");
+            }
         }
         else{
             $error='Password is incorrect ';

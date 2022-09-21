@@ -15,8 +15,15 @@
 
     session_start();
 
-    if (isset($_SESSION['username'])) {
-        header("Location: ../Profile/index.php");
+    if (isset($_SESSION['email'])) {
+        $tableName=$_SESSION['tableName'];
+        echo $tableName;
+        if($tableName=='teacher'){
+            header('Location: ../TeacherProfile/index.php');
+        }
+        else if($tableName=='student'){
+            header('Location: ../StudentProfile/index.php');
+        }
     }
 
 
