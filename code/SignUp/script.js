@@ -11,6 +11,36 @@ const errorGender=document.getElementById('genderError')
 const gender=document.getElementById('gender')
 var dateString=new Date().toLocaleDateString('en-ca');
 
+const togglePassword = document
+            .querySelector('#togglePassword');
+  
+        togglePassword.addEventListener('click', () => {
+  
+            // Toggle the type attribute using
+            // getAttribure() method
+            const type = password
+                .getAttribute('type') === 'password' ?
+                'text' : 'password';
+                  
+            password.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+  });
+
+  const togglePassword2 = document
+            .querySelector('#togglePassword2');
+  
+        togglePassword2.addEventListener('click', () => {
+  
+            // Toggle the type attribute using
+            // getAttribure() method
+            const type = cfpassword
+                .getAttribute('type') === 'password' ?
+                'text' : 'password';
+                  
+            cfpassword.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+  });
+
 function passwordVerification(){
     let password_message=[]
     if(password.value.length>=8){

@@ -3,6 +3,21 @@ var password=document.getElementById('password')
 const form=document.getElementById('form')
 const errorElement=document.getElementById('error')
 
+const togglePassword = document
+            .querySelector('#togglePassword');
+  
+        togglePassword.addEventListener('click', () => {
+  
+            // Toggle the type attribute using
+            // getAttribure() method
+            const type = password
+                .getAttribute('type') === 'password' ?
+                'text' : 'password';
+                  
+            password.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+  });
+
 form.addEventListener('submit', (e) => {
     let messages = []
     if(email.value==='' || email.value==null){

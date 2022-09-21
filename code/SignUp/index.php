@@ -114,6 +114,7 @@ if (isset($_POST['submit'])) {
                         <i class="fas fa-lock"> </i>
                         
                         <input class="myInput" placeholder="Password" type="password" id="password" name="password" required value="<?php echo $_POST['password']; ?>">
+                        <i class="fas fa-eye-slash" id="togglePassword"></i>
                     </div>
                     <div id="confirmPasswordError" class="form-group" style="color:red;display:none">
 
@@ -121,6 +122,7 @@ if (isset($_POST['submit'])) {
                     <div class="form-group">
                         <i class="fas fa-lock"> </i>
                         <input class="myInput" placeholder="Confirm Password" type="password" id="cfpassword" name="cfpassword" required value="<?php echo $_POST['cfpassword']; ?>">
+                        <i class="fas fa-eye-slash" id="togglePassword2"></i>
                     </div>
                     <div id="genderError" class="form-group" style="color:red;display:none">
 

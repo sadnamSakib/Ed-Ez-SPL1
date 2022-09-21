@@ -13,7 +13,12 @@ if(isset($_POST['submit_password']) && $_POST['type'])
   $pass=password_hash($pass,PASSWORD_BCRYPT);
   $type=$_POST['type'];
   $select=mysqli_query($conn,"update $type set password='$pass' where email='$email'");
-  header("Location: ../Profile/index.php");
+        if($type==='teacher'){
+            header('Location: ../TeacherProfile/index.php');
+        }
+        else{
+            header('Location: ../StudentProfile/index.php');
+        }
   
 }
 
@@ -60,13 +65,44 @@ if($_GET['key'] && $_GET['reset'] && $_GET['type'])
                     <div class="form-group">
                         <i class="fas fa-lock"> </i>
                         <input class="myInput" placeholder="Password" type="password" id="password" name="password" required>
+                        <i class="fas fa-eye-slash" id="togglePassword"></i>
                     </div>
                     <div class="form-group">
                         <i class="fas fa-lock"> </i>
                         <input class="myInput" placeholder="Confirm Password" type="password" id="cfpassword" name="cfpassword" required>
+                        <i class="fas fa-eye-slash" id="togglePassword2"></i>
                     </div>
                     <input type="submit" value="Reset Password" class="butt" name="submit_password"> 
                     <script>
+                        const togglePassword = document
+            .querySelector('#togglePassword');
+  
+        togglePassword.addEventListener('click', () => {
+  
+            // Toggle the type attribute using
+            // getAttribure() method
+            const type = password
+                .getAttribute('type') === 'password' ?
+                'text' : 'password';
+                  
+            password.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+  });
+
+  const togglePassword2 = document
+            .querySelector('#togglePassword2');
+  
+        togglePassword2.addEventListener('click', () => {
+  
+            // Toggle the type attribute using
+            // getAttribure() method
+            const type = cfpassword
+                .getAttribute('type') === 'password' ?
+                'text' : 'password';
+                  
+            cfpassword.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+  });
                         const form=document.getElementById('form')
                         form.addEventListener('submit', (e) => {
                             const errorElement=document.getElementById('error')
@@ -152,8 +188,8 @@ else{
                     $mail->isSMTP();                                            
                     $mail->Host       = 'smtp-relay.sendinblue.com;';                    
                     $mail->SMTPAuth   = true;                             
-                    $mail->Username   = '##################';                 
-                    $mail->Password   = '#################';                        
+                    $mail->Username   = '-------------';                 
+                    $mail->Password   = '-------------';                      
                     $mail->SMTPSecure = 'tls';                              
                     $mail->Port       = 587;  
                 

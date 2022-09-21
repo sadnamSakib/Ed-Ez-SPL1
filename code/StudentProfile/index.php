@@ -105,6 +105,10 @@ if($Semester==-1){
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="../css/bootstrap.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/2.0.2/sha.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://kit.fontawesome.com/d0f239b9af.js" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/2.0.2/sha.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://kit.fontawesome.com/d0f239b9af.js" crossorigin="anonymous"></script>
@@ -204,7 +208,10 @@ if($Semester==-1){
                   </div>
                   <div class="col-md-12 mb-3">
                     <label class = "form-label">Password</label>
-                    <input type="password" class="form-control" placeholder="Enter Password" name="password">
+                    <div class="form-group">
+                    <input type="password" class="form-control" placeholder="Enter Password" name="password" id="password">
+                    <i class="fas fa-eye-slash" id="togglePassword"></i>
+                    </div>
                   </div>
                   <div class="col-md-12 mb-3">
                     <label class = "form-label">Email</label>
@@ -220,7 +227,11 @@ if($Semester==-1){
                   </div>
                   <div class="col-md-12 mb-3">
                     <label class = "form-label">Semester</label>
-                    <input type="number" class="form-control" id="semester" name="semester" value="<?php echo $Semester?>">
+                    <input type="number" class="form-control" id="semester" name="semester" value="<?php echo $Semester?>" onclick="
+                    var value=document.getElementById('semester');
+                    this.setAttribute('min',0);
+                    this.setAttribute('max',20);
+                    ">
                   </div>
                   <div class="col-md-12 mb-3">
                     <label class = "form-label">Country</label>

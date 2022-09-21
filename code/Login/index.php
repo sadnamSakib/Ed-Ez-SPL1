@@ -95,6 +95,7 @@ if (isset($_REQUEST['submit'])) {
                     <i class="fas fa-lock"> </i>
                         <input class="myInput" placeholder="Password" type="password" name="password" id="password" value="<?php echo $_REQUEST['password']; ?>" required>
                         <div class="invalid-feedback">Please fill out this field.</div>
+                        <i class="fas fa-eye-slash" id="togglePassword"></i>
                     </div>
                     <div class="form-group">
                         <p>Don't have an account? <a href="../SignUp/index.php">REGISTER NOW!</a></p>  

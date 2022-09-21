@@ -18,10 +18,10 @@
     if (isset($_SESSION['email'])) {
         $tableName=$_SESSION['tableName'];
         echo $tableName;
-        if($tableName=='teacher'){
+        if($tableName==='teacher'){
             header('Location: ../TeacherProfile/index.php');
         }
-        else if($tableName=='student'){
+        else{
             header('Location: ../StudentProfile/index.php');
         }
     }

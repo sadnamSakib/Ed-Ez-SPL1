@@ -198,7 +198,9 @@ $Country=$row['Country'];
                   </div>
                   <div class="col-md-12 mb-3">
                     <label class = "form-label">Password</label>
-                    <input type="password" class="form-control" placeholder="Enter Password" name="password">
+                    <input type="password" class="form-control" placeholder="Enter Password" name="password" id="password">
+                    <i class="fas fa-eye-slash" id="togglePassword"></i>
+                    </div>
                   </div>
                   <div class="col-md-12 mb-3">
                     <label class = "form-label">Email</label>
