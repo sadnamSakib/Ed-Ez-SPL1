@@ -123,10 +123,12 @@ if ($Semester == -1) {
       </div>
       <ul class="list-unstyled px-2">
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-dashboard pe-2'></i>Dashboard</a></li>
-        <li class=""><a href="../StudentProfile/index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-user-circle pe-2'></i>Profile</a></li>
+        <li class=""><a href="index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-user-circle pe-2'></i>Profile</a></li>
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-calendar-plus pe-2'></i>Schedule</a></li>
-        <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-chalkboard pe-2'></i>Classrooms</a></li>
+        <li class=""><a href="../ClassroomSystem/index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-chalkboard pe-2'></i>Classrooms</a></li>
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-bar-chart-alt-2 pe-2'></i>Grades</a></li>
+
+
       </ul>
       <hr class="h-color mx-2 my-5">
       <hr class="h-color mx-2 my-5">
@@ -160,108 +162,87 @@ if ($Semester == -1) {
           </div>
         </div>
       </nav>
-      <section class="content-section m-auto px-1 w-75">
-        <div class="container bg-white rounded mt-5 mb-5"></div>
-        <div class="px-3 me-3 d-flex flex-row-reverse">
-          <button type="button" class="btn btn-outline-primary btn-join d-flex p-4 py-3" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@fat"><b>Join new classroom</b></button>
-          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="exampleModalLabel">Join classroom</h1>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <form>
-                    <div class="mb-3">
-                      <input type="text" class="form-control" placeholder="Enter classroom code" aria-label="Leave a comment">
-                    </div>
-                  </form>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary btn-join">Join</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="container bg-white rounded mt-5 mb-5"></div>
+      <section class="content-section m-auto px-2 py-2">
+        <div class="container-fluid bg-white rounded mt-5 mb-5"></div>
         <!-- <h2 class="fs-5">Profile</h2> -->
-        <div class="row justify-content-center me-2">
-          <!-- <div class="col-md-6 col-sm-6 border" style="max-height:20rem"> -->
-          <!-- <div class="row"> -->
-          <div class="col-sm-4 p-4 px-2">
-            <div class="card card-box-shadow">
-              <div class="card-body">
-                <h4 class="card-title">CSE 4301</h4>
-                <p class="card-text">Md. Jubair Ibna Mostafa</p>
-
+        <div class="row justify-content-center">
+          <div class="col-md-6 col-sm-6">
+            <div class="card intro-card text-bg-secondary mb-3">
+              <div class="card-body px-4">
+                <h1 class="card-title">Data Structures</h1>
+                <h4 class="card-text">CSE 4303</h4>
+                <p class="card-text">Winter Semester 2021-2022</p>
+                <p class="card-text">Md. Mezbaur Rahman</p>
               </div>
-              <div class="pb-5 px-5"><a href="../StudentClassroom/index.php" class="btn btn-primary btn-go">Enter Class</a></div>
             </div>
           </div>
-          <div class="col-sm-4 p-4 px-2">
-            <div class="card card-box-shadow">
-              <div class="card-body">
-                <h4 class="card-title">CSE 4303: Data Structure</h4>
-                <p class="card-text">Mezbaur Rahman</p>
-
+          <div class="col-md-3 col-sm-6 border-end">
+            <div class="card text-bg-primary  mb-3">
+              <div class="card-header task-card" style="height:50px">
+                <h4 style="text-align:center">Pending Tasks</h4>
               </div>
-              <div class="pb-5 px-5"><a href="../StudentClassroom/index.php" class="btn btn-primary btn-go">Enter Class</a></div>
+              <div class="card-body ">
+                <p class="card-text" style="text-align:center">No pending tasks.</p>
+              </div>
             </div>
           </div>
-          <div class="col-sm-4 p-4 px-2">
-            <div class="card card-box-shadow">
-              <div class="card-body">
-                <h4 class="card-title">CSE 4309: Theory of Computing</h4>
-                <p class="card-text">Tanjila Alam Sathi</p>
-              </div>
-              <div class="pb-5 px-5"><a href="../StudentClassroom/index.php" class="btn btn-primary btn-go">Enter Class</a></div>
-            </div>
-          </div>
-          <div class="col-sm-4 p-4 px-2">
-            <div class="card card-box-shadow">
-              <div class="card-body">
-                <h4 class="card-title">CSE 4307: Database Management System</h4>
-                <p class="card-text">Dr. Abu Raihan Mostafa Kamal</p>
-
-              </div>
-              <div class="pb-5 px-5"><a href="../StudentClassroom/index.php" class="btn btn-primary btn-go">Enter Class</a></div>
-            </div>
-          </div>
-          <div class="col-sm-4 p-4 px-2">
-            <div class="card card-box-shadow">
-              <div class="card-body">
-                <h4 class="card-title">CSE 4305: Computer Organization and Architecture</h4>
-                <p class="card-text">Imtiaj Ahmed Chowdhury</p>
-
-              </div>
-              <div class="pb-5 px-5"><a href="../StudentClassroom/index.php" class="btn btn-primary btn-go">Enter Class</a></div>
-            </div>
-          </div>
-          <div class="col-sm-4 p-4 px-2">
-            <div class="card card-box-shadow">
-              <div class="card-body">
-                <h4 class="card-title">Math 4341: Linear Algebra</h4>
-                <p class="card-text">Md. Mohsinul Kabir</p>
-              </div>
-              <div class="pb-5 px-5"><a href="../StudentClassroom/index.php" class="btn btn-primary btn-go">Enter Class</a></div>
-            </div>
-          </div>
-          <!-- </div> -->
         </div>
-
-        <!-- ekhane card dhukabo  -->
-
-
-        <!-- <div class="input-group mb-3">
+        <div class="row justify-content-center post">
+          <div class="col-md-6 col-sm-6 border-end">
+            <div class="card  text-bg-light mb-3">
+              <div class="card-header">
+                Posted by Md. Mezbaur Rahman.
+              </div>
+              <div class="card-body">
+                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+              </div>
+            </div>
+            <div class="input-group mb-3 pb-3">
               <input type="text" class="form-control" placeholder="Leave a comment" aria-label="Leave a comment" aria-describedby="button-addon2">
               <button class="btn btn-primary" type="button" id="button-addon2">comment</button>
-            </div> -->
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6 border-end">
+          </div>
+        </div>
+        <div class="row justify-content-center post">
+          <div class="col-md-6 col-sm-6 border-end">
+            <div class="card  text-bg-light mb-3">
+              <div class="card-header">
+                Posted by Md. Mezbaur Rahman.
+              </div>
+              <div class="card-body">
+                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+              </div>
+            </div>
+            <div class="input-group mb-3 pb-3">
+              <input type="text" class="form-control" placeholder="Leave a comment" aria-label="Leave a comment" aria-describedby="button-addon2">
+              <button class="btn btn-primary" type="button" id="button-addon2">comment</button>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6 border-end">
+          </div>
+        </div>
+        <div class="row justify-content-center post">
+          <div class="col-md-6 col-sm-6 border-end">
+            <div class="card  text-bg-light mb-3">
+              <div class="card-header">
+                Posted by Md. Mezbaur Rahman.
+              </div>
+              <div class="card-body">
+                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+              </div>
+            </div>
+            <div class="input-group mb-3 pb-3">
+              <input type="text" class="form-control" placeholder="Leave a comment" aria-label="Leave a comment" aria-describedby="button-addon2">
+              <button class="btn btn-primary" type="button" id="button-addon2">comment</button>
+            </div>
+          </div>
+          <div class="col-md-3 col-sm-6 border-end">
+          </div>
+        </div>
+      </section>
     </div>
-    </section>
-  </div>
   </div>
 
 
