@@ -123,12 +123,10 @@ if ($Semester == -1) {
       </div>
       <ul class="list-unstyled px-2">
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-dashboard pe-2'></i>Dashboard</a></li>
-        <li class=""><a href="index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-user-circle pe-2'></i>Profile</a></li>
+        <li class=""><a href="../StudentProfile/index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-user-circle pe-2'></i>Profile</a></li>
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-calendar-plus pe-2'></i>Schedule</a></li>
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-chalkboard pe-2'></i>Classrooms</a></li>
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-bar-chart-alt-2 pe-2'></i>Grades</a></li>
-
-
       </ul>
       <hr class="h-color mx-2 my-5">
       <hr class="h-color mx-2 my-5">
@@ -200,7 +198,7 @@ if ($Semester == -1) {
                 <p class="card-text">Md. Jubair Ibna Mostafa</p>
 
               </div>
-              <div class="pb-5 px-5"><a href="#" class="btn btn-primary btn-go">Enter Class</a></div>
+              <div class="pb-5 px-5"><a href="../StudentClassroom/index.php" class="btn btn-primary btn-go">Enter Class</a></div>
             </div>
           </div>
           <div class="col-sm-4 p-4 px-2">
@@ -210,7 +208,7 @@ if ($Semester == -1) {
                 <p class="card-text">Mezbaur Rahman</p>
 
               </div>
-              <div class="pb-5 px-5"><a href="#" class="btn btn-primary btn-go">Enter Class</a></div>
+              <div class="pb-5 px-5"><a href="../StudentClassroom/index.php" class="btn btn-primary btn-go">Enter Class</a></div>
             </div>
           </div>
           <div class="col-sm-4 p-4 px-2">
@@ -219,7 +217,7 @@ if ($Semester == -1) {
                 <h4 class="card-title">CSE 4309: Theory of Computing</h4>
                 <p class="card-text">Tanjila Alam Sathi</p>
               </div>
-              <div class="pb-5 px-5"><a href="#" class="btn btn-primary btn-go">Enter Class</a></div>
+              <div class="pb-5 px-5"><a href="../StudentClassroom/index.php" class="btn btn-primary btn-go">Enter Class</a></div>
             </div>
           </div>
           <div class="col-sm-4 p-4 px-2">
@@ -229,7 +227,7 @@ if ($Semester == -1) {
                 <p class="card-text">Dr. Abu Raihan Mostafa Kamal</p>
 
               </div>
-              <div class="pb-5 px-5"><a href="#" class="btn btn-primary btn-go">Enter Class</a></div>
+              <div class="pb-5 px-5"><a href="../StudentClassroom/index.php" class="btn btn-primary btn-go">Enter Class</a></div>
             </div>
           </div>
           <div class="col-sm-4 p-4 px-2">
@@ -239,7 +237,7 @@ if ($Semester == -1) {
                 <p class="card-text">Imtiaj Ahmed Chowdhury</p>
 
               </div>
-              <div class="pb-5 px-5"><a href="#" class="btn btn-primary btn-go">Enter Class</a></div>
+              <div class="pb-5 px-5"><a href="../StudentClassroom/index.php" class="btn btn-primary btn-go">Enter Class</a></div>
             </div>
           </div>
           <div class="col-sm-4 p-4 px-2">
@@ -247,9 +245,8 @@ if ($Semester == -1) {
               <div class="card-body">
                 <h4 class="card-title">Math 4341: Linear Algebra</h4>
                 <p class="card-text">Md. Mohsinul Kabir</p>
-
               </div>
-              <div class="pb-5 px-5"><a href="#" class="btn btn-primary btn-go">Enter Class</a></div>
+              <div class="pb-5 px-5"><a href="../StudentClassroom/index.php" class="btn btn-primary btn-go">Enter Class</a></div>
             </div>
           </div>
           <!-- </div> -->
