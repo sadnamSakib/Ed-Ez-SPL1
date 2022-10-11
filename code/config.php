@@ -17,7 +17,6 @@
 
     if (isset($_SESSION['email'])) {
         $tableName=$_SESSION['tableName'];
-        echo $tableName;
         if($tableName==='teacher'){
             header('Location: ../TeacherProfile/index.php');
         }
