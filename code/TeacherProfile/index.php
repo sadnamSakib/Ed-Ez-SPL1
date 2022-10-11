@@ -148,7 +148,7 @@ $Country=$row['Country'];
           <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <ul class="navbar-nav mb-2 mb-lg-0">
               <li class="nav-item">
-                <button type="button" class="btn btn-primary me-2 d-flex">
+                <button type="button" class="btn btn-primary me-2 md-lg-2 d-flex">
                 <a href="../logout.php" style="text-decoration: none; color:black">Log Out</a>
                 </button>
               </li>
