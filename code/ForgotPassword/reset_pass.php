@@ -188,8 +188,8 @@ else{
                     $mail->isSMTP();                                            
                     $mail->Host       = 'smtp-relay.sendinblue.com;';                    
                     $mail->SMTPAuth   = true;                             
-                    $mail->Username   = '-------------';                 
-                    $mail->Password   = '-------------';                      
+                    $mail->Username   = 'mirzaazwad8@gmail.com';                 
+                    $mail->Password   = 'IpqnFSAgYZwx37v9';                      
                     $mail->SMTPSecure = 'tls';                              
                     $mail->Port       = 587;  
                 

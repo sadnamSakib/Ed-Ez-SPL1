@@ -196,11 +196,16 @@ $Country=$row['Country'];
                     <input type="text" class="form-control" id="mobile" name="mobile" placeholder="<?php echo $MobileNumber ?>" value="<?php echo $MobileNumber ?>">
                     <div id="error" style="color:red"></div>
                   </div>
-                  <div class="col-md-12 mb-3">
-                    <label class = "form-label">Password</label>
-                    <input type="password" class="form-control" placeholder="Enter Password" name="password" id="password">
-                    <i class="fas fa-eye-slash" id="togglePassword"></i>
-                    </div>
+                  <label class = "form-label">Password</label>
+                  <div class="col-md-12 mb-3 d-flex justify-content-around">
+  
+                    <input type="password" class="form-control" placeholder="Enter Password" name="password" id="password" >
+                    <i class="fas fa-eye-slash my-2 p-1" id="togglePassword"></i>
+                    
+                  </div>
+                    <div class="col-md-12 mb-3">
+                  <a href="../UpdatePassword/index.php"><button type="button" class="btn btn-dark col-3">Change Password</button></a>
+                  </div>
                   </div>
                   <div class="col-md-12 mb-3">
                     <label class = "form-label">Email</label>
@@ -227,8 +232,10 @@ $Country=$row['Country'];
               <div class="row justify-content-center">
               <input type="submit" name="UpdateProfile" class="btn btn-dark col-3" value="Update Profile"/>
               </div>
+              
             </div>
 </form>
+            
             
           </div>
           
