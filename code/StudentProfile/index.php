@@ -158,7 +158,7 @@ if($Semester==-1){
           <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <ul class="navbar-nav mb-2 mb-lg-0">
               <li class="nav-item">
-                <button type="button" class="btn btn-primary me-2 d-flex">
+                <button type="button" class="btn btn-primary me-2 md-lg-2 d-flex">
                 <a href="../logout.php" style="text-decoration: none; color:black">Log Out</a>
                 </button>
               </li>
@@ -214,7 +214,7 @@ if($Semester==-1){
                     
                   </div>
                   <div class="col-md-12 mb-3">
-                  <a href="../UpdatePassword/index.php"><button type="button" class="btn btn-dark col-3">Change Password</button></a>
+                  <a href="../UpdatePassword/index.php"><button type="button" class="btn btn-dark btn-changepass col-md-auto me-5">Change Password</button></a>
                   </div>
                   </div>
                   <div class="col-md-12 mb-3">
@@ -244,7 +244,7 @@ if($Semester==-1){
                 </div>
               </div>
               <div class="row justify-content-center">
-              <input type="submit" name="UpdateProfile" class="btn btn-dark col-3" value="Update Profile"/>
+              <input type="submit" name="UpdateProfile" class="btn btn-dark btn-update col-md-auto mb-5 me-5" value="Update Profile"/>
               </div>
             </div>
 </form>
