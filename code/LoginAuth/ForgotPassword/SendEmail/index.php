@@ -18,7 +18,6 @@ include '../../../LibraryFiles/URLFinder/URLPath.php';
             $link = "<a href='".URLPath::getDirectoryURL()."/ResetPassword/index.php?key=" . $email . "&reset=" . $pass . "'>Click To Reset password</a>";
             $emailContent = new Email($temp,'Please click here to reset your password ' . $link . ' ', 'Reset Password');
             $smtp = new SMTP($emailContent);
-            
             $error = $smtp->sendMail();
             
         } else {

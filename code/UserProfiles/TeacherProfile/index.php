@@ -58,7 +58,7 @@ if(isset($_POST['UpdateProfile'])){
 }
 
 
-$existanceCheck = "SELECT * FROM users INNER JOIN teacher ON users.email=teacher.email WHERE email = '$temp'";
+$existanceCheck = "SELECT * FROM users INNER JOIN teacher ON users.email=teacher.email WHERE users.email = '$temp'";
 $result=$database->performQuery($existanceCheck);
 $row = mysqli_fetch_assoc($result);
 

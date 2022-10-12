@@ -34,7 +34,9 @@ if (isset($_REQUEST['submit'])) {
     else{
         $tableName="student";
     }
-    $existence_name = "SELECT * FROM users INNER JOIN $tableName ON  users.email=$tableName.email WHERE email='$email'";
+    
+    
+    $existence_name = "SELECT * FROM users INNER JOIN $tableName ON  users.email=$tableName.email WHERE users.email = '$email'";
     $result = $database->performQuery($existence_name);
 	if ($result->num_rows > 0) 
     {
