@@ -49,8 +49,8 @@ if(isset($_POST['UpdateProfile'])){
   }
   
   if(password_verify($password,$row['password'])){
-    $updateTeacherInformation="UPDATE users SET name='$name',mobileNumber='$mobileNumber',country='$country',department='$department' WHERE email='$temp';UPDATE teacher SET designation='$designation' WHERE email='$temp'";
-    $database->performQuery($updateTeacherInformation);
+    $database->performQuery("UPDATE users SET name='$name',mobileNumber='$mobileNumber',country='$country',department='$department' WHERE email='$temp'");
+    $database->performQuery("UPDATE teacher SET designation='$designation' WHERE email='$temp';");
   }
   else{
     $error="Incorrect Password, Cannot make changes to profile";

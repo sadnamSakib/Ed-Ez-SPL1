@@ -51,8 +51,8 @@ if(isset($_POST['UpdateProfile'])){
     if($semester==''){
       $semester=-1;
     }
-    $updateStudentInformation="UPDATE users SET name='$name',mobileNumber='$mobileNumber',country='$country',department='$department' WHERE email='$temp';UPDATE student SET semester='$semester' WHERE email = '$temp';";
-    $database->performQuery($updateStudentInformation);
+    $database->performQuery("UPDATE users SET name='$name',mobileNumber='$mobileNumber',country='$country',department='$department' WHERE email='$temp'");
+    $database->performQuery("UPDATE student SET semester='$semester' WHERE email = '$temp'");
   }
   else{
     $error="Incorrect Password, Cannot make changes to profile";
