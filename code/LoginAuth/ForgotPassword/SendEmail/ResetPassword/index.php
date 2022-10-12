@@ -1,5 +1,7 @@
 <?php
 include '../../../../LibraryFiles/DatabaseConnection/config.php';
+include '../../../session.php';
+session::stay_in_session();
 session_start();
 error_reporting(0);
 

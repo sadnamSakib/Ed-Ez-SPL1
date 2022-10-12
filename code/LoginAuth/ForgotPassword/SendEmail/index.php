@@ -3,6 +3,9 @@
 include '../../../LibraryFiles/DatabaseConnection/config.php';
 include '../../../LibraryFiles/MailServer/smtp.php';
 include '../../../LibraryFiles/URLFinder/URLPath.php';
+include '../../session.php';
+
+session::stay_in_session();
 
     $error = '';
     if (isset($_POST['email'])) {

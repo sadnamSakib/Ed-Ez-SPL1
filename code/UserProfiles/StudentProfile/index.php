@@ -1,13 +1,15 @@
 <?php
     include '../../LibraryFiles/DatabaseConnection/config.php';
+    include '../../LibraryFiles/URLFinder/URLPath.php';
     error_reporting(0);
     session_start();
 
 if (!isset($_SESSION['email'])) {
-  header("Location: ../index.php");
+  header("Location: ../../index.php");
 }
 $temp=hash('sha512',$_SESSION['email']);
 $tableName=$_SESSION['tableName'];
+$_SESSION['url']=URLPath::getURL();
 
 $error="Enter Password To make Updates to Profile Information";
 $errorColor="black";

@@ -10,8 +10,7 @@
             
             // Append the requested resource location to the URL   
             $url.= $_SERVER['REQUEST_URI'];    
-            
-            echo $url; 
+            return $url;
         }
 
         public static function getDirectoryURL(){

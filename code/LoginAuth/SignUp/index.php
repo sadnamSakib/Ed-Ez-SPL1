@@ -1,16 +1,9 @@
 <?php 
 
 include '../../LibraryFiles/DatabaseConnection/config.php';
+include '../session.php';
 
-if (isset($_SESSION['email'])) {
-    $tableName=$_SESSION['tableName'];
-    if($tableName==='teacher'){
-        header('Location: '.$uri.'/Ed-Ez-SPL1/code/UserProfiles/TeacherProfile/index.php');
-    }
-    else{
-        header('Location: '.$uri.'/Ed-Ez-SPL1/code/UserProfiles/StudentProfile/index.php');
-    }
-}
+session::stay_in_session();
 
 $error='';
 
@@ -55,12 +48,7 @@ if (isset($_POST['submit'])) {
 		$_SESSION['name'] = $row['name'];
         $_SESSION['email'] = $temp;
         $_SESSION['tableName']=$tableName;
-        if($tablename=='teacher'){
-            header("Location: ../../UserProfiles/TeacherProfile/index.php");
-        }
-        else{
-            header("Location: ../../UserProfiles/StudentProfile/index.php");
-        }
+        session::redirectProfile($tableName);
 		
     }   
 }
