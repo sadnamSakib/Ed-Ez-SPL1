@@ -1,6 +1,6 @@
 <?php 
 
-include 'config.php';
+include 'LibraryFiles/DatabaseConnection/config.php';
 
 if (isset($_SESSION['email'])) {
   $tableName=$_SESSION['tableName'];
@@ -39,14 +39,14 @@ if (isset($_SESSION['email'])) {
           <button
             type="button"
             class="btn btn-light btn-lg"
-            onclick="location.href='Login/index.php';"
+            onclick="location.href='LoginAuth/Login/index.php';"
           >
             Login
           </button>
           <button
             type="button"
             class="btn btn-light btn-lg"
-            onclick="location.href='SignUp/index.php';"
+            onclick="location.href='LoginAuth/SignUp/index.php';"
           >
             Register
           </button>
