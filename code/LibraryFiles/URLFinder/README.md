@@ -1,6 +1,6 @@
 
 
-# Database Connection Documentation
+# URLFinder Documentation
 
 First include the required library files as basically a header using 
 
