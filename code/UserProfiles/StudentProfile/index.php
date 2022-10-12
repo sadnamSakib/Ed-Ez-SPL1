@@ -22,8 +22,8 @@ if(isset($_REQUEST['profileimg'])){
       $image = $_FILES['image']['tmp_name']; 
       $imgContent = addslashes(file_get_contents($image)); 
   }
-    $sql="UPDATE users SET profile_picture='$imgContent' WHERE email = '$temp'";
-    $database->performQuery($sql);
+    $updateProfilePicture="UPDATE users SET profile_picture='$imgContent' WHERE email = '$temp'";
+    $database->performQuery($updateProfilePicture);
 }
 
 if(isset($_POST['UpdateProfile'])){
@@ -35,8 +35,8 @@ if(isset($_POST['UpdateProfile'])){
   $country=$_REQUEST['country'];
   $password=$_REQUEST['password'];
   $password=hash('sha512',$password);
-  $existence_name = "SELECT * FROM users WHERE email = '$temp'";
-  $result=$database->performQuery($existence_name);
+  $existanceCheck = "SELECT * FROM users WHERE email = '$temp'";
+  $result=$database->performQuery($existanceCheck);
   $row = mysqli_fetch_assoc($result);
   if($_REQUEST['mobile']!=''){
     $mobileNumber=$_REQUEST['mobile'];
@@ -49,11 +49,8 @@ if(isset($_POST['UpdateProfile'])){
     if($semester==''){
       $semester=-1;
     }
-    $sql="UPDATE users SET name='$name',mobileNumber='$mobileNumber',country='$country',department='$department' WHERE email='$temp'";
-    $sql2="UPDATE student SET semester='$semester' WHERE email = '$temp'";
-
-    $database->performQuery($sql);
-    $database->performQuery($sql2);
+    $updateStudentInformation="UPDATE users SET name='$name',mobileNumber='$mobileNumber',country='$country',department='$department' WHERE email='$temp';UPDATE student SET semester='$semester' WHERE email = '$temp';";
+    $database->performQuery($updateStudentInformation);
   }
   else{
     $error="Incorrect Password, Cannot make changes to profile";
@@ -63,12 +60,9 @@ if(isset($_POST['UpdateProfile'])){
 }
 
 
-$existence_name = "SELECT * FROM users WHERE email = '$temp'";
-$result=$database->performQuery($existence_name);
+$existanceCheck = "SELECT * FROM users INNER JOIN student ON users.email=student.email WHERE email = '$temp'";
+$result=$database->performQuery($existanceCheck);
 $row = mysqli_fetch_assoc($result);
-$existence_name = "SELECT * FROM student WHERE email = '$temp'";
-$result=$database->performQuery($existence_name);
-$row2 = mysqli_fetch_assoc($result);
 
 $var=$row['profile_picture'];
 if($var!=""){
@@ -81,7 +75,7 @@ $name=$row['name'];
 $mobileNumber=$row['mobileNumber'];
 $instituion=$row['institution'];
 $department=$row['department'];
-$semester=$row2['semester'];
+$semester=$row['semester'];
 $country=$row['country'];
 if($semester==-1){
   $semester='';

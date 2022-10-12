@@ -27,14 +27,14 @@ if (isset($_REQUEST['submit'])) {
     $button_radio=$_REQUEST['btnradio'];
     $password=hash('sha512',$password);
     $email=hash('sha512',$email);
-    $tablename;
+    $tableName;
     if($button_radio==='teacher'){
-        $tablename="teacher";
+        $tableName="teacher";
     }
     else{
-        $tablename="student";
+        $tableName="student";
     }
-    $existence_name = "SELECT * FROM users WHERE email = '$email'";
+    $existence_name = "SELECT * FROM users INNER JOIN $tableName ON  users.email=$tableName.email WHERE email='$email'";
     $result = $database->performQuery($existence_name);
 	if ($result->num_rows > 0) 
     {
@@ -44,8 +44,8 @@ if (isset($_REQUEST['submit'])) {
 		if(password_verify($password,$row['password'])){
             $_SESSION['name'] = $row['name'];
             $_SESSION['email'] = $temp;
-            $_SESSION['tablename']=$tablename;
-		    if($tablename=='teacher'){
+            $_SESSION['tableName']=$tableName;
+		    if($tableName=='teacher'){
                 header("Location: ../../UserProfiles/TeacherProfile/index.php");
             }
             else{
