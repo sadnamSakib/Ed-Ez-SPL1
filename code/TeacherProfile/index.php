@@ -1,18 +1,7 @@
 <?php
 
-    $servername = "localhost";
-    $username = "UserManager";
-    $password = "12345678";
-    $dbname = "user";
-
-    // Create connection
-    $conn = new mysqli($servername, $username, $password, $dbname);
-    // Check connection
-    if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-    }
-    error_reporting(0);
-
+include '../config.php';
+error_reporting(0);
 session_start();
 
 if (!isset($_SESSION['email'])) {
@@ -34,32 +23,34 @@ if(isset($_REQUEST['profileimg'])){
       $image = $_FILES['image']['tmp_name']; 
       $imgContent = addslashes(file_get_contents($image)); 
   }
-    $sql="UPDATE $tableName SET ProfilePicture='$imgContent' WHERE email = '$temp'";
-    $res = mysqli_query($conn, $sql);
+    $sql="UPDATE users SET profile_picture='$imgContent' WHERE email = '$temp'";
+    $res = $database->performQuery($sql);
 }
 
 if(isset($_POST['UpdateProfile'])){
-  $username=$_REQUEST['username'];
-  $_SESSION['username']=$username;
+  $name=$_REQUEST['name'];
+  $_SESSION['name']=$name;
   
-  $Department=$_REQUEST['department'];
-  $Designation=$_REQUEST['Designation'];
+  $department=$_REQUEST['department'];
+  $designation=$_REQUEST['designation'];
   $country=$_REQUEST['country'];
   $password=$_REQUEST['password'];
   $password=hash('sha512',$password);
-  $existence_name = "SELECT * FROM $tableName WHERE email = '$temp'";
-  $result = mysqli_query($conn, $existence_name);
+  $existence_name = "SELECT * FROM users WHERE email = '$temp'";
+  $result=$database->performQuery($existence_name);
   $row = mysqli_fetch_assoc($result);
   if($_REQUEST['mobile']!=''){
-    $MobileNumber=$_REQUEST['mobile'];
+    $mobileNumber=$_REQUEST['mobile'];
   }
   else{
-    $MobileNumber=$row['MobileNumber'];
+    $mobileNumber=$row['mobileNumber'];
   }
   
   if(password_verify($password,$row['password'])){
-    $sql="UPDATE $tableName SET username='$username',MobileNumber='$MobileNumber',Country='$country',Department='$Department',Designation='$Designation' WHERE email='$temp'";
-    $res=mysqli_query($conn,$sql);
+    $sql="UPDATE users SET name='$name',mobileNumber='$mobileNumber',country='$country',department='$department' WHERE email='$temp'";
+    $res=$database->performQuery($sql);
+    $sql="UPDATE teacher SET designation='$designation' WHERE email='$temp'";
+    $res=$database->performQuery($sql);
   }
   else{
     $error="Incorrect Password, Cannot make changes to profile";
@@ -69,23 +60,27 @@ if(isset($_POST['UpdateProfile'])){
 }
 
 
-$existence_name = "SELECT * FROM $tableName WHERE email = '$temp'";
-$result = mysqli_query($conn, $existence_name);
+$existence_name = "SELECT * FROM users WHERE email = '$temp'";
+$result=$database->performQuery($existence_name);
 $row = mysqli_fetch_assoc($result);
 
-$var=$row['ProfilePicture'];
+$existence_name = "SELECT * FROM teacher WHERE email = '$temp'";
+$result=$database->performQuery($existence_name);
+$row2 = mysqli_fetch_assoc($result);
+
+$var=$row['profile_picture'];
 if($var!=""){
   $src="data:image/jpg;charset=utf8;base64,".base64_encode($var);
 }
 else{
   $src="profile-picture.png";
 }
-$username=$row['username'];
-$MobileNumber=$row['MobileNumber'];
+$name=$row['name'];
+$mobileNumber=$row['mobileNumber'];
 $instituion=$row['institution'];
-$Department=$row['Department'];
-$Designation=$row['Designation'];
-$Country=$row['Country'];
+$department=$row['department'];
+$designation=$row2['designation'];
+$country=$row['country'];
 ?>
 
 <!DOCTYPE html>
@@ -117,7 +112,7 @@ $Country=$row['Country'];
       </div>
       <ul class="list-unstyled px-2">
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-dashboard pe-2'></i>Dashboard</a></li>
-        <li class=""><a href="index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-user-circle pe-2'></i>Profile</a></li>
+        <li class=""><a href="index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-users-circle pe-2'></i>Profile</a></li>
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-calendar-plus pe-2'></i>Schedule</a></li>
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-chalkboard pe-2'></i>Classrooms</a></li>
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-bar-chart-alt-2 pe-2'></i>Grades</a></li>
@@ -163,7 +158,7 @@ $Country=$row['Country'];
             <div class="col-md-3 border-end">
               <div class="d-flex flex-column align-items-center text-center p-3 py-5">
                 <img src="<?php echo $src ?>" class="rounded mt-5" width="150px" />
-                <span class="font-weight-bold"><?php echo $_SESSION['username'] ?></span>
+                <span class="font-weight-bold"><?php echo $_SESSION['name'] ?></span>
                 <span class="text-black-50"><?php echo $_SESSION['email'] ?></span>
                 <form method="POST" action="" enctype="multipart/form-data">
                 <input class="d-none" type="file" name="img" accept="image/*"/>
@@ -186,14 +181,14 @@ $Country=$row['Country'];
                 <div id="errorPass form-label" style="color:<?php echo $errorColor ?>"><?php echo $error ?></div>
                 <div class="row mt-3">
                 <div class="col-md-12 mb-3">
-                    <label class = "form-label">Username</label>
-                    <input type="text" class="form-control" id="username" name="username" placeholder="<?php echo $username ?>" value="<?php echo $username ?>">
+                    <label class = "form-label">Full Name</label>
+                    <input type="text" class="form-control" id="name" name="name" placeholder="<?php echo $name ?>" value="<?php echo $name ?>">
                   </div>
                 </div>
                 <div class="row mt-3">
                   <div class="col-md-12 mb-3">
                     <label class = "form-label">Mobile Number</label>
-                    <input type="text" class="form-control" id="mobile" name="mobile" placeholder="<?php echo $MobileNumber ?>" value="<?php echo $MobileNumber ?>">
+                    <input type="text" class="form-control" id="mobile" name="mobile" placeholder="<?php echo $mobileNumber ?>" value="<?php echo $mobileNumber ?>">
                     <div id="error" style="color:red"></div>
                   </div>
                   <label class = "form-label">Password</label>
@@ -217,15 +212,15 @@ $Country=$row['Country'];
                   </div>
                   <div class="col-md-12 mb-3">
                     <label class = "form-label">Department</label>
-                    <input type="text" class="form-control" id="department" name="department" value="<?php echo $Department?>">
+                    <input type="text" class="form-control" id="department" name="department" value="<?php echo $department?>">
                   </div>
                   <div class="col-md-12 mb-3">
                     <label class = "form-label">Designation</label>
-                    <input type="text" class="form-control" id="designation" name="Designation" placeholder="Enter Your Designation" value="<?php echo $Designation?>">
+                    <input type="text" class="form-control" id="designation" name="designation" placeholder="Enter Your designation" value="<?php echo $designation?>">
                   </div>
                   <div class="col-md-12 mb-3">
                     <label class = "form-label">Country</label>
-                    <input type="text" class="form-control" id="country" name="country" placeholder="Enter country" value="<?php echo $Country?>">
+                    <input type="text" class="form-control" id="country" name="country" placeholder="Enter country" value="<?php echo $country?>">
                   </div>
                 </div>
               </div>

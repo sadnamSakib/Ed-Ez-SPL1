@@ -1,29 +1,57 @@
 <?php
-    $servername = "localhost";
-    $username = "UserManager";
-    $password = "12345678";
-    $dbname = "user";
 
-    // Create connection
-    $conn = new mysqli($servername, $username, $password, $dbname);
-    // Check connection
-    if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    class Database{
+        private $username;
+        private $servername;
+        private $password;
+        private $database;
+        private $connection;
+        function __construct($username, $servername, $password,$database){
+            $this->username = $username;
+            $this->servername = $servername;
+            $this->password = $password;
+            $this->database = $database;
+        }
+
+        function connect(){
+            $this->connection=new mysqli($this->servername, $this->username, $this->password, $this->database);
+            if ($this->connection->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }
+
+        }
+
+        function get_connection(){
+            return $this->connection;
+        }
+
+        function set_connection($username, $servername, $password,$database){
+            $this->username = $username;
+            $this->servername = $servername;
+            $this->password = $password;
+            $this->database = $database;
+            connect();
+        }
+
+        function performQuery($sql){
+            if(is_null($this->connection)){
+                die("Connection with database failed");
+            }
+            return mysqli_query($this->connection,$sql);
+        }
+        
+
+        
     }
+    
+    // Create connection
+    $database=new Database("UserManager","localhost","12345678","user");
+    // Check connection
+    $database->connect();
 
     error_reporting(0);
 
     session_start();
-
-    if (isset($_SESSION['email'])) {
-        $tableName=$_SESSION['tableName'];
-        if($tableName==='teacher'){
-            header('Location: ../TeacherProfile/index.php');
-        }
-        else{
-            header('Location: ../StudentProfile/index.php');
-        }
-    }
 
 
 ?>

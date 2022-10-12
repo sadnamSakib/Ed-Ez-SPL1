@@ -12,7 +12,7 @@ if(isset($_POST['submit_password']) && $_POST['type'])
   $pass=hash('sha512',$pass);
   $pass=password_hash($pass,PASSWORD_BCRYPT);
   $type=$_POST['type'];
-  $select=mysqli_query($conn,"update $type set password='$pass' where email='$email'");
+  $select=mysqli_query($conn,"update user set password='$pass' where email='$email'");
         if($type==='teacher'){
             header('Location: ../TeacherProfile/index.php');
         }
@@ -27,7 +27,7 @@ if($_GET['key'] && $_GET['reset'] && $_GET['type'])
   $email=$_GET['key'];
   $pass=$_GET['reset'];
   $type=$_GET['type'];
-  $select=mysqli_query($conn,"select email,password from $type where md5(email)='$email' and md5(password)='$pass'");
+  $select=mysqli_query($conn,"select email,password from user where md5(email)='$email' and md5(password)='$pass'");
   if($select->num_rows==1)
   {
     $row=mysqli_fetch_assoc($select);

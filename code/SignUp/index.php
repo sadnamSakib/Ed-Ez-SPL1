@@ -1,15 +1,25 @@
 <?php 
 
 include '../config.php';
+
+if (isset($_SESSION['email'])) {
+    $tableName=$_SESSION['tableName'];
+    if($tableName==='teacher'){
+        header('Location: '.$uri.'/Ed-Ez-SPL1/code/TeacherProfile/index.php');
+    }
+    else{
+        header('Location: '.$uri.'/Ed-Ez-SPL1/code/StudentProfile/index.php');
+    }
+}
 $error='';
 
 
+
 if (isset($_POST['submit'])) {
-	$name =  $_POST['username'];
+	$name =  $_POST['name'];
     $email = $_POST['email'];
     $temp=$email;
     $password = $_POST['password'];
-    $gender = $_POST['gender'];
     $dob = $_POST['dob'];
     $institutions = $_POST['institution'];
     $button_radio=$_POST['btnradio'];
@@ -25,10 +35,10 @@ if (isset($_POST['submit'])) {
     else{
         $tableName='student';
     }
-        echo $institutions;
-    $sql = "INSERT INTO $tableName(username,email,password,dob,gender,institution) VALUES ('$name', '$email','$password','$dob','$gender','$institutions')";
-        $existence_name = "SELECT * FROM $tableName WHERE email = '$email'";
-    $result = mysqli_query($conn, $existence_name);
+    $insertusers = "INSERT INTO users(email,name,password,institution,dob) VALUES ('$email', '$name','$password','$institutions','$dob')";
+    $exists = "SELECT * FROM users WHERE email = '$email'";
+    $insertTable="INSERT INTO $tableName(email) VALUES('$email')";
+    $result=$database->performQuery($exists);
     if ($result->num_rows > 0) {
         $email='';
         $password='';
@@ -36,11 +46,11 @@ if (isset($_POST['submit'])) {
         $error="An account already exists with this email";
     }
     else{
-        
-        $addToTable=mysqli_query($conn,$sql);
-        $row_fetch = mysqli_query($conn, $existence_name);
-        $row = mysqli_fetch_assoc($row_fetch);
-		$_SESSION['username'] = $row['username'];
+        $database->performQuery($insertusers);
+        $database->performQuery($insertTable);
+        $result=$database->performQuery($exists);
+        $row=mysqli_fetch_assoc($result);
+		$_SESSION['name'] = $row['name'];
         $_SESSION['email'] = $temp;
         $_SESSION['tableName']=$tableName;
         if($tableName=='teacher'){
@@ -91,7 +101,7 @@ if (isset($_POST['submit'])) {
                     </div>
                     <div class="form-group">
                         <i class="fas fa-user"> </i>
-                        <input class="myInput" type="text" placeholder="Username" name="username" id="username" required>
+                        <input class="myInput" type="text" placeholder="Full Name" name="name" id="name" required>
                         <div class="invalid-feedback">Please fill out this field.</div>
                     </div>
                     <div class="form-group" id="error" style="color:red;display:none">
@@ -123,19 +133,6 @@ if (isset($_POST['submit'])) {
                         <i class="fas fa-lock"> </i>
                         <input class="myInput" placeholder="Confirm Password" type="password" id="cfpassword" name="cfpassword" required value="<?php echo $_POST['cfpassword']; ?>">
                         <i class="fas fa-eye-slash" id="togglePassword2"></i>
-                    </div>
-                    <div id="genderError" class="form-group" style="color:red;display:none">
-
-                        </div>
-                    <div class="form-group">
-                        <i class="fas fa-venus"></i>
-                            <select class="myInput" name="gender" id="gender" value="<?php echo $gender; ?>">
-                                <option value="select">Select Gender</option>
-                                <option value="male">Male</option>
-                                <option value="female">Female</option>
-                                <option value="not specified">Not Specified</option>
-                                <option value="other">Other</option>
-                                </select>
                     </div>
                     <div class="form-group">
                     <i class="fas fa-calendar-days"></i>

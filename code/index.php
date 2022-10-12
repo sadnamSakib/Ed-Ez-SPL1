@@ -2,9 +2,16 @@
 
 include 'config.php';
 
-session_start();
+if (isset($_SESSION['email'])) {
+  $tableName=$_SESSION['tableName'];
+  if($tableName==='teacher'){
+      header('Location: '.$uri.'/Ed-Ez-SPL1/code/TeacherProfile/index.php');
+  }
+  else{
+      header('Location: '.$uri.'/Ed-Ez-SPL1/code/StudentProfile/index.php');
+  }
+}
 
-error_reporting(0);
 ?>
 <!DOCTYPE HTML>
 <html>

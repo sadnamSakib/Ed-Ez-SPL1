@@ -2,6 +2,16 @@
 
 include '../config.php';
 
+if (isset($_SESSION['email'])) {
+    $tableName=$_SESSION['tableName'];
+    if($tableName==='teacher'){
+        header('Location: '.$uri.'/Ed-Ez-SPL1/code/TeacherProfile/index.php');
+    }
+    else{
+        header('Location: '.$uri.'/Ed-Ez-SPL1/code/StudentProfile/index.php');
+    }
+}
+
 $error='';
 
 if (isset($_REQUEST['submit'])) {
@@ -11,23 +21,25 @@ if (isset($_REQUEST['submit'])) {
     $button_radio=$_REQUEST['btnradio'];
     $password=hash('sha512',$password);
     $email=hash('sha512',$email);
-    $tableName;
+    $tablename;
     if($button_radio==='teacher'){
-        $tableName="teacher";
+        $tablename="teacher";
     }
     else{
-        $tableName="student";
+        $tablename="student";
     }
-    $existence_name = "SELECT * FROM $tableName WHERE email = '$email'";
-    $result = mysqli_query($conn, $existence_name);
+    $existence_name = "SELECT * FROM users WHERE email = '$email'";
+    $result = $database->performQuery($existence_name);
 	if ($result->num_rows > 0) 
     {
-		$row = mysqli_fetch_assoc($result);
+        
+		$result = $database->performQuery($existence_name);
+        $row=mysqli_fetch_assoc($result);
 		if(password_verify($password,$row['password'])){
-            $_SESSION['username'] = $row['username'];
+            $_SESSION['name'] = $row['name'];
             $_SESSION['email'] = $temp;
-            $_SESSION['tableName']=$tableName;
-		    if($tableName=='teacher'){
+            $_SESSION['tablename']=$tablename;
+		    if($tablename=='teacher'){
                 header("Location: ../TeacherProfile/index.php");
             }
             else{

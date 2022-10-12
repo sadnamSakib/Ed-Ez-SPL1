@@ -1,18 +1,7 @@
 <?php
 
-    $servername = "localhost";
-    $username = "UserManager";
-    $password = "12345678";
-    $dbname = "user";
-
-    // Create connection
-    $conn = new mysqli($servername, $username, $password, $dbname);
-    // Check connection
-    if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-    }
-    error_reporting(0);
-
+include '../config.php';
+error_reporting(0);
 session_start();
 
 if (!isset($_SESSION['email'])) {
@@ -30,14 +19,14 @@ $error="";
 if(isset($_REQUEST['updatePassword'])){
     $oldPassword=$_REQUEST['opassword'];
     $oldPassword=hash('sha512',$oldPassword);
-    $existence_name = "SELECT * FROM $tableName WHERE email = '$temp'";
-    $result = mysqli_query($conn, $existence_name);
+    $existence_name = "SELECT * FROM user WHERE email = '$temp'";
+    $result = $database->performQuery($existence_name);
     $row = mysqli_fetch_assoc($result);
     $password=hash('sha512',$_REQUEST['password']);
     $password=password_hash($password,PASSWORD_BCRYPT);
     if(password_verify($oldPassword,$row['password'])){
-        $sql="UPDATE $tableName SET password='$password' WHERE email='$temp'";
-        $res=mysqli_query($conn,$sql);
+        $sql="UPDATE user SET password='$password' WHERE email='$temp'";
+        $res=$database->performQuery($sql);
         header('Location: '.$src.'');
     }
     else{
