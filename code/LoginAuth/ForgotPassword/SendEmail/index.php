@@ -59,25 +59,15 @@ if (isset($_POST['email'])) {
                                 <p><?php echo $error ?></p>
                             </div>
                             <div class="form-group">
-                                <div class="btn-group col" role="group" aria-label="Basic radio toggle button group">
-
-                                    <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked value="teacher">
-                                    <label class="btn btn-outline-primary" for="btnradio1">As Teacher</label>
-
-                                    <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" value="student">
-                                    <label class="btn btn-outline-primary" for="btnradio2">As Student</label>
-                                </div>
-                            </div>
-                            <div class="form-group">
                                 <i class="fas fa-envelope"> </i>
                                 <input class="myInput" placeholder="Email" type="text" id="email" name="email" required>
                                 <div class="invalid-feedback">Please fill out this field.</div>
                             </div>
                             <div class="form-group">
-                                <p>Retry Login? <a href="../Login/index.php">Login</a></p>
+                                <p>Retry Login? <a href="<?php echo $root_path; ?>LoginAuth/Login/index.php">Login</a></p>
                             </div>
                             <div class="form-group">
-                                <p>Don't have an account? <a href="../SignUp/index.php">REGISTER NOW!</a></p>
+                                <p>Don't have an account? <a href="<?php echo $root_path; ?>LoginAuth/SignUp/index.php">REGISTER NOW!</a></p>
                             </div>
                             <input type="submit" value="Send Reset Mail" class="butt" name="submit_email_reset">
                         </form>

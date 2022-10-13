@@ -13,7 +13,7 @@ if (isset($_POST['submit_password'])) {
     $pass = password_hash($pass, PASSWORD_BCRYPT);
     $select = $database->performQuery("update users set password='$pass' where email='$email'");
     $_SESSION['Password_Reset']=true;
-    header('Location: ../../../Login/index.php');
+    header('Location: '.$root_path.'LoginAuth/Login/index.php');
 }
 else if ($_GET['key'] && $_GET['reset']) {
     $email = $_GET['key'];
@@ -33,8 +33,8 @@ else if ($_GET['key'] && $_GET['reset']) {
                 Reset Password
             </title>
             <meta name="viewport" content="width=device-width, initial-scale=1">
-            <link rel="stylesheet" href="<?php echo $root_path ?>style.css" />
-            <link rel="stylesheet" href="<?php echo $root_path ?>css/bootstrap.css" />
+            <link rel="stylesheet" href="<?php echo $parent_path ?>style.css" />
+            <link rel="stylesheet" href="<?php echo $parent_path ?>css/bootstrap.css" />
             <script src="https://kit.fontawesome.com/d0f239b9af.js" crossorigin="anonymous"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/2.0.2/sha.js"></script>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
