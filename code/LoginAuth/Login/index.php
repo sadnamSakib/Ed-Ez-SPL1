@@ -1,13 +1,16 @@
 <?php 
 
-include '../../LibraryFiles/DatabaseConnection/config.php';
-include '../session.php';
+$root_path='../../';
+include $root_path.'LibraryFiles/DatabaseConnection/config.php';
+include $root_path.'LibraryFiles/SessionStore/session.php';
+session::create_or_resume_session();
+
 
 session::stay_in_session();
 
 if(isset($_SESSION['Password_Reset'])){
     $error="Password Has Been Successfully Reset";
-    session_destroy();
+    unset($_SESSION['Password_Reset']);
 }
 else{
     $error='';
@@ -59,7 +62,7 @@ if (isset($_REQUEST['submit'])) {
 <!DOCTYPE HTML>
 <html>
 <head>
-<link rel="icon" href="../../logo4.jpg" />
+<link rel="icon" href="<?php echo $root_path; ?>logo4.jpg" />
 <title>
     Login
 </title>

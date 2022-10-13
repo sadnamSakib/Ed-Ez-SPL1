@@ -1,10 +1,12 @@
 <?php
 
-include '../../LibraryFiles/DatabaseConnection/config.php';
+$root_path = '../../';
+include $root_path . 'LibraryFiles/DatabaseConnection/config.php';
+include $root_path . 'LibraryFiles/URLFinder/URLPath.php';
+include $root_path . 'LibraryFiles/SessionStore/session.php';
+session::create_or_resume_session();
+session::profile_not_set($root_path);
 
-if (!isset($_SESSION['email'])) {
-  header("Location: ../index.php");
-}
 $temp=hash('sha512',$_SESSION['email']);
 $tableName=$_SESSION['tableName'];
 if($tableName==='teacher'){

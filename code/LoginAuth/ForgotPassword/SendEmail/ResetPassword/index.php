@@ -1,9 +1,10 @@
 <?php
-include '../../../../LibraryFiles/DatabaseConnection/config.php';
-include '../../../session.php';
+$root_path='../../../../';
+$parent_path='../../';
+include $root_path.'LibraryFiles/DatabaseConnection/config.php';
+include $root_path.'LibraryFiles/SessionStore/session.php';
+session::create_or_resume_session();
 session::stay_in_session();
-session_start();
-error_reporting(0);
 
 if (isset($_POST['submit_password'])) {
     $email = $_POST['email'];
@@ -27,13 +28,13 @@ else if ($_GET['key'] && $_GET['reset']) {
         <html>
 
         <head>
-            <link rel="icon" href="../../../../logo4.jpg" />
+            <link rel="icon" href="<?php echo $root_path; ?>logo4.jpg" />
             <title>
                 Reset Password
             </title>
             <meta name="viewport" content="width=device-width, initial-scale=1">
-            <link rel="stylesheet" href="../../style.css" />
-            <link rel="stylesheet" href="../../css/bootstrap.css" />
+            <link rel="stylesheet" href="<?php echo $root_path ?>style.css" />
+            <link rel="stylesheet" href="<?php echo $root_path ?>css/bootstrap.css" />
             <script src="https://kit.fontawesome.com/d0f239b9af.js" crossorigin="anonymous"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/2.0.2/sha.js"></script>
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />

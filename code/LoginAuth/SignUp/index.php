@@ -1,7 +1,8 @@
 <?php 
-
-include '../../LibraryFiles/DatabaseConnection/config.php';
-include '../session.php';
+$root_path='../../';
+include $root_path.'LibraryFiles/DatabaseConnection/config.php';
+include $root_path.'LibraryFiles/SessionStore/session.php';
+session::create_or_resume_session();
 
 session::stay_in_session();
 
@@ -60,7 +61,7 @@ if (isset($_POST['submit'])) {
 <title>
     SignUp
 </title>
-<link rel="icon" href="../logo4.jpg" />
+<link rel="icon" href="<?php echo $root_path; ?>logo4.jpg" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="style.css" />
 <link rel="stylesheet" href="css/bootstrap.css" />
