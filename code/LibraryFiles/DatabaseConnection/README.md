@@ -5,7 +5,7 @@
 First include the required library files as basically a header using 
 
 ```php
-$root_path='../' something that basically takes you to root directory using a series of '../'
+$root_path='../' //something that basically takes you to root directory using a series of '../'
 include $root_path.'LibraryFiles/DatabaseConnection/config.php'; //The path may change depending on location of Library Files as a relative path to the current working file
 ```
 
