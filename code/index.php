@@ -22,7 +22,7 @@ session::stay_in_session();
 </head>
 <body>
 <script src="js/bootstrap.js"></script>
-    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <nav class="navbar navbar-default navbar-fixed-top m-auto" role="navigation">
       <div class="container-fluid">
         <div class="navbar-header">
           <a class="navbar-brand" href="#"
@@ -48,7 +48,7 @@ session::stay_in_session();
       </div>
     </nav>
     <div id="home">
-      <div class="heading row">
+      <div class="heading row m-0">
         <div class="landing-text col">
           <h1>Ed-Ez</h1>
           <h3>Education Made Easy.</h3>

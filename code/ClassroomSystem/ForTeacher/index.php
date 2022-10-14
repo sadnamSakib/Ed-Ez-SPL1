@@ -99,7 +99,7 @@ if ($Semester == -1) {
   <link rel="icon" href="../logo4.jpg" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="../css/bootstrap.css" />
+  <link rel="stylesheet" href="../../css/bootstrap.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/2.0.2/sha.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -114,7 +114,7 @@ if ($Semester == -1) {
 
 <body>
 
-  <script src="../js/bootstrap.js"></script>
+  <script src="../../js/bootstrap.js"></script>
   <div class="main-container d-flex">
     <div class="sidebar" id="side_nav">
       <div class="header-box px-2 pt-3 pb-4 d-flex justify-content-between ">
@@ -163,18 +163,21 @@ if ($Semester == -1) {
       <section class="content-section m-auto px-1 w-75">
         <div class="container bg-white rounded mt-5 mb-5"></div>
         <div class="px-3 me-3 d-flex flex-row-reverse">
-          <button type="button" class="btn btn-outline-primary btn-join d-flex p-4 py-3" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@fat"><b>Join new classroom</b></button>
+          <button type="button" class="btn btn-outline-primary btn-join d-flex p-4 py-3" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@fat"><b>Create new classroom</b></button>
           <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="exampleModalLabel">Join classroom</h1>
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">Create classroom</h1>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                   <form>
                     <div class="mb-3">
-                      <input type="text" class="form-control" placeholder="Enter classroom code" aria-label="Leave a comment">
+                      <input type="text" class="form-control" placeholder="Enter course code" aria-label="Leave a comment">
+                    </div>
+                    <div class="mb-3">
+                      <input type="text" class="form-control" placeholder="Enter course name" aria-label="Leave a comment">
                     </div>
                   </form>
                 </div>
@@ -186,12 +189,12 @@ if ($Semester == -1) {
             </div>
           </div>
         </div>
-        <div class="container bg-white rounded mt-5 mb-5"></div>
+        <div class="container bg-white rounded m-auto justify-content-center mt-5 mb-5"></div>
         <!-- <h2 class="fs-5">Profile</h2> -->
-        <div class="row justify-content-center me-2">
+        <div class="row justify-content-start m-auto">
           <!-- <div class="col-md-6 col-sm-6 border" style="max-height:20rem"> -->
           <!-- <div class="row"> -->
-          <div class="col-sm-4 p-4 px-2">
+          <div class="card-element col-lg-4 col-md-6 p-4 px-2">
             <div class="card card-box-shadow">
               <div class="card-body">
                 <h4 class="card-title">CSE 4301</h4>
@@ -201,7 +204,7 @@ if ($Semester == -1) {
               <div class="pb-5 px-5"><a href="../StudentClassroom/index.php" class="btn btn-primary btn-go">Enter Class</a></div>
             </div>
           </div>
-          <div class="col-sm-4 p-4 px-2">
+          <div class="card-element col-lg-4 col-md-6 p-4 px-2">
             <div class="card card-box-shadow">
               <div class="card-body">
                 <h4 class="card-title">CSE 4303: Data Structure</h4>
@@ -211,7 +214,7 @@ if ($Semester == -1) {
               <div class="pb-5 px-5"><a href="../StudentClassroom/index.php" class="btn btn-primary btn-go">Enter Class</a></div>
             </div>
           </div>
-          <div class="col-sm-4 p-4 px-2">
+          <div class="card-element col-lg-4 col-md-6 p-4 px-2">
             <div class="card card-box-shadow">
               <div class="card-body">
                 <h4 class="card-title">CSE 4309: Theory of Computing</h4>
@@ -220,7 +223,7 @@ if ($Semester == -1) {
               <div class="pb-5 px-5"><a href="../StudentClassroom/index.php" class="btn btn-primary btn-go">Enter Class</a></div>
             </div>
           </div>
-          <div class="col-sm-4 p-4 px-2">
+          <div class="card-element col-lg-4 col-md-6 p-4 px-2">
             <div class="card card-box-shadow">
               <div class="card-body">
                 <h4 class="card-title">CSE 4307: Database Management System</h4>
@@ -230,7 +233,7 @@ if ($Semester == -1) {
               <div class="pb-5 px-5"><a href="../StudentClassroom/index.php" class="btn btn-primary btn-go">Enter Class</a></div>
             </div>
           </div>
-          <div class="col-sm-4 p-4 px-2">
+          <div class="card-element col-lg-4 col-md-6 p-4 px-2">
             <div class="card card-box-shadow">
               <div class="card-body">
                 <h4 class="card-title">CSE 4305: Computer Organization and Architecture</h4>
@@ -240,7 +243,7 @@ if ($Semester == -1) {
               <div class="pb-5 px-5"><a href="../StudentClassroom/index.php" class="btn btn-primary btn-go">Enter Class</a></div>
             </div>
           </div>
-          <div class="col-sm-4 p-4 px-2">
+          <div class="card-element col-lg-4 col-md-6 p-4 px-2">
             <div class="card card-box-shadow">
               <div class="card-body">
                 <h4 class="card-title">Math 4341: Linear Algebra</h4>

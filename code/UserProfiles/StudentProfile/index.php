@@ -199,7 +199,7 @@ if ($semester == -1) {
 
                   </div>
                   <div class="col-md-12 mb-3">
-                    <a href="../UpdatePassword/index.php"><button type="button" class="btn btn-dark col-3">Change Password</button></a>
+                    <a href="../UpdatePassword/index.php"><button type="button" class="btn btn-dark col-md-auto me-5">Change Password</button></a>
                   </div>
                 </div>
                 <div class="col-md-12 mb-3">
@@ -227,10 +227,11 @@ if ($semester == -1) {
                   <input type="text" class="form-control" id="country" name="country" placeholder="Enter country" value="<?php echo $country ?>">
                 </div>
             </div>
+            <div class="row justify-content-center p-3">
+            <input type="submit" name="UpdateProfile" class="btn btn-dark col-md-auto mb-sm-5 me-sm-5" value="Update Profile" />
           </div>
-          <div class="row justify-content-center">
-            <input type="submit" name="UpdateProfile" class="btn btn-dark col-3" value="Update Profile" />
           </div>
+          
         </div>
         </form>
 
