@@ -6,6 +6,7 @@ include $root_path . 'LibraryFiles/SessionStore/session.php';
 session::create_or_resume_session();
 session::profile_not_set($root_path);
 
+
 $temp = hash('sha512', $_SESSION['email']);
 $tableName = $_SESSION['tableName'];
 $_SESSION['url'] = URLPath::getURL();

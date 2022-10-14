@@ -8,6 +8,10 @@ class session{
             $url=$_SESSION['url'];
             header('Location: '.$url.'');
         }
+        else{
+            $url=$_SESSION['ROOT'];
+            header('Location: '.$url.'');
+        }
     }
 
     public static function redirectProfile($tableName){
