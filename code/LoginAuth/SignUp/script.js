@@ -9,6 +9,10 @@ const errorPassword = document.getElementById('passwordError')
 const errorConfirmPassword = document.getElementById('confirmPasswordError')
 var dateString = new Date().toLocaleDateString('en-ca');
 
+if (window.history.replaceState) {
+    window.history.replaceState(null, null, window.location.href);
+  }
+
 const togglePassword = document
     .querySelector('#togglePassword');
 

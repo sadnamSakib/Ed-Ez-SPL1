@@ -3,6 +3,10 @@ var password=document.getElementById('password')
 const form=document.getElementById('form')
 const errorElement=document.getElementById('error')
 
+if (window.history.replaceState) {
+    window.history.replaceState(null, null, window.location.href);
+  }
+
 const togglePassword = document
             .querySelector('#togglePassword');
   

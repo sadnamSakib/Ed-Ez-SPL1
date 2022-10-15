@@ -9,12 +9,12 @@ session::stay_in_session();
 $error='';
 
 
-
 if (isset($_POST['submit'])) {
 	$name =  $_POST['name'];
     $email = $_POST['email'];
-    $temp=$email;
+    $original_email=$email;
     $password = $_POST['password'];
+    $original_password=$password;
     $dob = $_POST['dob'];
     $institutions = $_POST['institution'];
     $button_radio=$_POST['btnradio'];
@@ -22,6 +22,7 @@ if (isset($_POST['submit'])) {
     $password=hash('sha512',$password);
     $email=hash('sha512',$email);
     $password=password_hash($password,PASSWORD_BCRYPT);
+    $check=$_POST['check_1'];
     $error=$_REQUEST['error'];
     $tableName='';
     if($button_radio==='teacher'){
@@ -30,6 +31,7 @@ if (isset($_POST['submit'])) {
     else{
         $tableName='student';
     }
+    $pattern = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/i";
     $insertusers = "INSERT INTO users(email,name,password,institution,dob) VALUES ('$email', '$name','$password','$institutions','$dob')";
     $exists = "SELECT * FROM users WHERE email = '$email'";
     $insertTable="INSERT INTO $tableName(email) VALUES('$email')";
@@ -41,13 +43,31 @@ if (isset($_POST['submit'])) {
         $error="An account already exists with this email";
         
     }
+    else if(!preg_match($pattern,$original_email)){
+        $error='Invalid email address';
+    }
+    else if(!isPasswordValid($password) || !isPasswordValid($confirm)){
+        $error='Password does not match the constraints';
+    }
+    else if($original_password!==$confirm){
+        $error="Passwords don't match";
+    }
+    else if($institutions==='' || is_null($institutions) || is_null($dob)){
+        $error="Institutions and dob are required";
+    }
+    else if(is_null($check)){
+        $error="You must accept the terms and conditions";
+    }
+    else if(is_null($name)){
+        $error="Name is required";
+    }
     else{
         $database->performQuery($insertusers);
         $database->performQuery($insertTable);
         $result=$database->performQuery($exists);
         $row=mysqli_fetch_assoc($result);
 		$_SESSION['name'] = $row['name'];
-        $_SESSION['email'] = $temp;
+        $_SESSION['email'] = $original_email;
         $_SESSION['tableName']=$tableName;
         session::redirectProfile($tableName);
 		

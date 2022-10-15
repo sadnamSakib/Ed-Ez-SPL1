@@ -30,20 +30,21 @@ $_SESSION['ROOT']= URLPath::getURL();
           /></a>
         </div>
         <div>
+        <a href="LoginAuth/Login/index.php">
           <button
             type="button"
             class="btn btn-light btn-lg"
-            onclick="location.href='LoginAuth/Login/index.php';"
           >
             Login
-          </button>
+          </button></a>
+          <a href="LoginAuth/SignUp/index.php">
           <button
             type="button"
             class="btn btn-light btn-lg"
-            onclick="location.href='LoginAuth/SignUp/index.php';"
           >
             Register
           </button>
+          </a>
         </div>
       </div>
     </nav>

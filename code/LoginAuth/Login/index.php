@@ -18,7 +18,7 @@ else{
 
 if (isset($_REQUEST['submit'])) {
 	$email = $_REQUEST['email'];
-    $temp=$email;
+    $original_email=$email;
     $password = $_REQUEST['password'];
     $button_radio=$_REQUEST['btnradio'];
     $password=hash('sha512',$password);
@@ -34,21 +34,31 @@ if (isset($_REQUEST['submit'])) {
     
     $existence_name = "SELECT * FROM users INNER JOIN $tableName ON  users.email=$tableName.email WHERE users.email = '$email'";
     $result = $database->performQuery($existence_name);
-	if ($result->num_rows > 0) 
+    $pattern = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/i";
+    if(!preg_match($pattern,$original_email)){
+        $error='Invalid email address';
+    }
+    else if(is_null($password)){
+        $error='Please enter your password';
+    }
+    else if(isPasswordValid($password)){
+        $error='Password does not meet the constraints';
+    }
+	else if ($result->num_rows > 0) 
     {
         
 		$result = $database->performQuery($existence_name);
         $row=mysqli_fetch_assoc($result);
 		if(password_verify($password,$row['password'])){
             $_SESSION['name'] = $row['name'];
-            $_SESSION['email'] = $temp;
+            $_SESSION['email'] = $original_email;
             $_SESSION['tableName']=$tableName;
 		    session::redirectProfile($tableName);
         }
         else{
             $error='Password is incorrect ';
         }
-	} 
+	}
     else 
     {
         $error='Login details is incorrect';

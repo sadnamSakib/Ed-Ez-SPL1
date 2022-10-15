@@ -45,7 +45,34 @@
     }
 
     
-
+    function isPasswordValid($password){
+        $len=strlen($password);
+        $smallCase=false;
+        $bigCase=false;
+        $charPresent=false;
+        $numPresent=false;
+        for($i=0;$i<$len;$i++){
+            if(ord($password[$i])>=ord('A') && ord($password[$i])<=ord('Z')){
+                $bigCase=true;
+            }
+            else  if(ord($password[$i])>=ord('a') && ord($password[$i])<=ord('z')){
+                $smallCase=true;
+            }
+            else if(ord($password[$i])>=ord('0') && ord($password[$i])<=ord('9')){
+                $numPresent=true;
+            }
+            else if((ord($password[$i])>=ord(' ') && ord($password[$i])<ord('9'))||(ord($password[$i])>ord('9') && ord($password[$i])<ord('A'))||(ord($password[$i])>ord('Z') && ord($password[$i])<ord('a'))|| (ord($password[$i])>ord('z'))){
+                $charPresent=true;
+            }
+            else{
+                continue;
+            }
+        }
+        if($charPresent && $numPresent && $bigCase && $smallCase){
+            return true;
+        }
+        return false;
+    }
     
     
     // Create connection
