@@ -1,5 +1,4 @@
 <?php
-$root_path='../../../';
 $root_path = '../../../';
 include $root_path . 'LibraryFiles/DatabaseConnection/config.php';
 include $root_path . 'LibraryFiles/URLFinder/URLPath.php';
@@ -16,9 +15,16 @@ if (isset($_POST['Join'])) {
   if($existenceCheck->num_rows>0){
     $database->performQuery("INSERT INTO student_classroom(email,class_code) VALUES('$temp','$classCode');");
   }
-  
 }
+
+
 $classrooms = $database->performQuery("SELECT * FROM classroom,student_classroom where classroom.class_code=student_classroom.class_code and student_classroom.email='$temp';");
+foreach($classrooms as $dummy_classroom){
+  if(isset($_POST[$dummy_classroom['class_code']])){
+    $_SESSION['class_code']=$dummy_classroom['class_code'];
+    header('Location: StudentClassroom/index.php');
+  }
+}
 ?>
 
 <!DOCTYPE html>
@@ -135,9 +141,11 @@ $classrooms = $database->performQuery("SELECT * FROM classroom,student_classroom
               <div class="card card-box-shadow">
                 <div class="card-body">
                   <h4 class="card-title"><?php echo $i['classroom_name']; ?></h4>
-                  <p class="card-text"><?php echo $instructor_name['name']; ?></p>
+                  <p class="card-text"><?php echo 'Course Instructor: '.$instructor_name['name']; ?></p>
                 </div>
-                <div class="pb-5 px-5"><a href="../StudentClassroom/index.php" class="btn btn-primary btn-go">Enter Class</a></div>
+                <form action="" method="POST">
+                <div class="pb-5 px-5"><input type="submit" name="<?php echo $i['class_code'] ?>" value="Enter Class" class="btn btn-primary btn-go"/></div>
+                </form>
               </div>
             </div>
           <?php

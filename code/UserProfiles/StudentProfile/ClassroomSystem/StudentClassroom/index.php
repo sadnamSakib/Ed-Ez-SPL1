@@ -1,93 +1,21 @@
 <?php
-
-$servername = "localhost";
-$username = "UserManager";
-$password = "12345678";
-$dbname = "user";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-// Check connection
-if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
-}
-error_reporting(0);
-
-session_start();
-
-if (!isset($_SESSION['email'])) {
-  header("Location: ../index.php");
-}
-$temp = hash('sha512', $_SESSION['email']);
-$tableName = $_SESSION['tableName'];
-
-$error = "Enter Password To make Updates to Profile Information";
-$errorColor = "black";
-
-if (isset($_REQUEST['profileimg'])) {
-  $img = $_REQUEST['image'];
-  $fileName = basename($_FILES["image"]["name"]);
-  $fileType = pathinfo($fileName, PATHINFO_EXTENSION);
-  // Allow certain file formats 
-  $allowTypes = array('jpg', 'png', 'jpeg');
-  if (in_array($fileType, $allowTypes)) {
-    $image = $_FILES['image']['tmp_name'];
-    $imgContent = addslashes(file_get_contents($image));
-  }
-  $sql = "UPDATE $tableName SET ProfilePicture='$imgContent' WHERE email = '$temp'";
-  $res = mysqli_query($conn, $sql);
+$root_path = '../../../../';
+include $root_path . 'LibraryFiles/DatabaseConnection/config.php';
+include $root_path . 'LibraryFiles/URLFinder/URLPath.php';
+include $root_path . 'LibraryFiles/SessionStore/session.php';
+session::create_or_resume_session();
+session::profile_not_set($root_path);
+$classCode=$_SESSION['class_code'];
+unset($_SESSION['class_code']);
+$email=$_SESSION['email'];
+$dummy_email=hash('sha512', $email);
+$authentication=$database->performQuery("SELECT * FROM student_classroom WHERE email='$dummy_email' and class_code='$classCode'");
+if($authentication->num_rows==0){
+  session::redirectProfile('student');
 }
 
-if (isset($_POST['UpdateProfile'])) {
-  $username = $_REQUEST['username'];
-  $_SESSION['username'] = $username;
-
-  $Department = $_REQUEST['department'];
-  $Semester = $_REQUEST['semester'];
-  $country = $_REQUEST['country'];
-  $password = $_REQUEST['password'];
-  $password = hash('sha512', $password);
-  $existence_name = "SELECT * FROM $tableName WHERE email = '$temp'";
-  $result = mysqli_query($conn, $existence_name);
-  $row = mysqli_fetch_assoc($result);
-  if ($_REQUEST['mobile'] != '') {
-    $MobileNumber = $_REQUEST['mobile'];
-  } else {
-    $MobileNumber = $row['MobileNumber'];
-  }
-
-  if (password_verify($password, $row['password'])) {
-    if ($Semester == '') {
-      $Semester = -1;
-    }
-    $sql = "UPDATE $tableName SET username='$username',MobileNumber='$MobileNumber',Country='$country',Department='$Department',Semester='$Semester' WHERE email='$temp'";
-    $res = mysqli_query($conn, $sql);
-  } else {
-    $error = "Incorrect Password, Cannot make changes to profile";
-    $errorColor = "red";
-  }
-}
-
-
-$existence_name = "SELECT * FROM $tableName WHERE email = '$temp'";
-$result = mysqli_query($conn, $existence_name);
-$row = mysqli_fetch_assoc($result);
-
-$var = $row['ProfilePicture'];
-if ($var != "") {
-  $src = "data:image/jpg;charset=utf8;base64," . base64_encode($var);
-} else {
-  $src = "profile-picture.png";
-}
-$username = $row['username'];
-$MobileNumber = $row['MobileNumber'];
-$instituion = $row['institution'];
-$Department = $row['Department'];
-$Semester = $row['Semester'];
-$Country = $row['Country'];
-if ($Semester == -1) {
-  $Semester = '';
-}
+$classroom_records=mysqli_fetch_assoc($database->performQuery("SELECT * FROM classroom WHERE class_code = '$classCode'"));
+$teacher_records=mysqli_fetch_assoc($database->performQuery("SELECT * FROM users,teacher_classroom,classroom WHERE users.email=teacher_classroom.email and classroom.class_code='$classCode';"));
 ?>
 
 <!DOCTYPE html>
@@ -96,10 +24,10 @@ if ($Semester == -1) {
 <head>
   <meta charset="UTF-8">
   <title>Classroom</title>
-  <link rel="icon" href="../logo4.jpg" />
+  <link rel="icon" href="<?php echo $root_path; ?>logo4.jpg" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="../css/bootstrap.css" />
+  <link rel="stylesheet" href="<?php echo $root_path; ?>css/bootstrap.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/2.0.2/sha.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -114,7 +42,7 @@ if ($Semester == -1) {
 
 <body>
 
-  <script src="../js/bootstrap.js"></script>
+<script src="<?php echo $root_path; ?>js/bootstrap.js"></script>
   <div class="main-container d-flex">
     <div class="sidebar" id="side_nav">
       <div class="header-box px-2 pt-3 pb-4 d-flex justify-content-between ">
@@ -123,9 +51,9 @@ if ($Semester == -1) {
       </div>
       <ul class="list-unstyled px-2">
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-dashboard pe-2'></i>Dashboard</a></li>
-        <li class=""><a href="../StudentProfile/index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-user-circle pe-2'></i>Profile</a></li>
+        <li class=""><a href="<?php echo $root_path?>UserProfiles/StudentProfile/index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-user-circle pe-2'></i>Profile</a></li>
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-calendar-plus pe-2'></i>Schedule</a></li>
-        <li class=""><a href="../ClassroomSystem/index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-chalkboard pe-2'></i>Classrooms</a></li>
+        <li class=""><a href="<?php echo $root_path?>UserProfiles/StudentProfile/ClassroomSystem/index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-chalkboard pe-2'></i>Classrooms</a></li>
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-bar-chart-alt-2 pe-2'></i>Grades</a></li>
 
 
@@ -154,8 +82,8 @@ if ($Semester == -1) {
           <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <ul class="navbar-nav mb-2 mb-lg-0">
               <li class="nav-item">
-                <button type="button" class="btn btn-primary me-2 d-flex">
-                  <a href="../logout.php" style="text-decoration: none; color:black">Log Out</a>
+              <button type="button" class="btn btn-primary me-2 d-flex">
+                  <a href="<?php echo $root_path;?>UserProfiles/Logout/logout.php" style="text-decoration: none; color:black">Log Out</a>
                 </button>
               </li>
             </ul>
@@ -169,10 +97,10 @@ if ($Semester == -1) {
           <div class="col-md-6 col-sm-6">
             <div class="card intro-card text-bg-secondary mb-3">
               <div class="card-body px-4">
-                <h1 class="card-title">Data Structures</h1>
-                <h4 class="card-text">CSE 4303</h4>
-                <p class="card-text">Winter Semester 2021-2022</p>
-                <p class="card-text">Md. Mezbaur Rahman</p>
+              <h1 class="card-title"><?php echo $classroom_records['classroom_name'] ?></h1>
+                <h4 class="card-text"><?php echo 'Course Code: '.$classroom_records['course_code'] ?></h4>
+                <p class="card-text"><?php echo 'Semester: '.$classroom_records['semester'] ?></p>
+                <p class="card-text"><?php echo 'Instructor: '.$teacher_records['name'] ?></p>
               </div>
             </div>
           </div>

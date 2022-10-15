@@ -22,11 +22,26 @@ $name = $row['name'];
 $className = 'Math 4341 Linear Algebra';
 if (isset($_POST['Create'])) {
   $classCode = generateRandomString(10);
+  $existence=$database->performQuery("SELECT * FROM classroom where class_code='$classCode'");
+  while($existence->num_rows>0){
+    $classCode = generateRandomString(10);
+  }
   $className = $_POST['courseName'];
-  $database->performQuery("INSERT INTO classroom(class_code,classroom_name) VALUES('$classCode','$className');");
+  $courseCode=$_POST['courseCode'];
+  $semester=$_POST['semester'];
+  $database->performQuery("INSERT INTO classroom(class_code,classroom_name,course_code,semester) VALUES('$classCode','$className','$courseCode','$semester');");
   $database->performQuery("INSERT INTO teacher_classroom(email,class_code) VALUES('$temp','$classCode');");
 }
+
 $classrooms = $database->performQuery("SELECT * FROM classroom,teacher_classroom where classroom.class_code=teacher_classroom.class_code and teacher_classroom.email='$temp';");
+foreach($classrooms as $dummy_classroom){
+  if(isset($_POST[$dummy_classroom['class_code']])){
+    $_SESSION['class_code']=$dummy_classroom['class_code'];
+    header('Location: TeacherClassroom/index.php');
+  }
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -116,9 +131,17 @@ $classrooms = $database->performQuery("SELECT * FROM classroom,teacher_classroom
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                  <form action='' method='POST'>
+                  <form action='' id='addCourse' method='POST'>
+                    <div class="mb-3" id="error" style="display:none">
+                    </div>
                     <div class="mb-3">
-                      <input type="text" name="courseName" class="form-control" placeholder="Enter course name" aria-label="Leave a comment">
+                      <input type="text" id="courseName" name="courseName" class="form-control" placeholder="Enter Course Name" aria-label="Leave a comment">
+                    </div>
+                    <div class="mb-3">
+                      <input type="text" id="courseCode" name="courseCode" class="form-control" placeholder="Enter Course Code" aria-label="Leave a comment">
+                    </div>
+                    <div class="mb-3">
+                      <input type="text" id="semester" name="semester" class="form-control" placeholder="Enter Semester" aria-label="Leave a comment">
                     </div>
 
                 </div>
@@ -140,11 +163,15 @@ $classrooms = $database->performQuery("SELECT * FROM classroom,teacher_classroom
             <div class="card-element col-lg-4 col-md-6 p-4 px-2">
               <div class="card card-box-shadow">
                 <div class="card-body">
-                  <h4 class="card-title"><?php echo $i['classroom_name']; ?></h4>
-                  <p class="card-text"><?php echo $name; ?></p>
+                  <h4 class="card-title"><?php echo $i['course_code'].": ".$i['classroom_name']; ?></h4>
+                  <p class="card-text"><?php echo "Course Instructor: ".$name; ?></p>
                   <p class="card-text"><?php echo $i['class_code']; ?></p>
                 </div>
-                <div class="pb-5 px-5"><a href="../StudentClassroom/index.php" class="btn btn-primary btn-go">Enter Class</a></div>
+                <div class="pb-5 px-5">
+                <form id="EnterClassroom" name="EnterClassroom" action="" method="POST">
+                <input type="submit" name="<?php echo  $i['class_code']; ?>" value="Enter Class" class="btn btn-primary btn-go">
+                </form>
+                </div>
               </div>
             </div>
           <?php
