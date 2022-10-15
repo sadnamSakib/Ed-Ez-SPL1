@@ -5,17 +5,17 @@ include $root_path . 'LibraryFiles/URLFinder/URLPath.php';
 include $root_path . 'LibraryFiles/SessionStore/session.php';
 session::create_or_resume_session();
 session::profile_not_set($root_path);
-$classCode=$_SESSION['class_code'];
+$classCode = $_SESSION['class_code'];
 unset($_SESSION['class_code']);
-$email=$_SESSION['email'];
-$dummy_email=hash('sha512', $email);
-$authentication=$database->performQuery("SELECT * FROM teacher_classroom WHERE email='$dummy_email' and class_code='$classCode'");
-if($authentication->num_rows==0){
+$email = $_SESSION['email'];
+$dummy_email = hash('sha512', $email);
+$authentication = $database->performQuery("SELECT * FROM teacher_classroom WHERE email='$dummy_email' and class_code='$classCode'");
+if ($authentication->num_rows == 0) {
   session::redirectProfile('teacher');
 }
 
-$classroom_records=mysqli_fetch_assoc($database->performQuery("SELECT * FROM classroom WHERE class_code = '$classCode'"));
-$teacher_records=mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email = '$dummy_email'"));
+$classroom_records = mysqli_fetch_assoc($database->performQuery("SELECT * FROM classroom WHERE class_code = '$classCode'"));
+$teacher_records = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email = '$dummy_email'"));
 ?>
 
 <!DOCTYPE html>
@@ -38,11 +38,12 @@ $teacher_records=mysqli_fetch_assoc($database->performQuery("SELECT * FROM users
   <script src="https://kit.fontawesome.com/d0f239b9af.js" crossorigin="anonymous"></script>
   <link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet" />
   <script defer src="script.js"></script>
+  <script src="<?php echo $root_path; ?>js/bootstrap.min.js"></script>
 </head>
 
 <body>
 
-<script src="<?php echo $root_path; ?>js/bootstrap.js"></script>
+
   <div class="main-container d-flex">
     <div class="sidebar" id="side_nav">
       <div class="header-box px-2 pt-3 pb-4 d-flex justify-content-between ">
@@ -51,9 +52,9 @@ $teacher_records=mysqli_fetch_assoc($database->performQuery("SELECT * FROM users
       </div>
       <ul class="list-unstyled px-2">
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-dashboard pe-2'></i>Dashboard</a></li>
-        <li class=""><a href="<?php echo $root_path?>UserProfiles/StudentProfile/index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-user-circle pe-2'></i>Profile</a></li>
+        <li class=""><a href="<?php echo $root_path ?>UserProfiles/StudentProfile/index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-user-circle pe-2'></i>Profile</a></li>
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-calendar-plus pe-2'></i>Schedule</a></li>
-        <li class=""><a href="<?php echo $root_path?>UserProfiles/TeacherProfile/ClassroomSystem/index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-chalkboard pe-2'></i>Classrooms</a></li>
+        <li class=""><a href="<?php echo $root_path ?>UserProfiles/TeacherProfile/ClassroomSystem/index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-chalkboard pe-2'></i>Classrooms</a></li>
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-bar-chart-alt-2 pe-2'></i>Grades</a></li>
 
 
@@ -82,8 +83,8 @@ $teacher_records=mysqli_fetch_assoc($database->performQuery("SELECT * FROM users
           <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <ul class="navbar-nav mb-2 mb-lg-0">
               <li class="nav-item">
-              <button type="button" class="btn btn-primary me-2 d-flex">
-                  <a href="<?php echo $root_path;?>UserProfiles/Logout/logout.php" style="text-decoration: none; color:black">Log Out</a>
+                <button type="button" class="btn btn-primary me-2 d-flex">
+                  <a href="<?php echo $root_path; ?>UserProfiles/Logout/logout.php" style="text-decoration: none; color:black">Log Out</a>
                 </button>
               </li>
             </ul>
@@ -98,21 +99,44 @@ $teacher_records=mysqli_fetch_assoc($database->performQuery("SELECT * FROM users
             <div class="card intro-card text-bg-secondary mb-3">
               <div class="card-body px-4">
                 <h1 class="card-title"><?php echo $classroom_records['classroom_name'] ?></h1>
-                <h4 class="card-text"><?php echo 'Course Code: '.$classroom_records['course_code'] ?></h4>
-                <p class="card-text"><?php echo 'Semester: '.$classroom_records['semester'] ?></p>
-                <p class="card-text"><?php echo 'Instructor: '.$teacher_records['name'] ?></p>
+                <h4 class="card-text"><?php echo 'Course Code: ' . $classroom_records['course_code'] ?></h4>
+                <p class="card-text"><?php echo 'Semester: ' . $classroom_records['semester'] ?></p>
+                <p class="card-text"><?php echo 'Instructor: ' . $teacher_records['name'] ?></p>
               </div>
+
             </div>
           </div>
           <div class="col-md-3 col-sm-6 border-end">
             <div class="card text-bg-primary  mb-3">
               <div class="card-header task-card" style="height:50px">
-                <h4 style="text-align:center">Pending Tasks</h4>
+                <h4 style="text-align:center">Assigned Tasks</h4>
               </div>
               <div class="card-body ">
-                <p class="card-text" style="text-align:center">No pending tasks.</p>
+                <p class="card-text" style="text-align:center">No assigned tasks.</p>
               </div>
             </div>
+            <div class="card-footer row justify-content-center">
+              <div class="dropdown col-lg-auto col-sm-6 col-md-3">
+                <button onclick="dropdownbtn()" class="dropbtn btn btn-lg btn-outline-primary btn-join dropdown-toggle">Create Task</button>
+                <div id="myDropdown" class="dropdown-content dropdown-menu">
+                  <a href="#home" class="dropdown-item">Create Quiz</a>
+                  <a href="#about" class="dropdown-item">Create Assignment</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+        <div class="row justify-content-center my-3 post">
+          <div class="col-md-6 col-sm-6 border-end">
+            <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Write a post..." rows="3"></textarea>
+            <div class="d-flex flex-column-reverse pt-2">
+            <button class="btn btn-primary ">Post</button>
+            </div> 
+          </div>
+          <div class="col-md-3 col-sm-6 border-end">
           </div>
         </div>
         <div class="row justify-content-center post">
@@ -173,7 +197,24 @@ $teacher_records=mysqli_fetch_assoc($database->performQuery("SELECT * FROM users
     </div>
   </div>
 
-
+  <script>
+    function dropdownbtn() {
+      document.getElementById("myDropdown").classList.toggle("show");
+    }
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function(event) {
+      if (!event.target.matches('.dropbtn')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
+  </script>
 </body>
 
 </html>

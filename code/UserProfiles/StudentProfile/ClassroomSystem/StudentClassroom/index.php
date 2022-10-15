@@ -115,6 +115,16 @@ $teacher_records=mysqli_fetch_assoc($database->performQuery("SELECT * FROM users
             </div>
           </div>
         </div>
+        <div class="row justify-content-center my-3 post">
+          <div class="col-md-6 col-sm-6 border-end">
+            <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Write a post..." rows="3"></textarea>
+            <div class="d-flex flex-column-reverse pt-2">
+            <button class="btn btn-primary ">Post</button>
+            </div> 
+          </div>
+          <div class="col-md-3 col-sm-6 border-end">
+          </div>
+        </div>
         <div class="row justify-content-center">
           <div class="col-md-6 col-sm-6 border-end">
             <div class="card  text-bg-light mb-3">
