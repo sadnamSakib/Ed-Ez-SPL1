@@ -8,12 +8,16 @@ session::profile_not_set($root_path);
 $temp = hash('sha512', $_SESSION['email']);
 $tableName = $_SESSION['tableName'];
 $row = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='$temp';"));
+$error="";
 $name = $row['name'];
 if (isset($_POST['Join'])) {
   $classCode=$_REQUEST['classCode'];
-  $existenceCheck=$database->performQuery("SELECT * FROM classroom WHERE class_code='$classCode';");
-  if($existenceCheck->num_rows>0){
+  $existenceCheck=$database->performQuery("SELECT * FROM student_classroom WHERE class_code='$classCode';");
+  if($existenceCheck->num_rows==0){
     $database->performQuery("INSERT INTO student_classroom(email,class_code) VALUES('$temp','$classCode');");
+  }
+  else{
+    $error="You are already enrolled in this classroom";
   }
 }
 
@@ -128,6 +132,9 @@ foreach($classrooms as $dummy_classroom){
               </div>
             </div>
           </div>
+        </div>
+        <div id="error" style="color:red">
+          <?php echo $error;?>
         </div>
         <div class="container bg-white rounded m-auto justify-content-center mt-5 mb-5"></div>
         <!-- <h2 class="fs-5">Profile</h2> -->
