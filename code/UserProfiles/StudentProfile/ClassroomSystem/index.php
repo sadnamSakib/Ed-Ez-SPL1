@@ -1,93 +1,24 @@
 <?php
-
-$servername = "localhost";
-$username = "UserManager";
-$password = "12345678";
-$dbname = "user";
-
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
-// Check connection
-if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
-}
-error_reporting(0);
-
-session_start();
-
-if (!isset($_SESSION['email'])) {
-  header("Location: ../index.php");
-}
+$root_path='../../../';
+$root_path = '../../../';
+include $root_path . 'LibraryFiles/DatabaseConnection/config.php';
+include $root_path . 'LibraryFiles/URLFinder/URLPath.php';
+include $root_path . 'LibraryFiles/SessionStore/session.php';
+session::create_or_resume_session();
+session::profile_not_set($root_path);
 $temp = hash('sha512', $_SESSION['email']);
 $tableName = $_SESSION['tableName'];
-
-$error = "Enter Password To make Updates to Profile Information";
-$errorColor = "black";
-
-if (isset($_REQUEST['profileimg'])) {
-  $img = $_REQUEST['image'];
-  $fileName = basename($_FILES["image"]["name"]);
-  $fileType = pathinfo($fileName, PATHINFO_EXTENSION);
-  // Allow certain file formats 
-  $allowTypes = array('jpg', 'png', 'jpeg');
-  if (in_array($fileType, $allowTypes)) {
-    $image = $_FILES['image']['tmp_name'];
-    $imgContent = addslashes(file_get_contents($image));
+$row = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='$temp';"));
+$name = $row['name'];
+if (isset($_POST['Join'])) {
+  $classCode=$_REQUEST['classCode'];
+  $existenceCheck=$database->performQuery("SELECT * FROM classroom WHERE class_code='$classCode';");
+  if($existenceCheck->num_rows>0){
+    $database->performQuery("INSERT INTO student_classroom(email,class_code) VALUES('$temp','$classCode');");
   }
-  $sql = "UPDATE $tableName SET ProfilePicture='$imgContent' WHERE email = '$temp'";
-  $res = mysqli_query($conn, $sql);
+  
 }
-
-if (isset($_POST['UpdateProfile'])) {
-  $username = $_REQUEST['username'];
-  $_SESSION['username'] = $username;
-
-  $Department = $_REQUEST['department'];
-  $Semester = $_REQUEST['semester'];
-  $country = $_REQUEST['country'];
-  $password = $_REQUEST['password'];
-  $password = hash('sha512', $password);
-  $existence_name = "SELECT * FROM $tableName WHERE email = '$temp'";
-  $result = mysqli_query($conn, $existence_name);
-  $row = mysqli_fetch_assoc($result);
-  if ($_REQUEST['mobile'] != '') {
-    $MobileNumber = $_REQUEST['mobile'];
-  } else {
-    $MobileNumber = $row['MobileNumber'];
-  }
-
-  if (password_verify($password, $row['password'])) {
-    if ($Semester == '') {
-      $Semester = -1;
-    }
-    $sql = "UPDATE $tableName SET username='$username',MobileNumber='$MobileNumber',Country='$country',Department='$Department',Semester='$Semester' WHERE email='$temp'";
-    $res = mysqli_query($conn, $sql);
-  } else {
-    $error = "Incorrect Password, Cannot make changes to profile";
-    $errorColor = "red";
-  }
-}
-
-
-$existence_name = "SELECT * FROM $tableName WHERE email = '$temp'";
-$result = mysqli_query($conn, $existence_name);
-$row = mysqli_fetch_assoc($result);
-
-$var = $row['ProfilePicture'];
-if ($var != "") {
-  $src = "data:image/jpg;charset=utf8;base64," . base64_encode($var);
-} else {
-  $src = "profile-picture.png";
-}
-$username = $row['username'];
-$MobileNumber = $row['MobileNumber'];
-$instituion = $row['institution'];
-$Department = $row['Department'];
-$Semester = $row['Semester'];
-$Country = $row['Country'];
-if ($Semester == -1) {
-  $Semester = '';
-}
+$classrooms = $database->performQuery("SELECT * FROM classroom,student_classroom where classroom.class_code=student_classroom.class_code and student_classroom.email='$temp';");
 ?>
 
 <!DOCTYPE html>
@@ -96,10 +27,10 @@ if ($Semester == -1) {
 <head>
   <meta charset="UTF-8">
   <title>Classroom</title>
-  <link rel="icon" href="../logo4.jpg" />
+  <link rel="icon" href="<?php echo $root_path;?>logo4.jpg" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="../../css/bootstrap.css" />
+  <link rel="stylesheet" href="<?php echo $root_path;?>css/bootstrap.css" />
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/2.0.2/sha.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
@@ -110,11 +41,16 @@ if ($Semester == -1) {
   <script src="https://kit.fontawesome.com/d0f239b9af.js" crossorigin="anonymous"></script>
   <link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet" />
   <script defer src="script.js"></script>
+  <script>
+    if (window.history.replaceState) {
+      window.history.replaceState(null, null, window.location.href);
+    }
+  </script>
 </head>
 
 <body>
 
-  <script src="../../js/bootstrap.js"></script>
+  <script src="<?php echo $root_path;?>js/bootstrap.js"></script>
   <div class="main-container d-flex">
     <div class="sidebar" id="side_nav">
       <div class="header-box px-2 pt-3 pb-4 d-flex justify-content-between ">
@@ -123,9 +59,9 @@ if ($Semester == -1) {
       </div>
       <ul class="list-unstyled px-2">
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-dashboard pe-2'></i>Dashboard</a></li>
-        <li class=""><a href="../StudentProfile/index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-user-circle pe-2'></i>Profile</a></li>
+        <li class=""><a href="<?php echo $root_path;?>UserProfiles/StudentProfile/index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-user-circle pe-2'></i>Profile</a></li>
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-calendar-plus pe-2'></i>Schedule</a></li>
-        <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-chalkboard pe-2'></i>Classrooms</a></li>
+        <li class=""><a href="<?php echo $root_path;?>UserProfiles/StudentProfile/ClassroomSystem/index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-chalkboard pe-2'></i>Classrooms</a></li>
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-bar-chart-alt-2 pe-2'></i>Grades</a></li>
       </ul>
       <hr class="h-color mx-2 my-5">
@@ -153,7 +89,7 @@ if ($Semester == -1) {
             <ul class="navbar-nav mb-2 mb-lg-0">
               <li class="nav-item">
                 <button type="button" class="btn btn-primary me-2 d-flex">
-                  <a href="../logout.php" style="text-decoration: none; color:black">Log Out</a>
+                <a href="<?php echo $root_path;?>UserProfiles/Logout/logout.php" style="text-decoration: none; color:black">Log Out</a>
                 </button>
               </li>
             </ul>
@@ -172,16 +108,17 @@ if ($Semester == -1) {
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                  <form>
+                  <form action="" method="POST">
                     <div class="mb-3">
-                      <input type="text" class="form-control" placeholder="Enter classroom code" aria-label="Leave a comment">
+                      <input type="text" name="classCode" class="form-control" placeholder="Enter classroom code" aria-label="Leave a comment">
                     </div>
-                  </form>
+                  
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary btn-join">Join</button>
+                  <input type="submit" name="Join" value="Join" class="btn btn-primary btn-join">
                 </div>
+                </form>
               </div>
             </div>
           </div>
@@ -189,76 +126,23 @@ if ($Semester == -1) {
         <div class="container bg-white rounded m-auto justify-content-center mt-5 mb-5"></div>
         <!-- <h2 class="fs-5">Profile</h2> -->
         <div class="row justify-content-start m-auto">
-          <!-- <div class="col-md-6 col-sm-6 border" style="max-height:20rem"> -->
-          <!-- <div class="row"> -->
-          <div class="card-element col-lg-4 col-md-6 p-4 px-2">
-            <div class="card card-box-shadow">
-              <div class="card-body">
-                <h4 class="card-title">CSE 4301</h4>
-                <p class="card-text">Md. Jubair Ibna Mostafa</p>
-
+        <?php
+          foreach ($classrooms as $i) {
+            $classCode=$i['class_code'];
+            $instructor_name=mysqli_fetch_assoc($database->performQuery("select name from users where email in (select teacher.email from teacher,teacher_classroom where teacher.email=teacher_classroom.email and class_code='$classCode');"));
+          ?>
+            <div class="card-element col-lg-4 col-md-6 p-4 px-2">
+              <div class="card card-box-shadow">
+                <div class="card-body">
+                  <h4 class="card-title"><?php echo $i['classroom_name']; ?></h4>
+                  <p class="card-text"><?php echo $instructor_name['name']; ?></p>
+                </div>
+                <div class="pb-5 px-5"><a href="../StudentClassroom/index.php" class="btn btn-primary btn-go">Enter Class</a></div>
               </div>
-              <div class="pb-5 px-5"><a href="../StudentClassroom/index.php" class="btn btn-primary btn-go">Enter Class</a></div>
             </div>
-          </div>
-          <div class="card-element col-lg-4 col-md-6 p-4 px-2">
-            <div class="card card-box-shadow">
-              <div class="card-body">
-                <h4 class="card-title">CSE 4303: Data Structure</h4>
-                <p class="card-text">Mezbaur Rahman</p>
-
-              </div>
-              <div class="pb-5 px-5"><a href="../StudentClassroom/index.php" class="btn btn-primary btn-go">Enter Class</a></div>
-            </div>
-          </div>
-          <div class="card-element col-lg-4 col-md-6 p-4 px-2">
-            <div class="card card-box-shadow">
-              <div class="card-body">
-                <h4 class="card-title">CSE 4309: Theory of Computing</h4>
-                <p class="card-text">Tanjila Alam Sathi</p>
-              </div>
-              <div class="pb-5 px-5"><a href="../StudentClassroom/index.php" class="btn btn-primary btn-go">Enter Class</a></div>
-            </div>
-          </div>
-          <div class="card-element col-lg-4 col-md-6 p-4 px-2">
-            <div class="card card-box-shadow">
-              <div class="card-body">
-                <h4 class="card-title">CSE 4307: Database Management System</h4>
-                <p class="card-text">Dr. Abu Raihan Mostafa Kamal</p>
-
-              </div>
-              <div class="pb-5 px-5"><a href="../StudentClassroom/index.php" class="btn btn-primary btn-go">Enter Class</a></div>
-            </div>
-          </div>
-          <div class="card-element col-lg-4 col-md-6 p-4 px-2">
-            <div class="card card-box-shadow">
-              <div class="card-body">
-                <h4 class="card-title">CSE 4305: Computer Organization and Architecture</h4>
-                <p class="card-text">Imtiaj Ahmed Chowdhury</p>
-
-              </div>
-              <div class="pb-5 px-5"><a href="../StudentClassroom/index.php" class="btn btn-primary btn-go">Enter Class</a></div>
-            </div>
-          </div>
-          <div class="card-element col-lg-4 col-md-6 p-4 px-2">
-            <div class="card card-box-shadow">
-              <div class="card-body">
-                <h4 class="card-title">Math 4341: Linear Algebra</h4>
-                <p class="card-text">Md. Mohsinul Kabir</p>
-              </div>
-              <div class="pb-5 px-5"><a href="../StudentClassroom/index.php" class="btn btn-primary btn-go">Enter Class</a></div>
-            </div>
-          </div>
-          <!-- </div> -->
-        </div>
-
-        <!-- ekhane card dhukabo  -->
-
-
-        <!-- <div class="input-group mb-3">
-              <input type="text" class="form-control" placeholder="Leave a comment" aria-label="Leave a comment" aria-describedby="button-addon2">
-              <button class="btn btn-primary" type="button" id="button-addon2">comment</button>
-            </div> -->
+          <?php
+          }
+          ?>
     </div>
     </section>
   </div>

@@ -98,6 +98,7 @@ if (isset($_POST['submit'])) {
                     <div class="form-group" id="error" style="color:red;display:none">
                             
                     </div>
+                    <span style="color:red;"><?php echo $error;?></span>
                     <div class="form-group">
                         <i class="fas fa-envelope"> </i>
                         <input class="myInput" placeholder="Email" name="email" type="text" id="email" required value="<?php echo $_REQUEST['email']; ?>">
