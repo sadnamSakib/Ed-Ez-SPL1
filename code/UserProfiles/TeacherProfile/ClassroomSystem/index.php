@@ -13,21 +13,21 @@ $name = $row['name'];
 $className = 'Math 4341 Linear Algebra';
 if (isset($_POST['Create'])) {
   $classCode = generateRandomString(10);
-  $existence=$database->performQuery("SELECT * FROM classroom where class_code='$classCode'");
-  while($existence->num_rows>0){
+  $existence = $database->performQuery("SELECT * FROM classroom where class_code='$classCode'");
+  while ($existence->num_rows > 0) {
     $classCode = generateRandomString(10);
   }
   $className = $_POST['courseName'];
-  $courseCode=$_POST['courseCode'];
-  $semester=$_POST['semester'];
+  $courseCode = $_POST['courseCode'];
+  $semester = $_POST['semester'];
   $database->performQuery("INSERT INTO classroom(class_code,classroom_name,course_code,semester) VALUES('$classCode','$className','$courseCode','$semester');");
   $database->performQuery("INSERT INTO teacher_classroom(email,class_code) VALUES('$temp','$classCode');");
 }
 
 $classrooms = $database->performQuery("SELECT * FROM classroom,teacher_classroom where classroom.class_code=teacher_classroom.class_code and teacher_classroom.email='$temp';");
-foreach($classrooms as $dummy_classroom){
-  if(isset($_POST[$dummy_classroom['class_code']])){
-    $_SESSION['class_code']=$dummy_classroom['class_code'];
+foreach ($classrooms as $dummy_classroom) {
+  if (isset($_POST[$dummy_classroom['class_code']])) {
+    $_SESSION['class_code'] = $dummy_classroom['class_code'];
     header('Location: TeacherClassroom/index.php');
   }
 }
@@ -73,9 +73,9 @@ foreach($classrooms as $dummy_classroom){
       </div>
       <ul class="list-unstyled px-2">
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-dashboard pe-2'></i>Dashboard</a></li>
-        <li class=""><a href="<?php echo $root_path?>UserProfiles/TeacherProfile/index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-user-circle pe-2'></i>Profile</a></li>
+        <li class=""><a href="<?php echo $root_path ?>UserProfiles/TeacherProfile/index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-user-circle pe-2'></i>Profile</a></li>
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-calendar-plus pe-2'></i>Schedule</a></li>
-        <li class=""><a href="<?php echo $root_path?>UserProfiles/TeacherProfile/ClassroomSystem/index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-chalkboard pe-2'></i>Classrooms</a></li>
+        <li class=""><a href="<?php echo $root_path ?>UserProfiles/TeacherProfile/ClassroomSystem/index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-chalkboard pe-2'></i>Classrooms</a></li>
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-bar-chart-alt-2 pe-2'></i>Grades</a></li>
       </ul>
       <hr class="h-color mx-2 my-5">
@@ -103,7 +103,7 @@ foreach($classrooms as $dummy_classroom){
             <ul class="navbar-nav mb-2 mb-lg-0">
               <li class="nav-item">
                 <button type="button" class="btn btn-primary me-2 d-flex">
-                  <a href="<?php echo $root_path;?>UserProfiles/Logout/logout.php" style="text-decoration: none; color:black">Log Out</a>
+                  <a href="<?php echo $root_path; ?>UserProfiles/Logout/logout.php" style="text-decoration: none; color:black">Log Out</a>
                 </button>
               </li>
             </ul>
@@ -153,15 +153,26 @@ foreach($classrooms as $dummy_classroom){
           ?>
             <div class="card-element col-lg-4 col-md-6 p-4 px-2">
               <div class="card card-box-shadow">
+                <div class="card-header  task-card justify-content-around" style="height:100px">
+                  <div class="row">
+                <h4 class="card-title col py-2"><?php echo $i['course_code'] . ": " . $i['classroom_name']; ?></h4>
+                  <div class="dropdown col-lg-auto col-sm-6 col-md-3 py-3">
+                    <i onclick="dropdownbtn()" class="dropbtn bx bx-dots-horizontal-rounded"></i>
+                    <div id="myDropdown" class="dropdown-content dropdown-menu">
+                      <a href="#home" class="dropdown-item">View Details</a>
+                      <a href="#about" class="dropdown-item">Delete Classroom</a>
+                    </div>
+                  </div>
+                  </div>
+                </div>
                 <div class="card-body">
-                  <h4 class="card-title"><?php echo $i['course_code'].": ".$i['classroom_name']; ?></h4>
-                  <p class="card-text"><?php echo "Course Instructor: ".$name; ?></p>
+                  <p class="card-text"><?php echo "Course Instructor: " . $name; ?></p>
                   <p class="card-text"><?php echo $i['class_code']; ?></p>
                 </div>
                 <div class="pb-5 px-5">
-                <form id="EnterClassroom" name="EnterClassroom" action="" method="POST">
-                <input type="submit" name="<?php echo  $i['class_code']; ?>" value="Enter Class" class="btn btn-primary btn-go">
-                </form>
+                  <form id="EnterClassroom" name="EnterClassroom" action="" method="POST">
+                    <input type="submit" name="<?php echo  $i['class_code']; ?>" value="Enter Class" class="btn btn-primary btn-go">
+                  </form>
                 </div>
               </div>
             </div>
@@ -173,7 +184,24 @@ foreach($classrooms as $dummy_classroom){
     </div>
   </div>
 
-
+  <script>
+    function dropdownbtn() {
+      document.getElementById("myDropdown").classList.toggle("show");
+    }
+    // Close the dropdown if the user clicks outside of it
+    window.onclick = function(event) {
+      if (!event.target.matches('.dropbtn')) {
+        var dropdowns = document.getElementsByClassName("dropdown-content");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    }
+  </script>
 </body>
 
 </html>
