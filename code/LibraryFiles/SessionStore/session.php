@@ -2,7 +2,7 @@
 
 class session{
     public static function stay_in_session(){
-        if (isset($_SESSION['email'])) {
+        if (isset($_SESSION['email']) && !isset($_SESSION['code'])) {
             $url=$_SESSION['url'];
             header('Location: '.$url.'');
         }

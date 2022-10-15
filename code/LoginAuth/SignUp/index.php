@@ -6,7 +6,7 @@ session::create_or_resume_session();
 
 session::stay_in_session();
 
-$error='';
+$error=$_SESSION['error'];
 
 
 if (isset($_POST['submit'])) {
@@ -31,10 +31,10 @@ if (isset($_POST['submit'])) {
     else{
         $tableName='student';
     }
-    $pattern = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/i";
     $insertusers = "INSERT INTO users(email,name,password,institution,dob) VALUES ('$email', '$name','$password','$institutions','$dob')";
-    $exists = "SELECT * FROM users WHERE email = '$email'";
     $insertTable="INSERT INTO $tableName(email) VALUES('$email')";
+    $pattern = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/i";
+    $exists = "SELECT * FROM users WHERE email = '$email'";
     $result=$database->performQuery($exists);
     if ($result->num_rows > 0) {
         $email='';
@@ -62,14 +62,15 @@ if (isset($_POST['submit'])) {
         $error="Name is required";
     }
     else{
+        $_SESSION['email']=$original_email;
         $database->performQuery($insertusers);
         $database->performQuery($insertTable);
+        echo $exists;
         $result=$database->performQuery($exists);
         $row=mysqli_fetch_assoc($result);
-		$_SESSION['name'] = $row['name'];
-        $_SESSION['email'] = $original_email;
+        $_SESSION['name'] = $row['name'];
         $_SESSION['tableName']=$tableName;
-        session::redirectProfile($tableName);
+        header('Location: ConfirmEmail/index.php');
 		
     }   
 }

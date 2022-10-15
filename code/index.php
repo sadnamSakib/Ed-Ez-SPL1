@@ -6,6 +6,7 @@ include 'LibraryFiles/URLFinder/URLPath.php';
 session::create_or_resume_session();
 session::stay_in_session();
 $_SESSION['ROOT']= URLPath::getURL();
+$database->performQuery("DELETE FROM users WHERE Verified='0'");
 ?>
 <!DOCTYPE HTML>
 <html>

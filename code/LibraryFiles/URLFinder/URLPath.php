@@ -20,5 +20,12 @@
                 $url = "http://";   
             return $url.$_SERVER['HTTP_HOST'] . substr($_SERVER['REQUEST_URI'], 0, strrpos($_SERVER['REQUEST_URI'], "/"));
         }
+        public static function getRoot(){
+            if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')   
+                $url = "https://";   
+            else  
+                $url = "http://";   
+            return $url.$_SERVER['HTTP_HOST'] . '/Ed-Ez-SPL1/code/';
+        }
     }
 ?>

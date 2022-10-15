@@ -44,8 +44,8 @@ class SMTP{
         $this->mail->isSMTP();
         $this->mail->Host ='smtp-relay.sendinblue.com';
         $this->mail->SMTPAuth = true;
-        $this->mail->Username = '.................';
-        $this->mail->Password = '.................';
+        $this->mail->Username = '####';
+        $this->mail->Password = '####';
         $this->mail->SMTPSecure = 'tls';
         $this->mail->Port = 587;
     }
@@ -70,6 +70,18 @@ class SMTP{
         }
         $this->error_message="An Email Has Been Sent, Check Your Registered Email Address. If you didn't receive the email within 5 minutes, Try Again";
         return $this->error_message;
+    }
+
+    public function send(&$error){
+        try{
+            $this->mail->send();
+        }
+        catch(Exception $e){
+            $error= "Message could not be sent. Mailer Error: {$this->mail->ErrorInfo}";
+            return false;
+        }
+        $error="An Email Has Been Sent, Check Your Registered Email Address. If you didn't receive the email within 5 minutes, Try Again";
+        return true;
     }
 
     public function set_error_message($error_message){
