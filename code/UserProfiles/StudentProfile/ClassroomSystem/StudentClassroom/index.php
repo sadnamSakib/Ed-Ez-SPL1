@@ -6,7 +6,6 @@ include $root_path . 'LibraryFiles/SessionStore/session.php';
 session::create_or_resume_session();
 session::profile_not_set($root_path);
 $classCode=$_SESSION['class_code'];
-unset($_SESSION['class_code']);
 $email=$_SESSION['email'];
 $dummy_email=hash('sha512', $email);
 $authentication=$database->performQuery("SELECT * FROM student_classroom WHERE email='$dummy_email' and class_code='$classCode'");
@@ -16,6 +15,19 @@ if($authentication->num_rows==0){
 
 $classroom_records=mysqli_fetch_assoc($database->performQuery("SELECT * FROM classroom WHERE class_code = '$classCode'"));
 $teacher_records=mysqli_fetch_assoc($database->performQuery("SELECT * FROM users,teacher_classroom,classroom WHERE users.email=teacher_classroom.email and classroom.class_code='$classCode';"));
+if(isset($_REQUEST['post_msg'])){
+  $post_date=date('Y-m-d H:i:s');
+  $post_id=generateRandomString(50);
+  while(($database->performQuery("SELECT * FROM post WHERE post_id = '$post_id'"))->num_rows>0){
+    $post_id=generateRandomString(50);
+  }
+  
+  $post_value=$_REQUEST['post_value'];
+  $database->performQuery("INSERT INTO post(post_id,email,post_datetime,post_message) VALUES('$post_id','$dummy_email','$post_date','$post_value');");
+  $database->performQuery("INSERT INTO post_classroom(post_id,class_code) VALUES('$post_id','$classCode');");
+}
+
+$posts=$database->performQuery("SELECT * FROM post,post_classroom WHERE post.post_id=post_classroom.post_id and post_classroom.class_code='$classCode';");
 ?>
 
 <!DOCTYPE html>
@@ -117,22 +129,32 @@ $teacher_records=mysqli_fetch_assoc($database->performQuery("SELECT * FROM users
         </div>
         <div class="row justify-content-center my-3 post">
           <div class="col-md-6 col-sm-6 border-end">
-            <textarea class="form-control" id="exampleFormControlTextarea1" placeholder="Write a post..." rows="3"></textarea>
+            <form id="Post" name="Post" action="" method="POST">
+            <textarea class="form-control" name="post_value" id="exampleFormControlTextarea1" placeholder="Write a post..." rows="3"></textarea>
             <div class="d-flex flex-column-reverse pt-2">
-            <button class="btn btn-primary ">Post</button>
+              <input type="submit" class="btn btn-primary" name="post_msg" value="Post">
             </div> 
+            </form>
           </div>
           <div class="col-md-3 col-sm-6 border-end">
           </div>
         </div>
+        <!-- POST STARTS HERE -->
+        <?php 
+        
+          foreach($posts as $i){
+        ?>
         <div class="row justify-content-center">
           <div class="col-md-6 col-sm-6 border-end">
             <div class="card  text-bg-light mb-3">
               <div class="card-header">
-                Posted by Md. Mezbaur Rahman.
+                Posted by <?php
+                    $user_record=mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='".$i['email']."';"));
+                    echo $user_record['name'];
+                ?>
               </div>
               <div class="card-body">
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                <p class="card-text"><?php echo $i['post_message'];?></p>
               </div>
             </div>
             <div class="input-group mb-3 pb-3">
@@ -143,41 +165,10 @@ $teacher_records=mysqli_fetch_assoc($database->performQuery("SELECT * FROM users
           <div class="col-md-3 col-sm-6 border-end">
           </div>
         </div>
-        <div class="row justify-content-center">
-          <div class="col-md-6 col-sm-6 border-end">
-            <div class="card  text-bg-light mb-3">
-              <div class="card-header">
-                Posted by Md. Mezbaur Rahman.
-              </div>
-              <div class="card-body">
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-              </div>
-            </div>
-            <div class="input-group mb-3 pb-3">
-              <input type="text" class="form-control" placeholder="Leave a comment" aria-label="Leave a comment" aria-describedby="button-addon2">
-              <button class="btn btn-primary" type="button" id="button-addon2">comment</button>
-            </div>
-          </div>
-          <div class="col-md-3 col-sm-6 border-end">
-          </div>
-        </div>
-        <div class="row justify-content-center">
-          <div class="col-md-6 col-sm-6 border-end">
-            <div class="card  text-bg-light mb-3">
-              <div class="card-header">
-                Posted by Md. Mezbaur Rahman.
-              </div>
-              <div class="card-body">
-                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-              </div>
-            </div>
-            <div class="input-group mb-3 pb-3">
-              <input type="text" class="form-control" placeholder="Leave a comment" aria-label="Leave a comment" aria-describedby="button-addon2">
-              <button class="btn btn-primary" type="button" id="button-addon2">comment</button>
-            </div>
-          </div>
-          <div class="col-md-3 col-sm-6 border-end">
-          </div>
+        <?php 
+          }
+        ?>
+        <!-- POST ENDS HERE -->
         </div>
       </section>
     </div>

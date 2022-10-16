@@ -34,7 +34,6 @@ catch(Exception $e){
     $email=hash('sha512',$email);
     $database->performQuery("DELETE FROM users WHERE email='$email';");
     header('Location: ../index.php');
-    unset($_SESSION['error']);
 }
 
 

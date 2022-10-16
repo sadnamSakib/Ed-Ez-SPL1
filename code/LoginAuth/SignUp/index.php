@@ -27,9 +27,11 @@ if (isset($_POST['submit'])) {
     $tableName='';
     if($button_radio==='teacher'){
         $tableName='teacher';
+        $_SESSION['tableName']=$tableName;
     }
     else{
         $tableName='student';
+        $_SESSION['tableName']=$tableName;
     }
     $insertusers = "INSERT INTO users(email,name,password,institution,dob) VALUES ('$email', '$name','$password','$institutions','$dob')";
     $insertTable="INSERT INTO $tableName(email) VALUES('$email')";
@@ -69,7 +71,6 @@ if (isset($_POST['submit'])) {
         $result=$database->performQuery($exists);
         $row=mysqli_fetch_assoc($result);
         $_SESSION['name'] = $row['name'];
-        $_SESSION['tableName']=$tableName;
         header('Location: ConfirmEmail/index.php');
 		
     }   
@@ -119,7 +120,7 @@ if (isset($_POST['submit'])) {
                     <div class="form-group" id="error" style="color:red;display:none">
                             
                     </div>
-                    <span style="color:red;"><?php echo $error;?></span>
+                    <span style="color:red;"><?php echo $error;unset($_SESSION['error']);?></span>
                     <div class="form-group">
                         <i class="fas fa-envelope"> </i>
                         <input class="myInput" placeholder="Email" name="email" type="text" id="email" required value="<?php echo $_REQUEST['email']; ?>">
