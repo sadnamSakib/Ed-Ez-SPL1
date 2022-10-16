@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 15, 2022 at 06:23 PM
+-- Generation Time: Oct 16, 2022 at 08:39 AM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -198,7 +198,8 @@ CREATE TABLE `users` (
   `mobileNumber` varchar(20) DEFAULT NULL,
   `department` text DEFAULT NULL,
   `country` text DEFAULT NULL,
-  `profile_picture` longblob DEFAULT NULL
+  `profile_picture` longblob DEFAULT NULL,
+  `Verified` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -242,16 +243,15 @@ ALTER TABLE `holiday`
 -- Indexes for table `post`
 --
 ALTER TABLE `post`
-  ADD PRIMARY KEY (`post_id`,`email`);
+  ADD PRIMARY KEY (`post_id`,`email`),
+  ADD KEY `fk_post_user` (`email`);
 
 --
 -- Indexes for table `post_classroom`
 --
 ALTER TABLE `post_classroom`
   ADD PRIMARY KEY (`post_id`,`class_code`),
-  ADD UNIQUE KEY `post_id_2` (`post_id`,`class_code`),
-  ADD KEY `post_id` (`post_id`,`class_code`),
-  ADD KEY `fk_post_classroom2` (`class_code`);
+  ADD KEY `fk_post_classroom_user` (`class_code`);
 
 --
 -- Indexes for table `quiz`
@@ -278,7 +278,7 @@ ALTER TABLE `student_classroom`
   ADD PRIMARY KEY (`email`,`class_code`),
   ADD UNIQUE KEY `email` (`email`,`class_code`),
   ADD KEY `email_2` (`email`,`class_code`),
-  ADD KEY `class_code` (`class_code`);
+  ADD KEY `fk_student_classroom2` (`class_code`);
 
 --
 -- Indexes for table `teacher`
@@ -294,7 +294,7 @@ ALTER TABLE `teacher_classroom`
   ADD UNIQUE KEY `email` (`email`,`class_code`),
   ADD UNIQUE KEY `email_2` (`email`,`class_code`),
   ADD KEY `email_3` (`email`,`class_code`),
-  ADD KEY `class_code` (`class_code`);
+  ADD KEY `fk_teacher_classroom2` (`class_code`);
 
 --
 -- Indexes for table `users`
@@ -310,34 +310,51 @@ ALTER TABLE `users`
 -- Constraints for table `comments`
 --
 ALTER TABLE `comments`
-  ADD CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`email`) REFERENCES `users` (`email`);
+  ADD CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `post`
 --
 ALTER TABLE `post`
-  ADD CONSTRAINT `post_ibfk_1` FOREIGN KEY (`email`) REFERENCES `users` (`email`);
+  ADD CONSTRAINT `fk_post_user` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `post_classroom`
 --
 ALTER TABLE `post_classroom`
-  ADD CONSTRAINT `fk_post_classroom` FOREIGN KEY (`post_id`) REFERENCES `post` (`post_id`),
-  ADD CONSTRAINT `fk_post_classroom2` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`);
+  ADD CONSTRAINT `fk_post_classroom` FOREIGN KEY (`post_id`) REFERENCES `post` (`post_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_post_classroom2` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_post_classroom_user` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `student`
+--
+ALTER TABLE `student`
+  ADD CONSTRAINT `fk_student_users` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `student_classroom`
 --
 ALTER TABLE `student_classroom`
-  ADD CONSTRAINT `student_classroom_ibfk_1` FOREIGN KEY (`email`) REFERENCES `users` (`email`),
-  ADD CONSTRAINT `student_classroom_ibfk_2` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`);
+  ADD CONSTRAINT `fk_student_classroom` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_student_classroom2` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE,
+  ADD CONSTRAINT `student_classroom_ibfk_1` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE,
+  ADD CONSTRAINT `student_classroom_ibfk_2` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `teacher`
+--
+ALTER TABLE `teacher`
+  ADD CONSTRAINT `fk_teacher_user` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `teacher_classroom`
 --
 ALTER TABLE `teacher_classroom`
-  ADD CONSTRAINT `teacher_classroom_ibfk_1` FOREIGN KEY (`email`) REFERENCES `users` (`email`),
-  ADD CONSTRAINT `teacher_classroom_ibfk_2` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`);
+  ADD CONSTRAINT `fk_teacher_classroom` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_teacher_classroom2` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE,
+  ADD CONSTRAINT `teacher_classroom_ibfk_1` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE,
+  ADD CONSTRAINT `teacher_classroom_ibfk_2` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
