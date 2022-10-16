@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 16, 2022 at 10:58 AM
+-- Generation Time: Oct 16, 2022 at 06:25 PM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -57,8 +57,10 @@ CREATE TABLE `classroom` (
 
 CREATE TABLE `comments` (
   `comment_id` varchar(50) NOT NULL,
-  `post_id` varchar(50) DEFAULT NULL,
-  `email` varchar(200) DEFAULT NULL
+  `comment_message` text NOT NULL,
+  `comment_datetime` datetime NOT NULL,
+  `email` varchar(200) NOT NULL,
+  `post_id` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -226,7 +228,8 @@ ALTER TABLE `classroom`
 --
 ALTER TABLE `comments`
   ADD PRIMARY KEY (`comment_id`),
-  ADD KEY `email` (`email`);
+  ADD KEY `fk_comments_users` (`email`),
+  ADD KEY `fk_comments_posts` (`post_id`);
 
 --
 -- Indexes for table `event`
@@ -311,7 +314,8 @@ ALTER TABLE `users`
 -- Constraints for table `comments`
 --
 ALTER TABLE `comments`
-  ADD CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE;
+  ADD CONSTRAINT `fk_comments_posts` FOREIGN KEY (`post_id`) REFERENCES `post` (`post_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_comments_users` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `post`

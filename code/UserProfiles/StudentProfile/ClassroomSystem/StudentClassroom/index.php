@@ -29,7 +29,7 @@ if(isset($_REQUEST['post_msg']) && !is_null($_REQUEST['post_value'])){
   }
 }
 
-$posts=$database->performQuery("SELECT * FROM post,post_classroom WHERE post.post_id=post_classroom.post_id and post_classroom.class_code='$classCode';");
+$posts=$database->performQuery("SELECT * FROM post,post_classroom WHERE post.post_id=post_classroom.post_id and post_classroom.class_code='$classCode' order by post_datetime desc;");
 foreach($posts as $i){
   $post_id=$i['post_id'];
   if(isset($_REQUEST[$post_id.'comment_msg'])){
@@ -42,7 +42,6 @@ foreach($posts as $i){
       if(!is_null($comment_text) && $comment_text!==''){
         $database->performQuery("INSERT INTO comments(comment_id,email,post_id,comment_datetime,comment_message) VALUES('$comment_id','$dummy_email','$post_id','$comment_date','$comment_text');");
       }
-      echo "Comes here";
     unset($_REQUEST[$post_id.'comment_msg']);
   }
 }
@@ -147,7 +146,8 @@ foreach($posts as $i){
         </div>
         <div class="row justify-content-center my-3 post">
           <div class="col-md-6 col-sm-6 border-end">
-            <form id="Post" name="Post" action="" method="POST">
+            <form id="Post" name="Post" action="#post_section" method="POST">
+            <a name="post_section"></a>
             <textarea class="form-control" name="post_value" id="exampleFormControlTextarea1" placeholder="Write a post..." rows="3"></textarea>
             <div class="d-flex flex-column-reverse pt-2">
               <input type="submit" class="btn btn-primary" name="post_msg" value="Post">
@@ -185,7 +185,7 @@ foreach($posts as $i){
                 <div class="collapse multi-collapse" id="collapseExample">
                   <?php 
                     $post_id=$i['post_id'];
-                    $sql=$database->performQuery("SELECT * FROM comments WHERE post_id='".$post_id."'");
+                    $sql=$database->performQuery("SELECT * FROM comments WHERE post_id='".$post_id."' order by comment_datetime desc;");
                     foreach($sql as $j){
                       $users_email=$j['email'];
                       $users_records=mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='$users_email'"));
@@ -202,9 +202,9 @@ foreach($posts as $i){
                 </div>
               </div>
               <?php $post_id=$i['post_id'];?>
-              <form id="comment" name="<?php echo $post_id.'Comment'; ?>" method="POST" action="">
+              <form id="comment" name="<?php echo $post_id.'Comment'; ?>" method="POST" action="#<?php echo $post_id; ?>comment_section">
               <div class="input-group mb-3 pb-3">
-                
+              <a name="<?php echo $post_id; ?>comment_section"></a>
                 <input type="text" class="form-control" placeholder="Leave a comment" aria-label="Leave a comment" aria-describedby="button-addon2" name="<?php echo $post_id.'comment_text'; ?>">
                 <input type="submit" class="btn btn-primary" id="button-addon2" value="comment" name="<?php echo $post_id.'comment_msg'; ?>">
               </div>
