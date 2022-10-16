@@ -15,19 +15,19 @@ if ($authentication->num_rows == 0) {
 
 $classroom_records = mysqli_fetch_assoc($database->performQuery("SELECT * FROM classroom WHERE class_code = '$classCode'"));
 $teacher_records = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email = '$dummy_email'"));
-if(isset($_REQUEST['post_msg'])){
-  $post_date=date('Y-m-d H:i:s');
-  $post_id=generateRandomString(50);
-  while(($database->performQuery("SELECT * FROM post WHERE post_id = '$post_id'"))->num_rows>0){
-    $post_id=generateRandomString(50);
+if (isset($_REQUEST['post_msg'])) {
+  $post_date = date('Y-m-d H:i:s');
+  $post_id = generateRandomString(50);
+  while (($database->performQuery("SELECT * FROM post WHERE post_id = '$post_id'"))->num_rows > 0) {
+    $post_id = generateRandomString(50);
   }
-  
-  $post_value=$_REQUEST['post_value'];
+
+  $post_value = $_REQUEST['post_value'];
   $database->performQuery("INSERT INTO post(post_id,email,post_datetime,post_message) VALUES('$post_id','$dummy_email','$post_date','$post_value');");
   $database->performQuery("INSERT INTO post_classroom(post_id,class_code) VALUES('$post_id','$classCode');");
 }
 
-$posts=$database->performQuery("SELECT * FROM post,post_classroom WHERE post.post_id=post_classroom.post_id and post_classroom.class_code='$classCode';");
+$posts = $database->performQuery("SELECT * FROM post,post_classroom WHERE post.post_id=post_classroom.post_id and post_classroom.class_code='$classCode';");
 ?>
 
 <!DOCTYPE html>
@@ -142,50 +142,69 @@ $posts=$database->performQuery("SELECT * FROM post,post_classroom WHERE post.pos
 
 
         <div class="row justify-content-center my-3 post">
-        <div class="col-md-6 col-sm-6 border-end">
+          <div class="col-md-6 col-sm-6 border-end">
             <form id="Post" name="Post" action="" method="POST">
-            <textarea class="form-control" name="post_value" id="exampleFormControlTextarea1" placeholder="Write a post..." rows="3"></textarea>
-            <div class="d-flex flex-column-reverse pt-2">
-              <input type="submit" class="btn btn-primary" name="post_msg" value="Post">
-            </div> 
+              <textarea class="form-control" name="post_value" id="exampleFormControlTextarea1" placeholder="Write a post..." rows="3"></textarea>
+              <div class="d-flex flex-column-reverse pt-2">
+                <input type="submit" class="btn btn-primary" name="post_msg" value="Post">
+              </div>
             </form>
           </div>
           <div class="col-md-3 col-sm-6 border-end">
           </div>
         </div>
         <!-- POST STARTS HERE -->
-        <?php 
-        
-          foreach($posts as $i){
+        <?php
+
+        foreach ($posts as $i) {
         ?>
-        <div class="row justify-content-center">
-          <div class="col-md-6 col-sm-6 border-end">
-            <div class="card  text-bg-light mb-3">
-              <div class="card-header">
-                Posted by <?php
-                    $user_record=mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='".$i['email']."';"));
-                    echo $user_record['name'];
-                ?>
+          <div class="row justify-content-center">
+            <div class="col-md-6 col-sm-6 border-end">
+              <div class="card  text-bg-light mb-3">
+                <div class="card-header">
+                  Posted by <?php
+                            $user_record = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='" . $i['email'] . "';"));
+                            echo $user_record['name'];
+                            ?>
+                </div>
+                <div class="card-body">
+                  <p class="card-text"><?php echo $i['post_message']; ?></p>
+                </div>
+                <div>
+                  <button class="btn btn-dark w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    2 comments
+                  </button>
+                </div>
+                <div class="collapse multi-collapse" id="collapseExample">
+                  <div class="card p-1">
+                    <div class="card-header">Commented by Mirza Azwad</div>
+                    <div class="card card-body">
+                      Spl is killing me.
+                    </div>
+                  </div>
+                  <div class="card p-1">
+                    <div class="card-header">Commented by Zaara Zabeen</div>
+                    <div class="card card-body">
+                      Us bro us.
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="card-body">
-                <p class="card-text"><?php echo $i['post_message'];?></p>
+              <div class="input-group mb-3 pb-3">
+                <input type="text" class="form-control" placeholder="Leave a comment" aria-label="Leave a comment" aria-describedby="button-addon2">
+                <button class="btn btn-primary" type="button" id="button-addon2">comment</button>
               </div>
             </div>
-            <div class="input-group mb-3 pb-3">
-              <input type="text" class="form-control" placeholder="Leave a comment" aria-label="Leave a comment" aria-describedby="button-addon2">
-              <button class="btn btn-primary" type="button" id="button-addon2">comment</button>
+            <div class="col-md-3 col-sm-6 border-end">
             </div>
           </div>
-          <div class="col-md-3 col-sm-6 border-end">
-          </div>
-        </div>
-        <?php 
-          }
+        <?php
+        }
         ?>
         <!-- POST ENDS HERE -->
-        </div>
-      </section>
     </div>
+    </section>
+  </div>
   </div>
 
   <script>

@@ -50,6 +50,22 @@ hr.h-color{
   --bs-btn-bg: #2f6d8b;
   --bs-btn-border-color: #2f6d8b;
 }
+
+.btn.btn-dark{
+  background-color:white !important;
+  color: #000!important;
+  border:none;
+  --bs-btn-hover-bg: #2f6d8b;
+  --bs-btn-hover-border-color: #2f6d8b;
+  --bs-btn-active-border-color: none !important;
+  --bs-btn-disabled-bg: #2f6d8b;
+  --bs-btn-disabled-border-color: #2f6d8b;
+  --bs-btn-active-bg: #2f6d8b;
+  --bs-btn-bg: #2f6d8b;
+  --bs-btn-border-color: #2f6d8b;
+}
+
+
 .btn.btn-join{
   border-width: medium;
   color: #000;
