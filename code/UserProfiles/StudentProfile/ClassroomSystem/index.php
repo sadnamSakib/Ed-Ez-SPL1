@@ -75,7 +75,7 @@ foreach($classrooms as $dummy_classroom){
         <li class=""><a href="<?php echo $root_path;?>UserProfiles/StudentProfile/ClassroomSystem/index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-chalkboard pe-2'></i>Classrooms</a></li>
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-bar-chart-alt-2 pe-2'></i>Grades</a></li>
       </ul>
-      <hr class="h-color mx-2 my-5">
+      <!-- <hr class="h-color mx-2 my-5">
       <hr class="h-color mx-2 my-5">
       <hr class="h-color mx-2 my-5">
       <hr class="h-color mx-2 my-5">
@@ -84,7 +84,7 @@ foreach($classrooms as $dummy_classroom){
       <hr class="h-color mx-2 my-5">
       <ul class="list-unstyled px-2 ">
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block "><i class='bx bx-wrench pe-2'></i>Settings</a></li>
-      </ul>
+      </ul> -->
     </div>
     <div class="content">
       <nav class="navbar navbar-expand p-3" style="background-color: #4596be;">

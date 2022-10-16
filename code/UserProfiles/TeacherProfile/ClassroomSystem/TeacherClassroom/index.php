@@ -71,7 +71,7 @@ $posts = $database->performQuery("SELECT * FROM post,post_classroom WHERE post.p
 
 
       </ul>
-      <hr class="h-color mx-2 my-5">
+      <!-- <hr class="h-color mx-2 my-5">
       <hr class="h-color mx-2 my-5">
       <hr class="h-color mx-2 my-5">
       <hr class="h-color mx-2 my-5">
@@ -80,7 +80,7 @@ $posts = $database->performQuery("SELECT * FROM post,post_classroom WHERE post.p
       <hr class="h-color mx-2 my-5">
       <ul class="list-unstyled px-2 ">
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block "><i class='bx bx-wrench pe-2'></i>Settings</a></li>
-      </ul>
+      </ul> -->
     </div>
     <div class="content">
       <nav class="navbar navbar-expand p-3" style="background-color: #4596be;">

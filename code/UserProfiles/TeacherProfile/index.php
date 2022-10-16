@@ -120,18 +120,6 @@ $country = $row['country'];
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-calendar-plus pe-2'></i>Schedule</a></li>
         <li class=""><a href="ClassroomSystem/index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-chalkboard pe-2'></i>Classrooms</a></li>
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-bar-chart-alt-2 pe-2'></i>Grades</a></li>
-
-
-      </ul>
-      <hr class="h-color mx-2 my-5">
-      <hr class="h-color mx-2 my-5">
-      <hr class="h-color mx-2 my-5">
-      <hr class="h-color mx-2 my-5">
-      <hr class="h-color mx-2 my-5">
-      <hr class="h-color mx-2 my-5">
-      <hr class="h-color mx-2 my-5">
-      <ul class="list-unstyled px-2 ">
-        <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block "><i class='bx bx-wrench pe-2'></i>Settings</a></li>
       </ul>
     </div>
     <div class="content">
@@ -141,9 +129,6 @@ $country = $row['country'];
             <button class="btn btn-primary open-btn me-2"><i class='bx bx-menu'></i></i></button>
             <a href="#" class="navbar-brand fs-5 px-3 mx-4" href="#"><span class="bg-dark rounded px-2 py-0 text-white">Ed-Ez</span></a>
           </div>
-          <!-- <button class="navbar-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <i class="fal fa-bars"></i>
-          </button> -->
           <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <ul class="navbar-nav mb-2 mb-lg-0">
               <li class="nav-item">
@@ -166,7 +151,7 @@ $country = $row['country'];
               <span class="text-black-50"><?php echo $_SESSION['email'] ?></span>
               <form method="POST" action="" enctype="multipart/form-data">
                 <input class="d-none" type="file" name="img" accept="image/*" />
-                <div class="input-group w-75">
+                <div class="input-group w-75 mx-5">
                   <input type="file" class="form-control profile" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload" name="image">
 
                   <!-- <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04">Upload Profile</button> -->
@@ -203,7 +188,7 @@ $country = $row['country'];
 
                   </div>
                   <div class="col-md-12 mb-3">
-                    <a href="../UpdatePassword/index.php"><button type="button" class="btn btn-dark col-3">Change Password</button></a>
+                    <a href="../UpdatePassword/index.php"><button type="button" class="btn btn-dark col-xs-5">Change Password</button></a>
                   </div>
                 </div>
                 <div class="col-md-12 mb-3">
@@ -227,9 +212,9 @@ $country = $row['country'];
                   <input type="text" class="form-control" id="country" name="country" placeholder="Enter country" value="<?php echo $country ?>">
                 </div>
             </div>
-          </div>
-          <div class="row justify-content-center">
-            <input type="submit" name="UpdateProfile" class="btn btn-dark col-3" value="Update Profile" />
+            <div class="row justify-content-center">
+              <input type="submit" name="UpdateProfile" class="btn btn-dark col-xs-5 mb-5 w-50" value="Update Profile" />
+            </div>
           </div>
 
         </div>
