@@ -217,10 +217,10 @@ foreach ($posts as $i) {
         <?php
         }
         ?>
+
+
+      </section>
     </div>
-  </div>
-  </section>
-  </div>
   </div>
 
 

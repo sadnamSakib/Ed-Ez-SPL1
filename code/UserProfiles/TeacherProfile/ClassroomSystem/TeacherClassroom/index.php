@@ -239,9 +239,9 @@ foreach ($posts as $i) {
         }
         ?>
         <!-- POST ENDS HERE -->
+
+      </section>
     </div>
-    </section>
-  </div>
   </div>
 
   <script>
