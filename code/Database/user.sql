@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 16, 2022 at 08:39 AM
+-- Generation Time: Oct 16, 2022 at 10:58 AM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -94,7 +94,8 @@ CREATE TABLE `holiday` (
 CREATE TABLE `post` (
   `post_id` varchar(50) NOT NULL,
   `email` varchar(200) NOT NULL,
-  `post_datetime` datetime DEFAULT NULL
+  `post_datetime` datetime DEFAULT NULL,
+  `post_message` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -243,8 +244,8 @@ ALTER TABLE `holiday`
 -- Indexes for table `post`
 --
 ALTER TABLE `post`
-  ADD PRIMARY KEY (`post_id`,`email`),
-  ADD KEY `fk_post_user` (`email`);
+  ADD PRIMARY KEY (`post_id`),
+  ADD KEY `fk_user_post` (`email`);
 
 --
 -- Indexes for table `post_classroom`
@@ -316,7 +317,8 @@ ALTER TABLE `comments`
 -- Constraints for table `post`
 --
 ALTER TABLE `post`
-  ADD CONSTRAINT `fk_post_user` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE;
+  ADD CONSTRAINT `fk_post_user` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_user_post` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `post_classroom`

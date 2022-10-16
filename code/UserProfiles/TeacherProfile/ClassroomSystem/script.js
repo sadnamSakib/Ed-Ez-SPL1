@@ -10,7 +10,9 @@ $(".sidebar ul li").on('click', function() {
   });
 
 const addCourse=document.getElementById('addCourse');
-
+if (window.history.replaceState) {
+  window.history.replaceState(null, null, window.location.href);
+}
 addCourse.addEventListener('submit',(e)=>{
   let messages=[];
   const courseName=document.getElementById('courseName').value;

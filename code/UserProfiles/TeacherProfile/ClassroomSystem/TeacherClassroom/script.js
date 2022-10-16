@@ -9,3 +9,6 @@ $('.close-btn').on('click', function () {
   $('.sidebar').removeClass('active');
 });
 
+if (window.history.replaceState) {
+  window.history.replaceState(null, null, window.location.href);
+}

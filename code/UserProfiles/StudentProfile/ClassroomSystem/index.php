@@ -12,13 +12,14 @@ $error="";
 $name = $row['name'];
 if (isset($_POST['Join'])) {
   $classCode=$_REQUEST['classCode'];
-  $existenceCheck=$database->performQuery("SELECT * FROM student_classroom WHERE class_code='$classCode';");
+  $existenceCheck=$database->performQuery("SELECT * FROM student_classroom WHERE class_code='$classCode' and email='$temp';");
   if($existenceCheck->num_rows==0){
     $database->performQuery("INSERT INTO student_classroom(email,class_code) VALUES('$temp','$classCode');");
   }
   else{
     $error="You are already enrolled in this classroom";
   }
+  unset($_REQUEST['classCode']);
 }
 
 
