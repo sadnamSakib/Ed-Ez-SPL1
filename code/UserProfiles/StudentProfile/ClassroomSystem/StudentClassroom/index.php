@@ -15,7 +15,7 @@ if($authentication->num_rows==0){
 
 $classroom_records=mysqli_fetch_assoc($database->performQuery("SELECT * FROM classroom WHERE class_code = '$classCode'"));
 $teacher_records=mysqli_fetch_assoc($database->performQuery("SELECT * FROM users,teacher_classroom,classroom WHERE users.email=teacher_classroom.email and classroom.class_code='$classCode';"));
-if(isset($_REQUEST['post_msg'])){
+if(isset($_REQUEST['post_msg']) && !is_null($_REQUEST['post_value'])){
   $post_date=date('Y-m-d H:i:s');
   $post_id=generateRandomString(50);
   while(($database->performQuery("SELECT * FROM post WHERE post_id = '$post_id'"))->num_rows>0){
@@ -23,11 +23,29 @@ if(isset($_REQUEST['post_msg'])){
   }
   
   $post_value=$_REQUEST['post_value'];
-  $database->performQuery("INSERT INTO post(post_id,email,post_datetime,post_message) VALUES('$post_id','$dummy_email','$post_date','$post_value');");
-  $database->performQuery("INSERT INTO post_classroom(post_id,class_code) VALUES('$post_id','$classCode');");
+  if(!is_null($post_value) && $post_value!==''){
+    $database->performQuery("INSERT INTO post(post_id,email,post_datetime,post_message) VALUES('$post_id','$dummy_email','$post_date','$post_value');");
+    $database->performQuery("INSERT INTO post_classroom(post_id,class_code) VALUES('$post_id','$classCode');");
+  }
 }
 
 $posts=$database->performQuery("SELECT * FROM post,post_classroom WHERE post.post_id=post_classroom.post_id and post_classroom.class_code='$classCode';");
+foreach($posts as $i){
+  $post_id=$i['post_id'];
+  if(isset($_REQUEST[$post_id.'comment_msg'])){
+    $comment_date = date('Y-m-d H:i:s');
+    $comment_id = generateRandomString(50);
+    while (($database->performQuery("SELECT * FROM comments WHERE comment_id = '$comment_id'"))->num_rows > 0) {
+      $comment_id = generateRandomString(50);
+    }
+      $comment_text= $_REQUEST[$post_id.'comment_text'];
+      if(!is_null($comment_text) && $comment_text!==''){
+        $database->performQuery("INSERT INTO comments(comment_id,email,post_id,comment_datetime,comment_message) VALUES('$comment_id','$dummy_email','$post_id','$comment_date','$comment_text');");
+      }
+      echo "Comes here";
+    unset($_REQUEST[$post_id.'comment_msg']);
+  }
+}
 ?>
 
 <!DOCTYPE html>
@@ -139,36 +157,66 @@ $posts=$database->performQuery("SELECT * FROM post,post_classroom WHERE post.pos
           <div class="col-md-3 col-sm-6 border-end">
           </div>
         </div>
-        <!-- POST STARTS HERE -->
-        <?php 
-        
-          foreach($posts as $i){
+        <?php
+
+        foreach ($posts as $i) {
         ?>
-        <div class="row justify-content-center">
-          <div class="col-md-6 col-sm-6 border-end">
-            <div class="card  text-bg-light mb-3">
-              <div class="card-header">
-                Posted by <?php
-                    $user_record=mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='".$i['email']."';"));
-                    echo $user_record['name'];
-                ?>
+          <div class="row justify-content-center">
+            <div class="col-md-6 col-sm-6 border-end">
+              <div class="card  text-bg-light mb-3">
+                <div class="card-header">
+                  Posted by <?php
+                            $user_record = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='" . $i['email'] . "';"));
+                            echo $user_record['name'];
+                            ?>
+                </div>
+                <div class="card-body">
+                  <p class="card-text"><?php echo $i['post_message']; ?></p>
+                </div>
+                <div>
+                  <button class="btn btn-dark w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                   <?php 
+                      $comments=mysqli_fetch_assoc($database->performQuery("SELECT count(*)count_comments FROM comments WHERE post_id='".$i['post_id']."'"));
+                      echo $comments['count_comments']." comments";
+
+                   ?>
+                  </button>
+                </div>
+                <div class="collapse multi-collapse" id="collapseExample">
+                  <?php 
+                    $post_id=$i['post_id'];
+                    $sql=$database->performQuery("SELECT * FROM comments WHERE post_id='".$post_id."'");
+                    foreach($sql as $j){
+                      $users_email=$j['email'];
+                      $users_records=mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='$users_email'"));
+                  ?>
+                  <div class="card p-1">
+                    <div class="card-header">Commented by <?php echo $users_records['name']; ?></div>
+                    <div class="card card-body">
+                      <?php echo $j['comment_message']; ?>
+                    </div>
+                  </div>
+                  <?php
+                    }
+                  ?>
+                </div>
               </div>
-              <div class="card-body">
-                <p class="card-text"><?php echo $i['post_message'];?></p>
+              <?php $post_id=$i['post_id'];?>
+              <form id="comment" name="<?php echo $post_id.'Comment'; ?>" method="POST" action="">
+              <div class="input-group mb-3 pb-3">
+                
+                <input type="text" class="form-control" placeholder="Leave a comment" aria-label="Leave a comment" aria-describedby="button-addon2" name="<?php echo $post_id.'comment_text'; ?>">
+                <input type="submit" class="btn btn-primary" id="button-addon2" value="comment" name="<?php echo $post_id.'comment_msg'; ?>">
               </div>
-            </div>
-            <div class="input-group mb-3 pb-3">
-              <input type="text" class="form-control" placeholder="Leave a comment" aria-label="Leave a comment" aria-describedby="button-addon2">
-              <button class="btn btn-primary" type="button" id="button-addon2">comment</button>
+              </form>
+              </div>
+            <div class="col-md-3 col-sm-6 border-end">
             </div>
           </div>
-          <div class="col-md-3 col-sm-6 border-end">
-          </div>
-        </div>
-        <?php 
-          }
+        <?php
+        }
         ?>
-        <!-- POST ENDS HERE -->
+            </div>
         </div>
       </section>
     </div>
@@ -176,5 +224,4 @@ $posts=$database->performQuery("SELECT * FROM post,post_classroom WHERE post.pos
 
 
 </body>
-
 </html>
