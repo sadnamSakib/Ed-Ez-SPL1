@@ -42,6 +42,7 @@ foreach($posts as $i){
       if(!is_null($comment_text) && $comment_text!==''){
         $database->performQuery("INSERT INTO comments(comment_id,email,post_id,comment_datetime,comment_message) VALUES('$comment_id','$dummy_email','$post_id','$comment_date','$comment_text');");
       }
+
     unset($_REQUEST[$post_id.'comment_msg']);
   }
 }
