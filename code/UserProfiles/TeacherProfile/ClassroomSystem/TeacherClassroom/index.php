@@ -23,35 +23,34 @@ if (isset($_REQUEST['post_msg'])) {
   }
 
   $post_value = $_REQUEST['post_value'];
-  if(!is_null($post_value) && $post_value!==''){
+  if (!is_null($post_value) && $post_value !== '') {
     $database->performQuery("INSERT INTO post(post_id,email,post_datetime,post_message) VALUES('$post_id','$dummy_email','$post_date','$post_value');");
     $database->performQuery("INSERT INTO post_classroom(post_id,class_code) VALUES('$post_id','$classCode');");
   }
-  
 }
-if(isset($_REQUEST['comment_msg'])){
+if (isset($_REQUEST['comment_msg'])) {
 
   $comment_text = $_REQUEST['comment_text'];
-  if(!is_null($comment_text) && $comment_text!==''){
+  if (!is_null($comment_text) && $comment_text !== '') {
     $database->performQuery("INSERT INTO comment(comment_id,email,comment_datetime,comment_message) VALUES('$comment_id','$dummy_email','$comment_date','$comment_text');");
     $database->performQuery("INSERT INTO comment_classroom(comment_id,class_code) VALUES('$comment_id','$classCode');");
   }
 }
 
 $posts = $database->performQuery("SELECT * FROM post,post_classroom WHERE post.post_id=post_classroom.post_id and post_classroom.class_code='$classCode' order by post_datetime desc;");
-foreach($posts as $i){
-  $post_id=$i['post_id'];
-  if(isset($_REQUEST[$post_id.'comment_msg'])){
+foreach ($posts as $i) {
+  $post_id = $i['post_id'];
+  if (isset($_REQUEST[$post_id . 'comment_msg'])) {
     $comment_date = date('Y-m-d H:i:s');
     $comment_id = generateRandomString(50);
     while (($database->performQuery("SELECT * FROM comments WHERE comment_id = '$comment_id'"))->num_rows > 0) {
       $comment_id = generateRandomString(50);
     }
-      $comment_text= $_REQUEST[$post_id.'comment_text'];
-      if(!is_null($comment_text) && $comment_text!==''){
-        $database->performQuery("INSERT INTO comments(comment_id,email,post_id,comment_datetime,comment_message) VALUES('$comment_id','$dummy_email','$post_id','$comment_date','$comment_text');");
-      }
-    unset($_REQUEST[$post_id.'comment_msg']);
+    $comment_text = $_REQUEST[$post_id . 'comment_text'];
+    if (!is_null($comment_text) && $comment_text !== '') {
+      $database->performQuery("INSERT INTO comments(comment_id,email,post_id,comment_datetime,comment_message) VALUES('$comment_id','$dummy_email','$post_id','$comment_date','$comment_text');");
+    }
+    unset($_REQUEST[$post_id . 'comment_msg']);
   }
 }
 ?>
@@ -196,41 +195,41 @@ foreach($posts as $i){
                 </div>
                 <div>
                   <button class="btn btn-dark w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                   <?php 
-                      $comments=mysqli_fetch_assoc($database->performQuery("SELECT count(*)count_comments FROM comments WHERE post_id='".$i['post_id']."'"));
-                      echo $comments['count_comments']." comments";
+                    <?php
+                    $comments = mysqli_fetch_assoc($database->performQuery("SELECT count(*)count_comments FROM comments WHERE post_id='" . $i['post_id'] . "'"));
+                    echo $comments['count_comments'] . " comments";
 
-                   ?>
+                    ?>
                   </button>
                 </div>
                 <div class="collapse multi-collapse" id="collapseExample">
                   <!--START-->
-                  <?php 
-                    $post_id=$i['post_id'];
-                    $sql=$database->performQuery("SELECT * FROM comments WHERE post_id='".$post_id."' order by comment_datetime desc");
-                    foreach($sql as $j){
-                      $users_email=$j['email'];
-                      $users_records=mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='$users_email'"));
-                  ?>
-                  <div class="card p-1">
-                    <div class="card-header">Commented by <?php echo $users_records['name']; ?></div>
-                    <div class="card card-body">
-                      <?php echo $j['comment_message']; ?>
-                    </div>
-                  </div>
                   <?php
-                    }
+                  $post_id = $i['post_id'];
+                  $sql = $database->performQuery("SELECT * FROM comments WHERE post_id='" . $post_id . "' order by comment_datetime desc");
+                  foreach ($sql as $j) {
+                    $users_email = $j['email'];
+                    $users_records = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='$users_email'"));
+                  ?>
+                    <div class="card p-1">
+                      <div class="card-header">Commented by <?php echo $users_records['name']; ?></div>
+                      <div class="card card-body">
+                        <?php echo $j['comment_message']; ?>
+                      </div>
+                    </div>
+                  <?php
+                  }
                   ?>
                   <!--END-->
                 </div>
               </div>
-              <?php $post_id=$i['post_id'];?>
-              <form id="comment" name="<?php echo $post_id.'Comment'; ?>" method="POST" action="#<?php echo $post_id; ?>comment_section">
-              <div class="input-group mb-3 pb-3">
-                <a name="<?php echo $post_id; ?>comment_section"></a>
-                <input type="text" class="form-control" placeholder="Leave a comment" aria-label="Leave a comment" aria-describedby="button-addon2" name="<?php echo $post_id.'comment_text'; ?>">
-                <input type="submit" class="btn btn-primary" id="button-addon2" value="comment" name="<?php echo $post_id.'comment_msg'; ?>">
-              </div>
+              <?php $post_id = $i['post_id']; ?>
+              <form id="comment" name="<?php echo $post_id . 'Comment'; ?>" method="POST" action="#<?php echo $post_id; ?>comment_section">
+                <div class="input-group mb-3 pb-3">
+                  <a name="<?php echo $post_id; ?>comment_section"></a>
+                  <input type="text" class="form-control" placeholder="Leave a comment" aria-label="Leave a comment" aria-describedby="button-addon2" name="<?php echo $post_id . 'comment_text'; ?>">
+                  <input type="submit" class="btn btn-primary" id="button-addon2" value="comment" name="<?php echo $post_id . 'comment_msg'; ?>">
+                </div>
               </form>
             </div>
             <div class="col-md-3 col-sm-6 border-end">
