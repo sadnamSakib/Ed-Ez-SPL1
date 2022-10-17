@@ -19,6 +19,7 @@ This Directory contains the code implementations for the StudentProfile and Teac
 3) Javascript (Client-Side Scripting/Front-End)
 4) Php (Server-Side Scripting/Backend)
 5) MySQL (Database)
+6) Full Calendar Plugin Javascript
 
 We used bootsrap as our CSS modules that helped further improve the presentation of our website and helped ensure responsiveness.
 
