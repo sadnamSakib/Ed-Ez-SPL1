@@ -13,6 +13,32 @@ if ($authentication->num_rows == 0) {
   session::redirectProfile('teacher');
 }
 
+$POST_ID=array();
+$COMMENT_ID=array();
+
+$posts = $database->performQuery("SELECT * FROM post;");
+foreach($posts as $i){
+  array_push($POST_ID,$i['post_id']);
+}
+$comments = $database->performQuery("SELECT * FROM comments;");
+foreach($comments as $i){
+  array_push($COMMENT_ID,$i['comment_id']);
+}
+
+
+
+foreach($POST_ID as $i){
+  if(isset($_REQUEST[$i.'POST'])){
+    $database->performQuery("DELETE FROM post WHERE post_id='$i'");
+  }
+}
+
+foreach($COMMENT_ID as $i){
+  if(isset($_REQUEST[$i.'COMMENT'])){
+    $database->performQuery("DELETE FROM comments WHERE comment_id='$i'");
+  }
+}
+
 $classroom_records = mysqli_fetch_assoc($database->performQuery("SELECT * FROM classroom WHERE class_code = '$classCode'"));
 $teacher_records = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email = '$dummy_email'"));
 if (isset($_REQUEST['post_msg'])) {
@@ -53,6 +79,9 @@ foreach ($posts as $i) {
     unset($_REQUEST[$post_id . 'comment_msg']);
   }
 }
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -73,6 +102,63 @@ foreach ($posts as $i) {
   <link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet" />
   <script defer src="script.js"></script>
   <script src="<?php echo $root_path; ?>js/bootstrap.min.js"></script>
+  <style>
+
+<?php
+  foreach($POST_ID as $i){
+?>
+<?php echo '#'.$i ?>myDropdown{
+  transition: all 0.3s;
+}
+
+<?php echo '.'.$i ?>dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 160px;
+  border-radius: 1.5px;
+  overflow: auto;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  transition: all 0.3s;
+}
+
+<?php echo '.'.$i ?>dropdown-content a {
+  color: black;
+  text-decoration: none;
+  display: block;
+}
+<?php
+  }
+?>
+<?php
+  foreach($COMMENT_ID as $i){
+?>
+<?php echo '#'.$i ?>myDropdown{
+  transition: all 0.3s;
+}
+
+<?php echo '.'.$i ?>dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: white;
+  min-width: 160px;
+  border-radius: 1.5px;
+  overflow: auto;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  transition: all 0.3s;
+}
+
+<?php echo '.'.$i ?>dropdown-content a {
+  color: black;
+  text-decoration: none;
+  display: block;
+}
+<?php
+  }
+?>
+    </style>
 </head>
 
 <body>
@@ -139,8 +225,8 @@ foreach ($posts as $i) {
             </div>
             <div class="card-footer row justify-content-center">
               <div class="dropdown col-lg-5 col-sm-6 col-md-3">
-                <button onclick="dropdownbtn()" class="dropbtn btn btn-lg btn-outline-primary btn-join dropdown-toggle">Create Task</button>
-                <div class="dropdown-content dropdown-menu">
+                <button onclick="dropdownbtnNew()" class="dropbtn btn btn-lg btn-outline-primary btn-join dropdown-toggle">Create Task</button>
+                <div id="myDropdown2" class="dropdown-content dropdown-menu">
                   <a href="#home" class="dropdown-item">Create Quiz</a>
                   <a href="#about" class="dropdown-item">Create Assignment</a>
                 </div>
@@ -168,6 +254,7 @@ foreach ($posts as $i) {
         <?php
 
         foreach ($posts as $i) {
+          $post_ID=$i['post_id'];
         ?>
           <div class="row justify-content-center">
             <div class="col-md-6 col-sm-6 border-end">
@@ -180,9 +267,15 @@ foreach ($posts as $i) {
                               echo $user_record['name'];
                               ?>
                             <div class="dropdown col-lg-auto col-sm-6 col-md-3">
-                              <i onclick="dropdownbtn()" class="dropbtn bx bx-dots-horizontal-rounded"></i>
-                              <div id="myDropdown" class="dropdown-content dropdown-menu">
-                                <a href="#about" class="dropdown-item">Delete</a>
+                              <?php
+                                  if($dummy_email===$user_record['email']){
+                                    echo "<i onclick=\"".$post_ID."dropdownbtn()\" class=\"dropbtn bx bx-dots-horizontal-rounded\"></i>";
+                                  }
+                              ?>
+                              <div id="<?php echo $post_ID;?>myDropdown" class="dropdown-content dropdown-menu">
+                                <form id="<?php echo $post_ID; ?>deletePost" action="" method="POST">
+                                  <input type="submit" value="Delete" class="dropdown-item" name="<?php echo $post_ID.'POST';?>">
+                                </form>
                               </div>
                             </div>
                           </div>
@@ -205,6 +298,7 @@ foreach ($posts as $i) {
                   $post_id = $i['post_id'];
                   $sql = $database->performQuery("SELECT * FROM comments WHERE post_id='" . $post_id . "' order by comment_datetime desc");
                   foreach ($sql as $j) {
+                    $comment_id=$j['comment_id'];
                     $users_email = $j['email'];
                     $users_records = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='$users_email'"));
                   ?>
@@ -214,9 +308,15 @@ foreach ($posts as $i) {
                         <div class="row">
                           <p class="col py-2"><?php echo $j['comment_message']; ?> </p>
                           <div class="dropdown col-lg-auto col-sm-6 col-md-3">
-                            <i onclick="dropdownbtn()" class="dropbtn bx bx-dots-horizontal-rounded"></i>
-                            <div id="myDropdown" class="dropdown-content dropdown-menu">
-                              <a href="#about" class="dropdown-item">Delete</a>
+                          <?php  
+                                  if($dummy_email===$users_email){
+                                    echo "<i onclick=\"".$comment_id."dropdownbtn()\" class=\"dropbtn bx bx-dots-horizontal-rounded\"></i>";
+                                  }
+                              ?>
+                            <div id="<?php echo $comment_id; ?>myDropdown" class="dropdown-content dropdown-menu">
+                                <form id="<?php echo $comment_ID; ?>deleteComment" action="" method="POST">
+                                  <input type="submit" value="Delete" class="dropdown-item" name="<?php echo $comment_id.'COMMENT';?>">
+                                </form>
                             </div>
                           </div>
                         </div>
@@ -249,9 +349,33 @@ foreach ($posts as $i) {
     </div>
   </div>
 </body>
+<?php
+  foreach($POST_ID as $i){
+?>
 <script>
-  function dropdownbtn() {
-    document.getElementById("myDropdown").classList.toggle("show");
+  function <?php echo $i;?>dropdownbtn() {
+    document.getElementById("<?php echo $i;?>myDropdown").classList.toggle("show");
+  }
+  </script>
+  <?php
+  }
+  ?>
+
+<?php
+  foreach($COMMENT_ID as $j){
+?>
+<script>
+  function <?php echo $j;?>dropdownbtn() {
+    document.getElementById("<?php echo $j;?>myDropdown").classList.toggle("show");
+  }
+  </script>
+  <?php
+  }
+  ?>
+
+<script>
+  function dropdownbtnNew() {
+    document.getElementById("myDropdown2").classList.toggle("show");
   }
   // Close the dropdown if the user clicks outside of it
   window.onclick = function(event) {
