@@ -8,6 +8,14 @@ session::profile_not_set($root_path);
 $temp = hash('sha512', $_SESSION['email']);
 $tableName = $_SESSION['tableName'];
 $row = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='$temp';"));
+
+$classrooms = $database->performQuery("SELECT * FROM classroom,student_classroom where classroom.class_code=student_classroom.class_code and student_classroom.email='$temp';");
+foreach ($classrooms as $dummy_classroom) {
+  if (isset($_REQUEST['leave'.$dummy_classroom['class_code']])) {
+    $database->performQuery("DELETE FROM student_classroom WHERE class_code='".$dummy_classroom['class_code']."';");
+  }
+}
+
 $error="";
 $name = $row['name'];
 if (isset($_POST['Join'])) {
@@ -214,10 +222,12 @@ foreach($classrooms as $dummy_classroom){
                     <?php $card = $i['class_code']; ?>
                     <div class="dropdown col-lg-auto col-sm-6 col-md-3 py-3">
                       <i onclick="<?php echo $card; ?>dropdownbtn()" class="<?php echo $card; ?>dropbtn bx bx-dots-horizontal-rounded"></i>
+                        <form name='view_leave<?php echo $card;?>' action='' method='POST'>
                       <div id="<?php echo $card; ?>myDropdown" class="<?php echo $card; ?>dropdown-content dropdown-menu">
-                        <a href="#home" class="dropdown-item">View Details</a>
-                        <a href="#about" class="dropdown-item">Leave Classroom</a>
+                      <input type="submit" value="View Details" name='view<?php echo $card; ?>' class="dropdown-item">
+                      <input type="submit" value="Leave Classroom" name='leave<?php echo $card; ?>' class="dropdown-item">
                       </div>
+                      </form>
                   </div>
                   </div>
                 </div>

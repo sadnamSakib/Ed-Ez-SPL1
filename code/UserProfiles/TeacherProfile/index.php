@@ -103,6 +103,7 @@ $country = $row['country'];
   <script src="https://kit.fontawesome.com/d0f239b9af.js" crossorigin="anonymous"></script>
   <link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet" />
   <script defer src="script.js"></script>
+  
 </head>
 
 <body>
