@@ -175,7 +175,7 @@ foreach ($posts as $i) {
                   <p class="card-text"><?php echo $i['post_message']; ?></p>
                 </div>
                 <div>
-                  <button class="btn btn-dark w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                  <button class="btn btn-dark w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample<?php echo $i['post_id'] ?>" aria-expanded="false" aria-controls="collapseExample">
                     <?php
                     $comments = mysqli_fetch_assoc($database->performQuery("SELECT count(*)count_comments FROM comments WHERE post_id='" . $i['post_id'] . "'"));
                     echo $comments['count_comments'] . " comments";
@@ -183,7 +183,7 @@ foreach ($posts as $i) {
                     ?>
                   </button>
                 </div>
-                <div class="collapse multi-collapse" id="collapseExample">
+                <div class="collapse multi-collapse" id="collapseExample<?php echo $i['post_id'] ?>">
                   <?php
                   $post_id = $i['post_id'];
                   $sql = $database->performQuery("SELECT * FROM comments WHERE post_id='" . $post_id . "' order by comment_datetime desc;");
