@@ -156,7 +156,7 @@ if ($semester == -1) {
             <ul class="navbar-nav mb-2 mb-lg-0">
               <li class="nav-item">
                 <button type="button" class="btn btn-primary me-2 d-flex">
-                  <a href="../Logout/logout.php" style="text-decoration: none; color:black">Log Out</a>
+                <a href="<?php echo $root_path; ?>UserProfiles/Logout/logout.php" style="text-decoration: none; color:black">Log Out</a>
                 </button>
               </li>
             </ul>
