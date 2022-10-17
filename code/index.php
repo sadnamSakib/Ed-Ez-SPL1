@@ -24,13 +24,13 @@ $database->performQuery("DELETE FROM users WHERE Verified='0'");
 <body>
 <script src="js/bootstrap.js"></script>
     <nav class="navbar navbar-default navbar-fixed-top " role="navigation">
-      <div class="container-fluid row justify-content-center">
-        <div class="navbar-header col-sm-10 col-lg-10 col-md-10  col-xs-10">
+      <div class="container-fluid">
+        <div class="navbar-header">
           <a class="navbar-brand" href="#"
-            ><img src="logo2.jpg" class="img-fluid" height="5%" width="25%"
+            ><img src="logo2.jpg" class="img-fluid" alt="bootstrap" height="50" width="250"
           /></a>
         </div>
-        <div class="col-sm-1 col-lg-1 col-md-1  col-xs-1">
+        <div class="d-flex">
          <a href="LoginAuth/Login/index.php">
           <button
             type="button"
@@ -38,8 +38,6 @@ $database->performQuery("DELETE FROM users WHERE Verified='0'");
           >
             Login
           </button></a>
-</div>
-<div class="col-sm-1 col-lg-1 col-md-1  col-xs-1">
           <a href="LoginAuth/SignUp/index.php">
           <button
             type="button"
@@ -49,57 +47,47 @@ $database->performQuery("DELETE FROM users WHERE Verified='0'");
           </button>
           </a>
         </div>
-</div>
       </div>
     </nav>
     <div id="home">
-      <div class="heading row m-0">
-        <div class="landing-text col">
-          <h1>Ed-Ez</h1>
-          <h3>Education Made Easy.</h3>
-          <a href="#" class="btn btn-default btn-lg">Get Started</a>
-        </div>
-        <div class="bgobject col">
-          <object data="bgimage.svg" width="500" height="500"></object>
-        </div>
-      </div>
-      <div class="cards flex-container">
-        <div class="card w-25 text-bg-primary mb-3 m-1">
-          <div class="card-body">
-            <h5 class="card-title">For Teachers</h5>
-            <p class="card-text">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat.
-            </p>
-            <a
-              href="#"
-              class="btn btn-light"
-              onclick="location.href='SignUp/index.php';"
-              >Join</a
-            >
-          </div>
-        </div>
-        <div class="card w-25 text-bg-primary mb-3 m-4">
-          <div class="card-body">
-            <h5 class="card-title">For Students</h5>
-            <p class="card-text">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat.
-            </p>
-            <a
-              href="#"
-              class="btn btn-light"
-              onclick="location.href='SignUp/index.php';"
-              >Join</a
-            >
-          </div>
-        </div>
+    <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="false">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="3" aria-label="Slide 4"></button>
+  </div>
+  <div class="carousel-inner d-flex justify-content-around">
+    <div class="carousel-item active">
+    <object data="slideHome.jpg" height="500"></object>
+      <div class="carousel-caption d-none d-md-block">
       </div>
     </div>
+    <div class="carousel-item ">
+    <object data="slide1.jpg" height="500"></object>
+      <div class="carousel-caption d-none d-md-block">
+      </div>
+    </div>
+    <div class="carousel-item">
+      <object data="slide2.jpg" height="500"></object>
+      <div class="carousel-caption d-none d-md-block">
+      </div>
+    </div>
+    <div class="carousel-item">
+      <object data="slide3.jpg" height="500"></object>
+      <div class="carousel-caption d-none d-md-block">
+      </div>
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
 </body>
 </html>
 
