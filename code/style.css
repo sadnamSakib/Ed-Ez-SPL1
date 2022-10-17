@@ -99,16 +99,13 @@ html, body{
 {
     max-width: 200px;
 }
-@media(max-width:768px){
-    .landing-text h1{
-        font-size:300%;
-    }
-    .fa{
-        font-size: 20px;
-        padding: 10px;
-    }
-    .icon{
-        padding-top: 5%;
-        max-width: 100px;
-    }
+@media(max-width:576px){
+.img-fluid.logo{
+    width: 150px;
+    height: 30px;
+}
+.btn.btn-light.btn-lg{
+    margin: 3px;
+}
+    
 }

@@ -23,71 +23,54 @@ $database->performQuery("DELETE FROM users WHERE Verified='0'");
 </head>
 <body>
 <script src="js/bootstrap.js"></script>
-    <nav class="navbar navbar-default navbar-fixed-top " role="navigation">
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="container-fluid">
         <div class="navbar-header">
           <a class="navbar-brand" href="#"
-            ><img src="logo2.jpg" class="img-fluid" alt="bootstrap" height="50" width="250"
+            ><img src="logo2.jpg" class="img-fluid logo" alt="bootstrap" height="50" width="250"
           /></a>
         </div>
         <div class="d-flex">
          <a href="LoginAuth/Login/index.php">
-          <button
-            type="button"
-            class="btn btn-light btn-lg"
-          >
-            Login
-          </button></a>
+          <button type="button" class="btn btn-light btn-lg mx-sm-2 mx-xs-2"> Login</button></a>
           <a href="LoginAuth/SignUp/index.php">
-          <button
-            type="button"
-            class="btn btn-light btn-lg"
-          >
-            Register
-          </button>
+          <button type="button" class="btn btn-light btn-lg mx-sm-2 mx-xs-2">Register </button>
           </a>
         </div>
       </div>
     </nav>
     <div id="home">
-    <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="false">
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
   <div class="carousel-indicators">
-    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="1" aria-label="Slide 2"></button>
-    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="2" aria-label="Slide 3"></button>
-    <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="3" aria-label="Slide 4"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
   </div>
-  <div class="carousel-inner d-flex justify-content-around">
-    <div class="carousel-item active">
-    <object data="slideHome.jpg" height="500"></object>
-      <div class="carousel-caption d-none d-md-block">
-      </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active" data-bs-interval="4000" >
+      <img src="slideHome.jpg" class="d-block w-75 img-fluid m-auto" alt="bootstrap" height="600">
     </div>
-    <div class="carousel-item ">
-    <object data="slide1.jpg" height="500"></object>
-      <div class="carousel-caption d-none d-md-block">
-      </div>
+    <div class="carousel-item" data-bs-interval="2000" >
+      <img src="slide1.jpg" class="d-block w-75 img-fluid m-auto" alt="bootstrap" height="600">
     </div>
-    <div class="carousel-item">
-      <object data="slide2.jpg" height="500"></object>
-      <div class="carousel-caption d-none d-md-block">
-      </div>
+    <div class="carousel-item" data-bs-interval="2000">
+      <img src="slide2.jpg" class="d-block w-75 img-fluid m-auto" alt="bootstrap" height="600">
     </div>
-    <div class="carousel-item">
-      <object data="slide3.jpg" height="500"></object>
-      <div class="carousel-caption d-none d-md-block">
-      </div>
+    <div class="carousel-item" data-bs-interval="2000">
+      <img src="slide3.jpg" class="d-block w-75 img-fluid m-auto" alt="bootstrap" height="600">
     </div>
   </div>
-  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
     <span class="visually-hidden">Previous</span>
   </button>
-  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
     <span class="carousel-control-next-icon" aria-hidden="true"></span>
     <span class="visually-hidden">Next</span>
   </button>
 </div>
+    </div>
 </body>
 </html>
 
