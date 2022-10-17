@@ -24,33 +24,35 @@ $database->performQuery("DELETE FROM users WHERE Verified='0'");
 <body>
 <script src="js/bootstrap.js"></script>
     <nav class="navbar navbar-default navbar-fixed-top " role="navigation">
-      <div class="container-fluid row justify-content-center">
-        <div class="navbar-header col-sm-10 col-lg-10 col-md-10  col-xs-10">
+      <div class="container-fluid">
+        <div class="navbar-header">
           <a class="navbar-brand" href="#"
-            ><img src="logo2.jpg" class="img-fluid" height="5%" width="25%"
+          >
+          <img src="logo2.jpg" class="img-fluid" alt="Bootstrap" width="250" height="50"
           /></a>
         </div>
-        <div class="col-sm-1 col-lg-1 col-md-1  col-xs-1">
+        <div class="d-flex">
+          <div >
          <a href="LoginAuth/Login/index.php">
           <button
             type="button"
-            class="btn btn-light btn-lg"
+            class="btn btn-light btn-lg px-2"
           >
             Login
           </button></a>
-</div>
-<div class="col-sm-1 col-lg-1 col-md-1  col-xs-1">
+          </div>
+          <div class="">
           <a href="LoginAuth/SignUp/index.php">
           <button
             type="button"
-            class="btn btn-light btn-lg"
+            class="btn btn-light btn-lg px-2"
           >
             Register
           </button>
           </a>
+          </div>
         </div>
-</div>
-      </div>
+       </div>
     </nav>
     <div id="home">
       <div class="heading row m-0">
