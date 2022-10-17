@@ -23,85 +23,53 @@ $database->performQuery("DELETE FROM users WHERE Verified='0'");
 </head>
 <body>
 <script src="js/bootstrap.js"></script>
-    <nav class="navbar navbar-default navbar-fixed-top " role="navigation">
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="container-fluid">
         <div class="navbar-header">
           <a class="navbar-brand" href="#"
-          >
-          <img src="logo2.jpg" class="img-fluid" alt="Bootstrap" width="250" height="50"
+            ><img src="logo2.jpg" class="img-fluid logo" alt="bootstrap" height="50" width="250"
           /></a>
         </div>
         <div class="d-flex">
-          <div >
          <a href="LoginAuth/Login/index.php">
-          <button
-            type="button"
-            class="btn btn-light btn-lg px-2"
-          >
-            Login
-          </button></a>
-          </div>
-          <div class="">
+          <button type="button" class="btn btn-light btn-lg mx-sm-2 mx-xs-2"> Login</button></a>
           <a href="LoginAuth/SignUp/index.php">
-          <button
-            type="button"
-            class="btn btn-light btn-lg px-2"
-          >
-            Register
-          </button>
+          <button type="button" class="btn btn-light btn-lg mx-sm-2 mx-xs-2">Register </button>
           </a>
-          </div>
         </div>
-       </div>
+      </div>
     </nav>
     <div id="home">
-      <div class="heading row m-0">
-        <div class="landing-text col">
-          <h1>Ed-Ez</h1>
-          <h3>Education Made Easy.</h3>
-          <a href="#" class="btn btn-default btn-lg">Get Started</a>
-        </div>
-        <div class="bgobject col">
-          <object data="bgimage.svg" width="500" height="500"></object>
-        </div>
-      </div>
-      <div class="cards flex-container">
-        <div class="card w-25 text-bg-primary mb-3 m-1">
-          <div class="card-body">
-            <h5 class="card-title">For Teachers</h5>
-            <p class="card-text">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat.
-            </p>
-            <a
-              href="#"
-              class="btn btn-light"
-              onclick="location.href='SignUp/index.php';"
-              >Join</a
-            >
-          </div>
-        </div>
-        <div class="card w-25 text-bg-primary mb-3 m-4">
-          <div class="card-body">
-            <h5 class="card-title">For Students</h5>
-            <p class="card-text">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris
-              nisi ut aliquip ex ea commodo consequat.
-            </p>
-            <a
-              href="#"
-              class="btn btn-light"
-              onclick="location.href='SignUp/index.php';"
-              >Join</a
-            >
-          </div>
-        </div>
-      </div>
+    <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-indicators">
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+  </div>
+  <div class="carousel-inner">
+    <div class="carousel-item active" data-bs-interval="4000" >
+      <img src="slideHome.jpg" class="d-block w-75 img-fluid m-auto" alt="bootstrap" height="600">
+    </div>
+    <div class="carousel-item" data-bs-interval="2000" >
+      <img src="slide1.jpg" class="d-block w-75 img-fluid m-auto" alt="bootstrap" height="600">
+    </div>
+    <div class="carousel-item" data-bs-interval="2000">
+      <img src="slide2.jpg" class="d-block w-75 img-fluid m-auto" alt="bootstrap" height="600">
+    </div>
+    <div class="carousel-item" data-bs-interval="2000">
+      <img src="slide3.jpg" class="d-block w-75 img-fluid m-auto" alt="bootstrap" height="600">
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
     </div>
 </body>
 </html>
-

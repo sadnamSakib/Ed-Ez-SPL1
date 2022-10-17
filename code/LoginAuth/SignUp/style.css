@@ -118,6 +118,9 @@ body{
     position: relative;
     border-bottom: 1px dotted black;
   }
+  .myLeftCtn .fas {
+    color: #4596be;
+  }
 
 .hovertext:before {
     content: attr(data-hover);

@@ -174,7 +174,7 @@ if ($semester == -1) {
               <span class="text-black-50"><?php echo $_SESSION['email'] ?></span>
               <form method="POST" action="" enctype="multipart/form-data">
                 <input class="d-none" type="file" name="img" accept="image/*" />
-                <div class="input-group w-75">
+                <div class="input-group w-75 mx-5">
                   <input type="file" class="form-control profile" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload" name="image">
 
                   <!-- <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04">Upload Profile</button> -->
