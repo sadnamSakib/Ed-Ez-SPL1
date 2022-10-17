@@ -90,19 +90,7 @@ foreach ($posts as $i) {
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-calendar-plus pe-2'></i>Schedule</a></li>
         <li class=""><a href="<?php echo $root_path ?>UserProfiles/TeacherProfile/ClassroomSystem/index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-chalkboard pe-2'></i>Classrooms</a></li>
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-bar-chart-alt-2 pe-2'></i>Grades</a></li>
-
-
       </ul>
-      <!-- <hr class="h-color mx-2 my-5">
-      <hr class="h-color mx-2 my-5">
-      <hr class="h-color mx-2 my-5">
-      <hr class="h-color mx-2 my-5">
-      <hr class="h-color mx-2 my-5">
-      <hr class="h-color mx-2 my-5">
-      <hr class="h-color mx-2 my-5">
-      <ul class="list-unstyled px-2 ">
-        <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block "><i class='bx bx-wrench pe-2'></i>Settings</a></li>
-      </ul> -->
     </div>
     <div class="content">
       <nav class="navbar navbar-expand p-3" style="background-color: #4596be;">
@@ -125,7 +113,7 @@ foreach ($posts as $i) {
           </div>
         </div>
       </nav>
-      <section class="content-section m-auto px-2 py-2">
+      <section class="content-section px-2 py-2">
         <div class="container-fluid bg-white rounded mt-5 mb-5"></div>
         <!-- <h2 class="fs-5">Profile</h2> -->
         <div class="row justify-content-center">
@@ -150,7 +138,7 @@ foreach ($posts as $i) {
               </div>
             </div>
             <div class="card-footer row justify-content-center">
-              <div class="dropdown col-lg-auto col-sm-6 col-md-3">
+              <div class="dropdown col-lg-5 col-sm-6 col-md-3">
                 <button onclick="dropdownbtn()" class="dropbtn btn btn-lg btn-outline-primary btn-join dropdown-toggle">Create Task</button>
                 <div id="myDropdown" class="dropdown-content dropdown-menu">
                   <a href="#home" class="dropdown-item">Create Quiz</a>
@@ -243,25 +231,6 @@ foreach ($posts as $i) {
       </section>
     </div>
   </div>
-
-  <script>
-    function dropdownbtn() {
-      document.getElementById("myDropdown").classList.toggle("show");
-    }
-    // Close the dropdown if the user clicks outside of it
-    window.onclick = function(event) {
-      if (!event.target.matches('.dropbtn')) {
-        var dropdowns = document.getElementsByClassName("dropdown-content");
-        var i;
-        for (i = 0; i < dropdowns.length; i++) {
-          var openDropdown = dropdowns[i];
-          if (openDropdown.classList.contains('show')) {
-            openDropdown.classList.remove('show');
-          }
-        }
-      }
-    }
-  </script>
 </body>
 
 </html>
