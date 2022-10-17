@@ -202,7 +202,15 @@ foreach ($posts as $i) {
                     <div class="card p-1">
                       <div class="card-header">Commented by <?php echo $users_records['name']; ?></div>
                       <div class="card card-body">
-                        <?php echo $j['comment_message']; ?>
+                        <div class="row">
+                          <p class="col py-2"><?php echo $j['comment_message']; ?> </p>
+                          <div class="dropdown col-lg-auto col-sm-6 col-md-3">
+                            <i onclick="dropdownbtn()" class="dropbtn bx bx-dots-horizontal-rounded"></i>
+                            <div id="myDropdown" class="dropdown-content dropdown-menu">
+                              <a href="#about" class="dropdown-item">Delete</a>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   <?php
