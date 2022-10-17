@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 17, 2022 at 09:51 AM
+-- Generation Time: Oct 17, 2022 at 09:53 AM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -48,6 +48,15 @@ CREATE TABLE `classroom` (
   `course_code` varchar(10) DEFAULT NULL,
   `semester` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `classroom`
+--
+
+INSERT INTO `classroom` (`class_code`, `classroom_name`, `course_code`, `semester`) VALUES
+('jITqBDlL0d', 'Classroom', '105', 5),
+('LwucsgVulu', 'Classroom', '102', 2),
+('oX6MdwrvrG', 'Classroom', '103', 3);
 
 -- --------------------------------------------------------
 
@@ -100,6 +109,14 @@ CREATE TABLE `post` (
   `post_message` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `post`
+--
+
+INSERT INTO `post` (`post_id`, `email`, `post_datetime`, `post_message`) VALUES
+('AGV3qlZOOnUrdbHpbr5S8aJVVD9Il9X1MDwhfoj7cUF7hjPZ3V', '90dc560460a215b93c5f067672aafd855e2b1fc411e0f5aba890e170ccb75ebb8941fa653b50396ba493a3d812b1857d4d140dc6bb4d500abf773762bb49a36d', '2022-10-17 09:42:39', 'This is another post'),
+('Rko8PTlqFmy4h2XpNC9NtGSB7aEm9kFbH0RqS9qdGbBbUbNEsd', '90dc560460a215b93c5f067672aafd855e2b1fc411e0f5aba890e170ccb75ebb8941fa653b50396ba493a3d812b1857d4d140dc6bb4d500abf773762bb49a36d', '2022-10-17 09:41:56', 'hello world');
+
 -- --------------------------------------------------------
 
 --
@@ -110,6 +127,14 @@ CREATE TABLE `post_classroom` (
   `post_id` varchar(50) NOT NULL,
   `class_code` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `post_classroom`
+--
+
+INSERT INTO `post_classroom` (`post_id`, `class_code`) VALUES
+('AGV3qlZOOnUrdbHpbr5S8aJVVD9Il9X1MDwhfoj7cUF7hjPZ3V', 'LwucsgVulu'),
+('Rko8PTlqFmy4h2XpNC9NtGSB7aEm9kFbH0RqS9qdGbBbUbNEsd', 'LwucsgVulu');
 
 -- --------------------------------------------------------
 
@@ -153,6 +178,14 @@ CREATE TABLE `student` (
   `semester` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `student`
+--
+
+INSERT INTO `student` (`email`, `semester`) VALUES
+('6195c42a51e25675263f44e92844da2ecc063f71fdd909d3b2a5e9d4339b332115d52b1877c9716698305f13fbf392387f11c78699ed6d1b0d524896c3525f72', NULL),
+('e048ab739a2f106de400f8139f08aa426de8f45737d9490527866de3f786cbe985fd736b21d541cae545a589f8706e1426deb06f0d486686fcd28ed8225600fa', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -163,6 +196,13 @@ CREATE TABLE `student_classroom` (
   `email` varchar(200) NOT NULL,
   `class_code` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `student_classroom`
+--
+
+INSERT INTO `student_classroom` (`email`, `class_code`) VALUES
+('e048ab739a2f106de400f8139f08aa426de8f45737d9490527866de3f786cbe985fd736b21d541cae545a589f8706e1426deb06f0d486686fcd28ed8225600fa', 'LwucsgVulu');
 
 -- --------------------------------------------------------
 
@@ -175,6 +215,13 @@ CREATE TABLE `teacher` (
   `designation` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `teacher`
+--
+
+INSERT INTO `teacher` (`email`, `designation`) VALUES
+('90dc560460a215b93c5f067672aafd855e2b1fc411e0f5aba890e170ccb75ebb8941fa653b50396ba493a3d812b1857d4d140dc6bb4d500abf773762bb49a36d', NULL);
+
 -- --------------------------------------------------------
 
 --
@@ -185,6 +232,15 @@ CREATE TABLE `teacher_classroom` (
   `email` varchar(200) NOT NULL,
   `class_code` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `teacher_classroom`
+--
+
+INSERT INTO `teacher_classroom` (`email`, `class_code`) VALUES
+('90dc560460a215b93c5f067672aafd855e2b1fc411e0f5aba890e170ccb75ebb8941fa653b50396ba493a3d812b1857d4d140dc6bb4d500abf773762bb49a36d', 'jITqBDlL0d'),
+('90dc560460a215b93c5f067672aafd855e2b1fc411e0f5aba890e170ccb75ebb8941fa653b50396ba493a3d812b1857d4d140dc6bb4d500abf773762bb49a36d', 'LwucsgVulu'),
+('90dc560460a215b93c5f067672aafd855e2b1fc411e0f5aba890e170ccb75ebb8941fa653b50396ba493a3d812b1857d4d140dc6bb4d500abf773762bb49a36d', 'oX6MdwrvrG');
 
 -- --------------------------------------------------------
 
@@ -204,6 +260,15 @@ CREATE TABLE `users` (
   `profile_picture` longblob DEFAULT NULL,
   `Verified` tinyint(1) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`email`, `name`, `password`, `institution`, `dob`, `mobileNumber`, `department`, `country`, `profile_picture`, `Verified`) VALUES
+('6195c42a51e25675263f44e92844da2ecc063f71fdd909d3b2a5e9d4339b332115d52b1877c9716698305f13fbf392387f11c78699ed6d1b0d524896c3525f72', 'sadnam', '$2y$10$GybDNB8WwmaOtBMhFhJdhOrO90cW4cAfXl2MrwOQTyDMN0pyhSV0O', 'IUT', '2022-10-04', NULL, NULL, NULL, NULL, 1),
+('90dc560460a215b93c5f067672aafd855e2b1fc411e0f5aba890e170ccb75ebb8941fa653b50396ba493a3d812b1857d4d140dc6bb4d500abf773762bb49a36d', 'Mirza Azwad(TEACHER)', '$2y$10$jMPHMfIEQgtgPkFBKJ/eC.04q9LJRNc3fha5MIiEN3eLYdQ2X6jNi', 'IUT', '2022-10-04', NULL, NULL, NULL, NULL, 1),
+('e048ab739a2f106de400f8139f08aa426de8f45737d9490527866de3f786cbe985fd736b21d541cae545a589f8706e1426deb06f0d486686fcd28ed8225600fa', 'Mirza Azwad(STUDENT)', '$2y$10$dq9L9OvvKZhREVpL53s55OpMzbuMvmP8c3UipbIZQ3mX3.57iMriG', 'IUT', '2022-09-28', NULL, NULL, NULL, NULL, 1);
 
 --
 -- Indexes for dumped tables
