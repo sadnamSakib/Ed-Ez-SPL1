@@ -1,7 +1,6 @@
 body{
   background: #eee;
-  overflow:hidden;
-
+  overflow:scroll;
 }
 #side_nav{
   background: #2f6d8b;
