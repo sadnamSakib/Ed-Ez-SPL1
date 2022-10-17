@@ -82,16 +82,6 @@ foreach ($classrooms as $dummy_classroom) {
         <li class=""><a href="<?php echo $root_path ?>UserProfiles/TeacherProfile/ClassroomSystem/index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-chalkboard pe-2'></i>Classrooms</a></li>
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-bar-chart-alt-2 pe-2'></i>Grades</a></li>
       </ul>
-      <!-- <hr class="h-color mx-2 my-5">
-      <hr class="h-color mx-2 my-5">
-      <hr class="h-color mx-2 my-5">
-      <hr class="h-color mx-2 my-5">
-      <hr class="h-color mx-2 my-5">
-      <hr class="h-color mx-2 my-5">
-      <hr class="h-color mx-2 my-5">
-      <ul class="list-unstyled px-2 ">
-        <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block "><i class='bx bx-wrench pe-2'></i>Settings</a></li>
-      </ul> -->
     </div>
     <div class="content">
       <nav class="navbar navbar-expand p-3" style="background-color: #4596be;">
@@ -119,5 +109,48 @@ foreach ($classrooms as $dummy_classroom) {
       </div>
     </div>
 </body>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      headerToolbar: {
+        left: 'prev,next',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      },
+      
+      navLinks: true, // can click day/week names to navigate views
+      selectable: false,
+      selectMirror: false,
+      
+      select: function(arg) {
+        var title = prompt('Event Title:');
+        if (title) {
+          calendar.addEvent({
+            title: title,
+            start: arg.start,
+            end: arg.end,
+            allDay: arg.allDay
+          })
+        }
+        calendar.unselect()
+      },
+      
+      editable: false,
+      dayMaxEvents: true, // allow "more" link when too many events
+      events: [
+        {
+          title: 'SPL progress Presentation',
+          start: '2022-10-19'
+        }
+        
+      ]
+    });
+
+    calendar.render();
+  });
+
+</script>
 
 </html>

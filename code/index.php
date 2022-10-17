@@ -73,4 +73,3 @@ $database->performQuery("DELETE FROM users WHERE Verified='0'");
     </div>
 </body>
 </html>
-

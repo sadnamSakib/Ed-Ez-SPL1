@@ -10,27 +10,7 @@ $temp = hash('sha512', $_SESSION['email']);
 $tableName = $_SESSION['tableName'];
 $row = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='$temp';"));
 $name = $row['name'];
-$className = 'Math 4341 Linear Algebra';
-if (isset($_POST['Create'])) {
-  $classCode = generateRandomString(10);
-  $existence = $database->performQuery("SELECT * FROM classroom where class_code='$classCode'");
-  while ($existence->num_rows > 0) {
-    $classCode = generateRandomString(10);
-  }
-  $className = $_POST['courseName'];
-  $courseCode = $_POST['courseCode'];
-  $semester = $_POST['semester'];
-  $database->performQuery("INSERT INTO classroom(class_code,classroom_name,course_code,semester) VALUES('$classCode','$className','$courseCode','$semester');");
-  $database->performQuery("INSERT INTO teacher_classroom(email,class_code) VALUES('$temp','$classCode');");
-}
 
-$classrooms = $database->performQuery("SELECT * FROM classroom,teacher_classroom where classroom.class_code=teacher_classroom.class_code and teacher_classroom.email='$temp';");
-foreach ($classrooms as $dummy_classroom) {
-  if (isset($_POST[$dummy_classroom['class_code']])) {
-    $_SESSION['class_code'] = $dummy_classroom['class_code'];
-    header('Location: TeacherClassroom/index.php');
-  }
-}
 
 
 ?>
@@ -82,16 +62,6 @@ foreach ($classrooms as $dummy_classroom) {
         <li class=""><a href="<?php echo $root_path ?>UserProfiles/TeacherProfile/ClassroomSystem/index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-chalkboard pe-2'></i>Classrooms</a></li>
         <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-bar-chart-alt-2 pe-2'></i>Grades</a></li>
       </ul>
-      <!-- <hr class="h-color mx-2 my-5">
-      <hr class="h-color mx-2 my-5">
-      <hr class="h-color mx-2 my-5">
-      <hr class="h-color mx-2 my-5">
-      <hr class="h-color mx-2 my-5">
-      <hr class="h-color mx-2 my-5">
-      <hr class="h-color mx-2 my-5">
-      <ul class="list-unstyled px-2 ">
-        <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block "><i class='bx bx-wrench pe-2'></i>Settings</a></li>
-      </ul> -->
     </div>
     <div class="content">
       <nav class="navbar navbar-expand p-3" style="background-color: #4596be;">
@@ -100,9 +70,6 @@ foreach ($classrooms as $dummy_classroom) {
             <button class="btn btn-primary open-btn me-2"><i class='bx bx-menu'></i></i></button>
             <a href="#" class="navbar-brand fs-5 px-3 mx-4" href="#"><span class="bg-dark rounded px-2 py-0 text-white">Ed-Ez</span></a>
           </div>
-          <!-- <button class="navbar-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <i class="fal fa-bars"></i>
-          </button> -->
           <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <ul class="navbar-nav mb-2 mb-lg-0">
               <li class="nav-item">
@@ -119,5 +86,62 @@ foreach ($classrooms as $dummy_classroom) {
       </div>
     </div>
 </body>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
 
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      headerToolbar: {
+        left: 'prev,next',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      },
+      
+      navLinks: true, // can click day/week names to navigate views
+      selectable: true,
+      selectMirror: true,
+      
+      select: function(arg) {
+        var title = prompt('Event Title:');
+        if (title) {
+          // calendar.addEvent({
+          //   title: title,
+          //   start: arg.start,
+          //   end: arg.end,
+          //   allDay: arg.allDay
+          // })
+          $.ajax({
+            type : "POST",  //type of method
+            url  : window.location.pathname,  //your page
+            data : { 
+            title: title,
+            start: arg.start,
+            type: 'holiday' 
+          },// passing the values
+            success: function(data){  
+                        location.reload();
+                    }
+        });
+        }
+        calendar.unselect()
+      },
+      eventClick: function(arg) {
+        if (confirm('Are you sure you want to delete this event?')) {
+          arg.event.remove()
+        }
+      },
+      editable: true,
+      dayMaxEvents: true, // allow "more" link when too many events
+      events: [
+        {
+          title: 'SPL progress Presentation',
+          start: '2022-10-19'
+        }
+        
+      ]
+    });
+
+    calendar.render();
+  });
+  </script>
 </html>

@@ -24,6 +24,7 @@ if (isset($_POST['Create'])) {
   $existence = $database->performQuery("SELECT * FROM classroom where class_code='$classCode'");
   while ($existence->num_rows > 0) {
     $classCode = generateRandomString(10);
+    $existence = $database->performQuery("SELECT * FROM classroom where class_code='$classCode'");
   }
   $className = $_POST['courseName'];
   $courseCode = $_POST['courseCode'];
