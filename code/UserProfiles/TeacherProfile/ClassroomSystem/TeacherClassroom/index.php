@@ -140,7 +140,7 @@ foreach ($posts as $i) {
             <div class="card-footer row justify-content-center">
               <div class="dropdown col-lg-5 col-sm-6 col-md-3">
                 <button onclick="dropdownbtn()" class="dropbtn btn btn-lg btn-outline-primary btn-join dropdown-toggle">Create Task</button>
-                <div id="myDropdown" class="dropdown-content dropdown-menu">
+                <div class="dropdown-content dropdown-menu">
                   <a href="#home" class="dropdown-item">Create Quiz</a>
                   <a href="#about" class="dropdown-item">Create Assignment</a>
                 </div>
