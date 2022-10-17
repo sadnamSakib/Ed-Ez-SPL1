@@ -128,7 +128,7 @@ $country = $row['country'];
         <div class="container-fluid mx-5 px-4">
           <div class="d-flex justify-content-between d-block">
             <button class="btn btn-primary open-btn me-2"><i class='bx bx-menu'></i></i></button>
-            <a href="#" class="navbar-brand fs-5 px-3 mx-4" href="#"><span class="bg-dark rounded px-2 py-0 text-white">Ed-Ez</span></a>
+            <a href="#" class="navbar-brand fs-5 px-3 mx-4" href="#"><img src="../../logo2.jpg" class="img-fluid" height="40" width= "200"/></a>
           </div>
           <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <ul class="navbar-nav mb-2 mb-lg-0">
