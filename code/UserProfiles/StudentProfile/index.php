@@ -23,7 +23,7 @@ $tableName = $_SESSION['tableName'];
 $_SESSION['url'] = URLPath::getURL();
 
 $error = "Enter Password To make Updates to Profile Information";
-$errorColor = "black";
+$errorColor = "red";
 
 if (isset($_REQUEST['profileimg'])) {
   $img = $_REQUEST['image'];
