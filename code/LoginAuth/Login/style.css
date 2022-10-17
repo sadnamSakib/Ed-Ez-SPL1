@@ -19,6 +19,10 @@ body{
     padding: 7px;
     
 }
+.myLeftCtn .fas{
+    position: relative;
+    color: #4596be!important;
+}
 
 .btn-group{
     padding:0% 0% 5% 0%;
