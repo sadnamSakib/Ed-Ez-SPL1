@@ -30,7 +30,7 @@ $database->performQuery("DELETE FROM users WHERE Verified='0'");
             ><img src="logo2.jpg" class="img-fluid" height="5%" width="25%"
           /></a>
         </div>
-        <div class="col-sm-2 col-lg-2 col-md-2  col-xs-2">
+        <div class="col-sm-1 col-lg-1 col-md-1  col-xs-1">
          <a href="LoginAuth/Login/index.php">
           <button
             type="button"
@@ -39,6 +39,7 @@ $database->performQuery("DELETE FROM users WHERE Verified='0'");
             Login
           </button></a>
 </div>
+<div class="col-sm-1 col-lg-1 col-md-1  col-xs-1">
           <a href="LoginAuth/SignUp/index.php">
           <button
             type="button"
@@ -48,6 +49,7 @@ $database->performQuery("DELETE FROM users WHERE Verified='0'");
           </button>
           </a>
         </div>
+</div>
       </div>
     </nav>
     <div id="home">
