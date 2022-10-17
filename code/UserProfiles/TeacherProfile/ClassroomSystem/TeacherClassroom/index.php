@@ -172,11 +172,20 @@ foreach ($posts as $i) {
           <div class="row justify-content-center">
             <div class="col-md-6 col-sm-6 border-end">
               <div class="card  text-bg-light mb-3">
-                <div class="card-header">
+              <div class="card-header">
+                  
+                  <div class="row">
                   Posted by <?php
-                            $user_record = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='" . $i['email'] . "';"));
-                            echo $user_record['name'];
-                            ?>
+                              $user_record = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='" . $i['email'] . "';"));
+                              echo $user_record['name'];
+                              ?>
+                            <div class="dropdown col-lg-auto col-sm-6 col-md-3">
+                              <i onclick="dropdownbtn()" class="dropbtn bx bx-dots-horizontal-rounded"></i>
+                              <div id="myDropdown" class="dropdown-content dropdown-menu">
+                                <a href="#about" class="dropdown-item">Delete</a>
+                              </div>
+                            </div>
+                          </div>
                 </div>
                 <div class="card-body">
                   <p class="card-text"><?php echo $i['post_message']; ?></p>

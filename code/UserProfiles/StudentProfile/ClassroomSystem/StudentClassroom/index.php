@@ -94,7 +94,7 @@ foreach ($posts as $i) {
         <div class="container-fluid mx-5 px-4">
           <div class="d-flex justify-content-between d-block">
             <button class="btn btn-primary open-btn me-2"><i class='bx bx-menu'></i></i></button>
-            <a href="#" class="navbar-brand fs-5 px-3 mx-4" href="#"><img src="../../../../logo2.jpg" class="img-fluid" height="40" width= "200"/></a>
+            <a href="#" class="navbar-brand fs-5 px-3 mx-4" href="#"><span class="bg-dark rounded px-2 py-0 text-white">Ed-Ez</span></a>
           </div>
           <!-- <button class="navbar-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <i class="fal fa-bars"></i>
@@ -155,11 +155,20 @@ foreach ($posts as $i) {
           <div class="row justify-content-center">
             <div class="col-md-6 col-sm-6 border-end">
               <div class="card  text-bg-light mb-3">
-                <div class="card-header">
+              <div class="card-header">
+                  
+                  <div class="row">
                   Posted by <?php
-                            $user_record = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='" . $i['email'] . "';"));
-                            echo $user_record['name'];
-                            ?>
+                              $user_record = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='" . $i['email'] . "';"));
+                              echo $user_record['name'];
+                              ?>
+                            <div class="dropdown col-lg-auto col-sm-6 col-md-3">
+                              <i onclick="dropdownbtn()" class="dropbtn bx bx-dots-horizontal-rounded"></i>
+                              <div id="myDropdown" class="dropdown-content dropdown-menu">
+                                <a href="#about" class="dropdown-item">Delete</a>
+                              </div>
+                            </div>
+                          </div>
                 </div>
                 <div class="card-body">
                   <p class="card-text"><?php echo $i['post_message']; ?></p>
