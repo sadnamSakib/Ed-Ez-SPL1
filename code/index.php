@@ -23,21 +23,22 @@ $database->performQuery("DELETE FROM users WHERE Verified='0'");
 </head>
 <body>
 <script src="js/bootstrap.js"></script>
-    <nav class="navbar navbar-default navbar-fixed-top m-auto" role="navigation">
-      <div class="container-fluid">
-        <div class="navbar-header">
+    <nav class="navbar navbar-default navbar-fixed-top " role="navigation">
+      <div class="container-fluid row justify-content-center">
+        <div class="navbar-header col-sm-10 col-lg-10 col-md-10  col-xs-10">
           <a class="navbar-brand" href="#"
-            ><img src="logo4.jpg" height="55px" width="55px"
+            ><img src="logo2.jpg" class="img-fluid" height="5%" width="25%"
           /></a>
         </div>
-        <div>
-        <a href="LoginAuth/Login/index.php">
+        <div class="col-sm-2 col-lg-2 col-md-2  col-xs-2">
+         <a href="LoginAuth/Login/index.php">
           <button
             type="button"
             class="btn btn-light btn-lg"
           >
             Login
           </button></a>
+</div>
           <a href="LoginAuth/SignUp/index.php">
           <button
             type="button"
