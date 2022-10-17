@@ -11,6 +11,14 @@ $tableName = $_SESSION['tableName'];
 $row = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='$temp';"));
 $name = $row['name'];
 $className = 'Math 4341 Linear Algebra';
+$classrooms = $database->performQuery("SELECT * FROM classroom,teacher_classroom where classroom.class_code=teacher_classroom.class_code and teacher_classroom.email='$temp';");
+foreach ($classrooms as $dummy_classroom) {
+  if (isset($_REQUEST['delete'.$dummy_classroom['class_code']])) {
+    $database->performQuery("DELETE FROM classroom WHERE class_code='".$dummy_classroom['class_code']."';");
+  }
+}
+
+
 if (isset($_POST['Create'])) {
   $classCode = generateRandomString(10);
   $existence = $database->performQuery("SELECT * FROM classroom where class_code='$classCode'");
@@ -31,6 +39,7 @@ foreach ($classrooms as $dummy_classroom) {
     header('Location: TeacherClassroom/index.php');
   }
 }
+
 
 
 ?>
@@ -61,61 +70,64 @@ foreach ($classrooms as $dummy_classroom) {
     }
   </script>
   <?php
-     foreach($classrooms as $i){
-      $card=$i['class_code'];
+  foreach ($classrooms as $i) {
+    $card = $i['class_code'];
   ?>
-<style>
-  <?php echo ".".$card."dropbtn";?> {
-  background-color: transparent;
-  color: black;
-  padding: 3px;
-  font-size: 16px;
-  border: 10px;
-  border-color: #000;
-  border-radius: 5px;
-  cursor: pointer;
-}
+    <style>
+      <?php echo "." . $card . "dropbtn"; ?> {
+        background-color: transparent;
+        color: black;
+        padding: 3px;
+        font-size: 16px;
+        border: 10px;
+        border-color: #000;
+        border-radius: 5px;
+        cursor: pointer;
+      }
 
 
-<?php "#".$card."myDropdown" ?>{
-  transition: all 0.3s;
-}
+      <?php "#" . $card . "myDropdown" ?> {
+        transition: all 0.3s;
+      }
 
-<?php echo ".".$card."dropbtn:hover, .".$card."dropbtn:focus";?> {
-  background-color: #2f6d8b;
-}
+      <?php echo "." . $card . "dropbtn:hover, ." . $card . "dropbtn:focus"; ?> {
+        background-color: #2f6d8b;
+      }
 
-<?php echo ".".$card."dropdown";?> {
-  position: relative;
-  display: inline-block;
-}
+      <?php echo "." . $card . "dropdown"; ?> {
+        position: relative;
+        display: inline-block;
+      }
 
-<?php echo ".".$card."dropdown-content";?>{
-  display: none;
-  position: absolute;
-  background-color: white;
-  min-width: 160px;
-  border-radius: 1.5px;
-  overflow: auto;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-  transition: all 0.3s;
-}
+      <?php echo "." . $card . "dropdown-content"; ?> {
+        display: none;
+        position: absolute;
+        background-color: white;
+        min-width: 160px;
+        border-radius: 1.5px;
+        overflow: auto;
+        box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+        z-index: 1;
+        transition: all 0.3s;
+      }
 
-<?php echo ".".$card."dropdown-content a";?> {
-  color: black;
-  text-decoration: none;
-  display: block;
-}
-<?php echo ".".$card."dropdown-toggle";?>{
-  background-color: #2980B9;
-  color:white;
-}
+      <?php echo "." . $card . "dropdown-content a"; ?> {
+        color: black;
+        text-decoration: none;
+        display: block;
+      }
 
-<?php echo ".".$card."dropdown a:hover";?> {background-color: #ddd;}
-</style>
+      <?php echo "." . $card . "dropdown-toggle"; ?> {
+        background-color: #2980B9;
+        color: white;
+      }
+
+      <?php echo "." . $card . "dropdown a:hover"; ?> {
+        background-color: #ddd;
+      }
+    </style>
   <?php
-     };
+  };
   ?>
 
 </head>
@@ -212,15 +224,17 @@ foreach ($classrooms as $dummy_classroom) {
               <div class="card card-box-shadow">
                 <div class="card-header  task-card justify-content-around" style="height:100px">
                   <div class="row">
-                <h4 class="card-title col py-2"><?php echo $i['course_code'] . ": " . $i['classroom_name']; ?></h4>
-                <?php $card=$i['class_code']; ?>
-                  <div class="dropdown col-lg-auto col-sm-6 col-md-3 py-3">
-                    <i onclick="<?php echo $card; ?>dropdownbtn()" class="<?php echo $card; ?>dropbtn bx bx-dots-horizontal-rounded"></i>
-                    <div id="<?php echo $card; ?>myDropdown" class="<?php echo $card; ?>dropdown-content dropdown-menu">
-                      <a href="#home" class="dropdown-item">View Details</a>
-                      <a href="#about" class="dropdown-item">Delete Classroom</a>
+                    <h4 class="card-title col py-2"><?php echo $i['course_code'] . ": " . $i['classroom_name']; ?></h4>
+                    <?php $card = $i['class_code']; ?>
+                    <div class="dropdown col-lg-auto col-sm-6 col-md-3 py-3">
+                      <i onclick="<?php echo $card; ?>dropdownbtn()" class="<?php echo $card; ?>dropbtn bx bx-dots-horizontal-rounded"></i>
+                      <div id="<?php echo $card; ?>myDropdown" class="<?php echo $card; ?>dropdown-content dropdown-menu">
+                        <form name='view_delete<?php echo $card;?>' action='' method='POST'>
+                        <input type="submit" value="View Details" name='view<?php echo $card; ?>' class="dropdown-item">
+                        <input type="submit" value="Delete Classroom" name='delete<?php echo $card; ?>' class="dropdown-item">
+                        </form>
+                      </div>
                     </div>
-                  </div>
                   </div>
                 </div>
                 <div class="card-body">
@@ -241,32 +255,42 @@ foreach ($classrooms as $dummy_classroom) {
       </section>
     </div>
   </div>
-<?php
-  foreach($classrooms as $i){
-    $card=$i['class_code'];
-?>
-  <script defer>
-    function <?php  echo $card; ?>dropdownbtn() {
-      document.getElementById("<?php echo $card; ?>myDropdown").classList.toggle("show");
-    }
+  <?php
+  foreach ($classrooms as $i) {
+    $card = $i['class_code'];
+  ?>
+    <script>
+      function <?php echo $card; ?>dropdownbtn() {
+        document.getElementById("<?php echo $card; ?>myDropdown").classList.toggle("show");
+      }
+    </script>
+  <?php
+  }
+  ?>
+  <script>
     //Close the dropdown if the user clicks outside of it
     window.onclick = function(event) {
-      if (!event.target.matches('.<?php echo $card;?>dropbtn')) {
-        var dropdowns = document.getElementsByClassName("<?php echo $card; ?>dropdown-content");
-        var i;
-        for (i = 0; i < dropdowns.length; i++) {
-          var openDropdown = dropdowns[i];
-          if (openDropdown.classList.contains('show')) {
-            openDropdown.classList.remove('show');
+      <?php
+      foreach ($classrooms as $i) {
+        $card = $i['class_code'];
+      ?>
+        if (!event.target.matches('.<?php echo $card; ?>dropbtn')) {
+          var dropdowns = document.getElementsByClassName("<?php echo $card; ?>dropdown-content");
+          var i;
+          for (i = 0; i < dropdowns.length; i++) {
+            var openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+              openDropdown.classList.remove('show');
+            }
           }
         }
+      <?php
       }
+      ?>
     }
   </script>
 
-  <?php 
-  }
-  ?>
+
 </body>
 
 </html>
