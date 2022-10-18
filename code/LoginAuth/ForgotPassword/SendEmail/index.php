@@ -14,7 +14,10 @@ if (isset($_POST['email'])) {
     $temp = $email;
     $email = hash('sha512', $email);
     $select = $database->performQuery("select email,password from users where email='$email'");
-    if ($select->num_rows == 1) {
+    if(!isEmailValid($email)){
+        $error="Email is not a valid/registered email address";
+    }
+    else if ($select->num_rows == 1) {
         $row = mysqli_fetch_assoc($select);
         $email = md5($row['email']);
         $pass = md5($row['password']);

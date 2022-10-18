@@ -64,6 +64,9 @@
             else if((ord($password[$i])>=ord(' ') && ord($password[$i])<ord('9'))||(ord($password[$i])>ord('9') && ord($password[$i])<ord('A'))||(ord($password[$i])>ord('Z') && ord($password[$i])<ord('a'))|| (ord($password[$i])>ord('z'))){
                 $charPresent=true;
             }
+            else if(ord($password[$i])===ord('(')||ord($password[$i])===ord(')')||ord($password[$i])===ord('\'')||ord($password[$i])===ord('\"')||ord($password[$i])===ord('=')||ord($password[$i])===ord('\\')||ord($password[$i])===ord(';')){
+                return false;
+            }
             else{
                 continue;
             }
@@ -72,6 +75,16 @@
             return true;
         }
         return false;
+    }
+
+    function isEmailValid($email){
+        $len=strlen($email);
+        for($i=0;$i<$len;$i++){
+            if(ord($email[$i])===ord('(')||ord($email[$i])===ord(')')||ord($email[$i])===ord('\'')||ord($email[$i])===ord('\"')||ord($email[$i])===ord('=')||ord($email[$i])===ord('\\')||ord($email[$i])===ord(';')){
+                return false;
+            }
+        }
+        return true;
     }
     
     function generateRandomString($length = 10)

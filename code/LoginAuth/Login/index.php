@@ -44,6 +44,9 @@ if (isset($_REQUEST['submit'])) {
     else if(isPasswordValid($password)){
         $error='Password does not meet the constraints';
     }
+    else if(!isEmailValid($original_email)){
+        $error="Email is invalid it contains dangerous characters (,),=,;,\\,\',\"";
+    }
 	else if ($result->num_rows > 0) 
     {
         

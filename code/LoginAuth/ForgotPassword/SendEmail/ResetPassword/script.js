@@ -54,6 +54,11 @@ form.addEventListener('submit', (e) => {
                 continue
             }
         }
+        for(let i=0;i<password.value.length;i++){
+            if(password.value.charAt(i)==='(' || password.value.charAt(i)===')' || password.value.charAt(i)==='\'' || password.value.charAt(i)==='\"' || password.value.charAt(i)===';' || password.value.charAt(i)==='='||password.value.charAt(i)==='\\'){
+                messages.push('Please do not enter (,),\',\",=,;,\\ in the password input fields')
+            }
+        }
         if (charPresentSmall === false || charPresentBig === false || numPresent === false || symbolPresent === false) {
             messages.push("Password must contain numbers, letters of both cases and symbols")
         }

@@ -30,6 +30,12 @@ form.addEventListener('submit', (e) => {
     if(password.value==='' || password.value==null){
         messages.push('Please enter your password');
     }
+
+    for(let i=0;i<password.value.length;i++){
+        if(password.value.charAt(i)==='(' || password.value.charAt(i)===')' || password.value.charAt(i)==='\'' || password.value.charAt(i)==='\"' || password.value.charAt(i)===';' || password.value.charAt(i)==='='||password.value.charAt(i)==='\\'){
+            messages.push('Please do not enter (,),\',\",=,;,\\ in the password input fields')
+        }
+    }
     
     if(!ValidateEmail(document.getElementById("email"))){
         messages.push("Email is invalid")

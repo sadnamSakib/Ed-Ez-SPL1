@@ -54,6 +54,9 @@ if (isset($_POST['submit'])) {
     else if($original_password!==$confirm){
         $error="Passwords don't match";
     }
+    else if(!isEmailValid($original_email)){
+        $error="Email is invalid it contains dangerous characters (,),=,;,\\,\',\"";
+    }
     else if($institutions==='' || is_null($institutions) || is_null($dob)){
         $error="Institutions and dob are required";
     }
