@@ -74,12 +74,12 @@ foreach($classrooms as $dummy_classroom){
       window.history.replaceState(null, null, window.location.href);
     }
   </script>
-    <?php
+<?php
   foreach ($classrooms as $i) {
     $card = $i['class_code'];
   ?>
     <style>
-      <?php echo "." . $card . "dropbtn"; ?> {
+    <?php echo "." . $card; ?>dropbtn {
         background-color: transparent;
         color: black;
         padding: 3px;
@@ -91,20 +91,20 @@ foreach($classrooms as $dummy_classroom){
       }
 
 
-      <?php "#" . $card . "myDropdown" ?> {
+      <?php "#" . $card ?>myDropdown {
         transition: all 0.3s;
       }
 
-      <?php echo "." . $card . "dropbtn:hover, ." . $card . "dropbtn:focus"; ?> {
+      <?php echo "." . $card?>dropbtn:hover,<?php echo $card;?>dropbtn:focus{
         background-color: #2f6d8b;
       }
 
-      <?php echo "." . $card . "dropdown"; ?> {
+      <?php echo "." . $card;?>dropdown{
         position: relative;
         display: inline-block;
       }
 
-      <?php echo "." . $card . "dropdown-content"; ?> {
+      <?php echo "." . $card; ?>dropdown-content{
         display: none;
         position: absolute;
         background-color: white;
@@ -116,18 +116,18 @@ foreach($classrooms as $dummy_classroom){
         transition: all 0.3s;
       }
 
-      <?php echo "." . $card . "dropdown-content a"; ?> {
+      <?php echo "." . $card; ?>dropdown-content a{
         color: black;
         text-decoration: none;
         display: block;
       }
 
-      <?php echo "." . $card . "dropdown-toggle"; ?> {
+      <?php echo "." . $card;?>dropdown-toggle {
         background-color: #2980B9;
         color: white;
       }
 
-      <?php echo "." . $card . "dropdown a:hover"; ?> {
+      <?php echo "." . $card; ?>dropdown a:hover {
         background-color: #ddd;
       }
     </style>
