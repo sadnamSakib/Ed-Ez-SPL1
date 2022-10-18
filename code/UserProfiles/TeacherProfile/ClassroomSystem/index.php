@@ -9,12 +9,12 @@ session::profile_not_set($root_path);
 $temp = hash('sha512', $_SESSION['email']);
 $tableName = $_SESSION['tableName'];
 $row = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='$temp';"));
-$name = $row['name'];
 $className = 'Math 4341 Linear Algebra';
 $classrooms = $database->performQuery("SELECT * FROM classroom,teacher_classroom where classroom.class_code=teacher_classroom.class_code and teacher_classroom.email='$temp';");
 foreach ($classrooms as $dummy_classroom) {
   if (isset($_REQUEST['delete'.$dummy_classroom['class_code']])) {
-    $database->performQuery("DELETE FROM classroom WHERE class_code='".$dummy_classroom['class_code']."';");
+    $database->performQuery("DELETE FROM teacher_classroom WHERE class_code='".$dummy_classroom['class_code']."';");
+    $database->performQuery("UPDATE classroom  SET archived='0' WHERE class_code='".$dummy_classroom['class_code']."';");
   }
 }
 
@@ -45,7 +45,7 @@ if (isset($_POST['Create'])) {
   $database->performQuery("INSERT INTO teacher_classroom(email,class_code) VALUES('$temp','$classCode');");
 }
 
-$classrooms = $database->performQuery("SELECT * FROM classroom,teacher_classroom where classroom.class_code=teacher_classroom.class_code and teacher_classroom.email='$temp';");
+$classrooms = $database->performQuery("SELECT * FROM classroom,teacher_classroom where classroom.class_code=teacher_classroom.class_code and teacher_classroom.email='$temp' and classroom.archived='1';");
 foreach ($classrooms as $dummy_classroom) {
   if (isset($_POST[$dummy_classroom['class_code']])) {
     $_SESSION['class_code'] = $dummy_classroom['class_code'];
@@ -285,7 +285,17 @@ foreach($classrooms as $dummy_classroom){
                   </div>
                 </div>
                 <div class="card-body">
-                  <p class="card-text"><?php echo "Course Instructor: " . $name; ?></p>
+                  <p class="card-text"><?php
+                   $class_code=$i['class_code'];
+                   $sql=$database->performQuery("SELECT * FROM teacher_classroom,users WHERE teacher_classroom.email=users.email AND class_code='$class_code'");
+                   ?></p>
+                   <?php
+                      foreach($sql as $j){
+                        ?>
+                           <p class="card-text"><?php  echo "Course Instructor(s): ".$j['name']; ?></p>
+                        <?php
+                      }
+                   ?>
                   <p class="card-text"><?php echo "Class Code: " .$i['class_code']; ?></p>
                 </div>
                 <div class="pb-5 px-5">

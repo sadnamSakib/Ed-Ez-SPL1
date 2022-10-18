@@ -31,7 +31,7 @@ if (isset($_POST['Join'])) {
 }
 
 
-$classrooms = $database->performQuery("SELECT * FROM classroom,student_classroom where classroom.class_code=student_classroom.class_code and student_classroom.email='$temp';");
+$classrooms = $database->performQuery("SELECT * FROM classroom,student_classroom where classroom.class_code=student_classroom.class_code and student_classroom.email='$temp' and archived='1';");
 foreach($classrooms as $dummy_classroom){
   if(isset($_POST[$dummy_classroom['class_code']])){
     $_SESSION['class_code']=$dummy_classroom['class_code'];
@@ -241,8 +241,17 @@ foreach($classrooms as $dummy_classroom){
                   </div>
                 </div>
                 <div class="card-body">
-                  
-                  <p class="card-text"><?php echo 'Course Instructor: '.$instructor_name['name']; ?></p>
+                  <p class="card-text"><?php
+                    $class_code=$i['class_code'];
+                    $sql=$database->performQuery("SELECT * FROM teacher_classroom,users WHERE teacher_classroom.email=users.email AND class_code='$class_code'");
+                    ?></p>
+                    <?php
+                        foreach($sql as $j){
+                          ?>
+                            <p class="card-text"><?php  echo "Course Instructor(s): ".$j['name']; ?></p>
+                          <?php
+                        }
+                    ?>
                 </div>
                 <form action="" method="POST">
                 <div class="pb-5 px-5"><input type="submit" name="<?php echo $i['class_code'] ?>" value="Enter Class" class="btn btn-primary btn-go"/></div>
