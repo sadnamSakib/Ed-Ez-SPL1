@@ -16,7 +16,7 @@ session::profile_not_set($root_path);
 
 <head>
   <meta charset="UTF-8">
-  <title>Profile</title>
+  <title>View Details</title>
   <link rel="icon" href="<?php echo $root_path; ?>logo4.jpg" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css" />
@@ -84,7 +84,7 @@ session::profile_not_set($root_path);
         <!-- <h2 class="fs-5">Profile</h2> -->
         <div class="card intro-card w-50 text-bg-secondary m-auto mb-3">
           <div class="card-header">
-            <h5 class="card-title">Instructor</h5>
+            <h5 class="card-title">Instructor(s)</h5>
           </div>
           <?php
                 $sql=$database->performQuery("SELECT * FROM users,teacher_classroom WHERE users.email=teacher_classroom.email AND class_code='$classCode'");
@@ -105,7 +105,7 @@ session::profile_not_set($root_path);
             <h5 class="card-title"><?php 
                 $sql=$database->performQuery("SELECT * FROM users, student_classroom WHERE users.email=student_classroom.email AND class_code='$classCode'");
                 $record=mysqli_fetch_assoc($database->performQuery("SELECT count(*)count_student FROM users, student_classroom WHERE users.email=student_classroom.email AND class_code='$classCode'"));
-                echo $record['count_student'];
+                echo $record['count_student'].' Student(s)';
             ?></h5>
           </div>
           

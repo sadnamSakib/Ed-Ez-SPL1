@@ -18,6 +18,18 @@ foreach ($classrooms as $dummy_classroom) {
   }
 }
 
+if (isset($_POST['Join'])) {
+  $classCode=$_REQUEST['classCode'];
+  $existenceCheck=$database->performQuery("SELECT * FROM teacher_classroom WHERE class_code='$classCode' and email='$temp';");
+  if($existenceCheck->num_rows==0){
+    $database->performQuery("INSERT INTO teacher_classroom(email,class_code) VALUES('$temp','$classCode');");
+  }
+  else{
+    $error="You have already joined in this classroom";
+  }
+  unset($_REQUEST['classCode']);
+}
+
 
 if (isset($_POST['Create'])) {
   $classCode = generateRandomString(10);
@@ -274,7 +286,7 @@ foreach($classrooms as $dummy_classroom){
                 </div>
                 <div class="card-body">
                   <p class="card-text"><?php echo "Course Instructor: " . $name; ?></p>
-                  <p class="card-text"><?php echo $i['class_code']; ?></p>
+                  <p class="card-text"><?php echo "Class Code: " .$i['class_code']; ?></p>
                 </div>
                 <div class="pb-5 px-5">
                   <form id="EnterClassroom" name="EnterClassroom" action="" method="POST">
