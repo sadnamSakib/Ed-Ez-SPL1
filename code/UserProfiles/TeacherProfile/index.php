@@ -5,14 +5,6 @@ include $root_path . 'LibraryFiles/DatabaseConnection/config.php';
 include $root_path . 'LibraryFiles/URLFinder/URLPath.php';
 include $root_path . 'LibraryFiles/SessionStore/session.php';
 $temp = hash('sha512', $_SESSION['email']);
-if ($_GET['key'] && isset($_SESSION['code'])){
-  $verified=$_GET['key'];
-  if($verified===$_SESSION['code']){
-    unset($_SESSION['code']);
-    $database->performQuery("UPDATE users SET Verified='1' where email='$temp';");
-  }
-}
-unset($_SESSION['code']);
 $verified=mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='$temp';"));
 if($verified['Verified']!=='1'){
   header('Location: '.$root_path.'LoginAuth/SignUp/ConfirmEmail/index.php');

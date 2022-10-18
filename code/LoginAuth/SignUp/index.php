@@ -68,6 +68,9 @@ if (isset($_POST['submit'])) {
     }
     else{
         $_SESSION['email']=$original_email;
+        unset($_POST['password']);
+        unset($_POST['email']);	
+        unset($_POST['cfpassword']);
         $database->performQuery($insertusers);
         $database->performQuery($insertTable);
         echo $exists;

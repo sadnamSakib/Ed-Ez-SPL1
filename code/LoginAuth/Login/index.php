@@ -7,6 +7,16 @@ session::create_or_resume_session();
 
 
 session::stay_in_session();
+if (isset($_GET['email']) && isset($_GET['code'])){
+    $temp=$_GET['email'];
+    $code=$_GET['code'];
+    $record=mysqli_fetch_assoc($database->performQuery("SELECT * FROM token_table WHERE email='$temp'"));
+    if($record['code']===$code){
+      $database->performQuery("UPDATE users SET Verified='1' where email='$temp';");
+      $database->performQuery("DELETE FROM token_table WHERE email='$temp';");
+    }
+    unset($_GET['email']);
+  }
 
 if(isset($_SESSION['Password_Reset'])){
     $error="Password Has Been Successfully Reset";
@@ -56,6 +66,8 @@ if (isset($_REQUEST['submit'])) {
             $_SESSION['name'] = $row['name'];
             $_SESSION['email'] = $original_email;
             $_SESSION['tableName']=$tableName;
+            unset($_POST['password']);
+            unset($_POST['email']);	
 		    session::redirectProfile($tableName);
         }
         else{
@@ -112,12 +124,12 @@ if (isset($_REQUEST['submit'])) {
                     </div>
                     <div class="form-group">
                         <i class="fas fa-envelope"> </i>
-                        <input class="myInput" placeholder="Email" type="text" id="email" name="email" value="<?php echo $_REQUEST['email']; ?>" required>
+                        <input class="myInput" placeholder="Email" type="text" id="email" name="email" value="<?php echo $_POST['email']; ?>" required>
                         <div class="invalid-feedback">Please fill out this field.</div>
                     </div>
                     <div class="form-group">
                     <i class="fas fa-lock"> </i>
-                        <input class="myInput" placeholder="Password" type="password" name="password" id="password" value="<?php echo $_REQUEST['password']; ?>" required>
+                        <input class="myInput" placeholder="Password" type="password" name="password" id="password" value="<?php echo $_POST['password']; ?>" required>
                         <div class="invalid-feedback">Please fill out this field.</div>
                         <i class="fas fa-eye-slash" id="togglePassword"></i>
                     </div>

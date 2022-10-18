@@ -7,32 +7,27 @@ include $root_path.'LibraryFiles/SessionStore/session.php';
 include $root_path.'LibraryFiles/MailServer/smtp.php';
 session::create_or_resume_session();
 $email=$_SESSION['email'];
-if(!isset($_SESSION['code'])){
-    $code=generateRandomString(12);
-    $_SESSION['code']=$code;
+$temp_email=hash('sha512',$email);
+$code=generateRandomString(12);
+if($database->performQuery("SELECT * FROM token_table WHERE email = '$temp_email'")->num_rows>0){
+    $database->performQuery("DELETE FROM token_table WHERE email = '$temp_email'");
 }
-$tableName=$_SESSION['tableName'];
-$ProfileLink='';
-if($tableName==='teacher'){
-    $ProfileLink='TeacherProfile/';
-}
-else{
-    $ProfileLink='StudentProfile/';
-}
-$link= URLPath::getRoot() .'UserProfiles/'.$ProfileLink.'index.php?key='.$code.'';
-$mail=new email($email,'<a href="'.$link.'">Click on this link</a> to verify your profile ','Email Verification for EdEz');
+$database->performQuery("INSERT INTO token_table(email,code) VALUES('$temp_email','$code');");
+$link= URLPath::getRoot() .'LoginAuth/Login/index.php?email='.$temp_email.'&code='.$code.'';
+$mail=new email($email,'<a href="'.$link.'">Click on this link</a> to verify your profile and then login with your credentials ','email Verification for EdEz');
+
 try{
     $smtp=new smtp($mail);
     if(!$smtp->send($_SESSION['error'])){
-        $database->performQuery("DELETE FROM users WHERE email='$email';");
+        $database->performQuery("DELETE FROM users WHERE email='$temp_email';");
+        $database->performQuery("DELETE FROM token_table WHERE email='$temp_email';");
         header('Location: ../index.php');
     }
-    unset($_SESSION['error']);
 }
 catch(Exception $e){
     $_SESSION['error']='MailServer Failure could not validate email address';
-    $email=hash('sha512',$email);
-    $database->performQuery("DELETE FROM users WHERE email='$email';");
+    $database->performQuery("DELETE FROM users WHERE email='$temp_email';");
+    $database->performQuery("DELETE FROM token_table WHERE email='$temp_email';");
     header('Location: ../index.php');
 }
 
@@ -49,7 +44,7 @@ catch(Exception $e){
 <head>
 <link rel="icon" href="<?php echo $root_path; ?>logo4.jpg" />
 <title>
-    Confirm Email
+    Confirm email
 </title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -84,7 +79,7 @@ catch(Exception $e){
                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                     <tr>
                         <td bgcolor="#ffffff" align="center" valign="top" style="padding: 40px 20px 20px 20px; border-radius: 4px 4px 0px 0px; color: #111111; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 48px; font-weight: 400; letter-spacing: 4px; line-height: 48px;">
-                            <h1 style="font-size: 48px; font-weight: 400; margin: 2;">Welcome!</h1> <img src="<?php echo $root_path; ?>logo2ConfirmEmail.jpg" width="300" height="250" style="display: block; border: 0px;" />
+                            <h1 style="font-size: 48px; font-weight: 400; margin: 2;">Welcome!</h1> <img src="<?php echo $root_path; ?>logo2Confirmemail.jpg" width="300" height="250" style="display: block; border: 0px;" />
                         </td>
                     </tr>
                 </table>
