@@ -38,6 +38,15 @@ foreach($classrooms as $dummy_classroom){
     header('Location: StudentClassroom/index.php');
   }
 }
+
+foreach($classrooms as $dummy_classroom){
+  if(isset($_POST["view".$dummy_classroom['class_code']])){
+    $_SESSION['class_code']=$dummy_classroom['class_code'];
+    header('Location: ViewDetails/index.php');
+  }
+}
+
+
 ?>
 
 <!DOCTYPE html>

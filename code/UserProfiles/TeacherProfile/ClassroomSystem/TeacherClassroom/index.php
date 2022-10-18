@@ -158,7 +158,7 @@ foreach ($posts as $i) {
 <?php
   }
 ?>
-    </style>
+</style>
 </head>
 
 <body>
