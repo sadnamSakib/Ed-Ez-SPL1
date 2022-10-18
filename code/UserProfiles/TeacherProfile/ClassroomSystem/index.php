@@ -187,7 +187,33 @@ foreach($classrooms as $dummy_classroom){
         </div>
       </nav>
       <section class="content-section m-auto px-1 w-75">
+        <div class="container justify-content-evenly">
         <div class="container bg-white rounded mt-5 mb-5"></div>
+        <div class="px-3 me-3 d-flex flex-row-reverse">
+          <button type="button" class="btn btn-outline-primary btn-join d-flex p-4 py-3" data-bs-toggle="modal" data-bs-target="#examplemodal1" data-bs-whatever="@fat"><b>Join new classroom</b></button>
+          <div class="modal fade" id="examplemodal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">Join classroom</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form action="" method="POST">
+                    <div class="mb-3">
+                      <input type="text" name="classCode" class="form-control" placeholder="Enter classroom code" aria-label="Leave a comment">
+                    </div>
+                  
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <input type="submit" name="Join" value="Join" class="btn btn-primary btn-join">
+                </div>
+                </form>
+              </div>
+            </div>
+          </div>
+       
         <div class="px-3 me-3 d-flex flex-row-reverse">
           <button type="button" class="btn btn-outline-primary btn-join d-flex p-4 py-3" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@fat"><b>Create new classroom</b></button>
           <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -220,6 +246,8 @@ foreach($classrooms as $dummy_classroom){
               </div>
             </div>
           </div>
+        </div>
+        </div>
         </div>
         <div class="container bg-white rounded m-auto justify-content-center mt-5 mb-5"></div>
         <div class="row justify-content-start m-auto">
