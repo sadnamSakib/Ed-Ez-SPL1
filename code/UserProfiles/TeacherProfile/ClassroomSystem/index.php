@@ -297,11 +297,11 @@ foreach($classrooms as $dummy_classroom){
                       }
                    ?>
                   <p class="card-text"><?php echo "Class Code: " .$i['class_code']; ?></p>
-                </div>
-                <div class="pb-5 px-5">
-                  <form id="EnterClassroom" name="EnterClassroom" action="" method="POST">
-                    <input type="submit" name="<?php echo  $i['class_code']; ?>" value="Enter Class" class="btn btn-primary btn-go">
-                  </form>
+                  <div class="pb-3 px-5">
+                    <form id="EnterClassroom" name="EnterClassroom" action="" method="POST">
+                      <input type="submit" name="<?php echo  $i['class_code']; ?>" value="Enter Class" class="btn btn-primary btn-go">
+                    </form>
+                  </div>
                 </div>
               </div>
             </div>
