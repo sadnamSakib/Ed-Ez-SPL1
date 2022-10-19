@@ -13,27 +13,16 @@ if ($authentication->num_rows == 0) {
   session::redirectProfile('teacher');
 }
 
-$POST_ID=array();
-$COMMENT_ID=array();
-
-$posts = $database->performQuery("SELECT * FROM post;");
-foreach($posts as $i){
-  array_push($POST_ID,$i['post_id']);
-}
-$comments = $database->performQuery("SELECT * FROM comments;");
-foreach($comments as $i){
-  array_push($COMMENT_ID,$i['comment_id']);
-}
-
-
-
-foreach($POST_ID as $i){
+$allPost = $database->performQuery("SELECT * FROM post;");
+foreach($allPost as $j){
+  $i=$j['post_id'];
   if(isset($_REQUEST[$i.'POST'])){
     $database->performQuery("DELETE FROM post WHERE post_id='$i'");
   }
 }
-
-foreach($COMMENT_ID as $i){
+$allComments = $database->performQuery("SELECT * FROM comments;");
+foreach($allComments as $j){
+  $i=$j['comment_id'];
   if(isset($_REQUEST[$i.'COMMENT'])){
     $database->performQuery("DELETE FROM comments WHERE comment_id='$i'");
   }
@@ -105,7 +94,8 @@ foreach ($posts as $i) {
   <style>
 
 <?php
-  foreach($POST_ID as $i){
+  foreach($allPost as $j){
+    $i=$j['post_id'];
 ?>
 <?php echo '#'.$i ?>myDropdown{
   transition: all 0.3s;
@@ -132,7 +122,8 @@ foreach ($posts as $i) {
   }
 ?>
 <?php
-  foreach($COMMENT_ID as $i){
+  foreach($allComments as $j){
+    $i=$j['comment_id'];
 ?>
 <?php echo '#'.$i ?>myDropdown{
   transition: all 0.3s;
@@ -350,11 +341,12 @@ foreach ($posts as $i) {
   </div>
 </body>
 <?php
-  foreach($POST_ID as $i){
+  foreach($allPost as $i){
+    $post_selector=$i['post_id'];
 ?>
 <script>
-  function <?php echo $i;?>dropdownbtn() {
-    document.getElementById("<?php echo $i;?>myDropdown").classList.toggle("show");
+  function <?php echo $post_selector;?>dropdownbtn() {
+    document.getElementById("<?php echo $post_selector;?>myDropdown").classList.toggle("show");
   }
   </script>
   <?php
@@ -362,11 +354,12 @@ foreach ($posts as $i) {
   ?>
 
 <?php
-  foreach($COMMENT_ID as $j){
+  foreach($allComments as $i){
+    $comment_selector=$i['comment_id'];
 ?>
 <script>
-  function <?php echo $j;?>dropdownbtn() {
-    document.getElementById("<?php echo $j;?>myDropdown").classList.toggle("show");
+  function <?php echo $comment_selector;?>dropdownbtn() {
+    document.getElementById("<?php echo $comment_selector;?>myDropdown").classList.toggle("show");
   }
   </script>
   <?php
