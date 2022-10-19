@@ -105,7 +105,7 @@ if (isset($_REQUEST['submit'])) {
 <div class="container col-md-4">
     <div class="myCard">
     <div class="row">
-        <div class="col-md">
+        
             <div class="myLeftCtn">
                 <form id="form" class="myForm text-center" action="" method="POST">
                     <header>Have an account? Log in!</header>
@@ -136,13 +136,13 @@ if (isset($_REQUEST['submit'])) {
                     <div class="form-group">
                         <p>Don't have an account? <a href="../SignUp/index.php">REGISTER NOW!</a></p>  
                     </div>
-                    <div class="form-group">
-                        <p><a href="../ForgotPassword/SendEmail/index.php">FORGOT PASSWORD?</a></p>  
+                    <div>
+                    <a href="../ForgotPassword/SendEmail/index.php">FORGOT PASSWORD?</a>
                     </div>
                     <button type="submit" class="butt" name="submit">Login</button>   
                 </form>
             </div>
-        </div>
+        
 
     </div>
     </div>
