@@ -198,7 +198,7 @@ $allComments = $database->performQuery("SELECT * FROM comments;");
         <div class="container-fluid mx-5 px-4">
           <div class="d-flex justify-content-between d-block">
             <button class="btn btn-primary open-btn me-2"><i class='bx bx-menu'></i></i></button>
-            <a href="#" class="navbar-brand fs-5 px-3 mx-4" href="#"><img src="../../../../logo2.jpg" class="img-fluid" height="40" width= "200"/></a>
+            <a href="#" class="navbar-brand fs-5 px-3 mx-4" href="#"><img src="<?php $root_path;?>logo2.jpg" class="img-fluid" height="40" width= "200"/></a>
           </div>
           <!-- <button class="navbar-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <i class="fal fa-bars"></i>
@@ -206,8 +206,8 @@ $allComments = $database->performQuery("SELECT * FROM comments;");
           <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <ul class="navbar-nav mb-2 mb-lg-0">
               <li class="nav-item">
-                <button type="button" class="btn btn-primary me-2 d-flex">
-                  <a href="<?php echo $root_path; ?>UserProfiles/Logout/logout.php" style="text-decoration: none; color:black">Log Out</a>
+                <button type="button" onclick="window.location.href='<?php echo $root_path; ?>UserProfiles/Logout/logout.php'" class="btn btn-primary me-2 d-flex">
+                      Log Out
                 </button>
               </li>
             </ul>

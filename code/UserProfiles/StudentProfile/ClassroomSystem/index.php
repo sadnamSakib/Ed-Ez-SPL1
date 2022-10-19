@@ -177,8 +177,8 @@ foreach($classrooms as $dummy_classroom){
           <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
             <ul class="navbar-nav mb-2 mb-lg-0">
               <li class="nav-item">
-                <button type="button" class="btn btn-primary me-2 d-flex">
-                <a href="<?php echo $root_path;?>UserProfiles/Logout/logout.php" style="text-decoration: none; color:black">Log Out</a>
+              <button type="button" onclick="window.location.href='<?php echo $root_path; ?>UserProfiles/Logout/logout.php'" class="btn btn-primary me-2 d-flex">
+                      Log Out
                 </button>
               </li>
             </ul>
