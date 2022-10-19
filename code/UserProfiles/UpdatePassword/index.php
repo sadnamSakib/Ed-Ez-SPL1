@@ -77,7 +77,15 @@ if(isset($_REQUEST['updatePassword'])){
                         <i class="fas fa-eye-slash" id="togglePassword2"></i>
                     </div>
                     <div class="form-group">
-                        <p>Return to Profile <a href="<?php echo $src; ?>">Profile</a></p>  
+                        <?php
+                            if($tableName==='teacher'){
+                                $src='TeacherProfile/';
+                            }
+                            else{
+                                $src='StudentProfile/';
+                            }
+                        ?>
+                        <p>Return to Profile <a href="../<?php echo $src; ?>index.php">Profile</a></p>  
                     </div>
                     <input type="submit" class="butt" name="updatePassword" value="Update Password"/>
                 </form>
