@@ -68,9 +68,8 @@ foreach ($posts as $i) {
     unset($_REQUEST[$post_id . 'comment_msg']);
   }
 }
-
-
-
+$allPost = $database->performQuery("SELECT * FROM post;");
+$allComments = $database->performQuery("SELECT * FROM comments;");
 ?>
 
 <!DOCTYPE html>
@@ -79,6 +78,31 @@ foreach ($posts as $i) {
 <head>
   <meta charset="UTF-8">
   <title>Classroom</title>
+  <?php
+  foreach($allPost as $i){
+    $post_selector=$i['post_id'];
+?>
+<script>
+  function <?php echo $post_selector;?>dropdownbtn() {
+    document.getElementById("<?php echo $post_selector;?>myDropdown").classList.toggle("show");
+  }
+  </script>
+  <?php
+  }
+  ?>
+
+<?php
+  foreach($allComments as $i){
+    $comment_selector=$i['comment_id'];
+?>
+<script>
+  function <?php echo $comment_selector;?>dropdownbtn() {
+    document.getElementById("<?php echo $comment_selector;?>myDropdown").classList.toggle("show");
+  }
+  </script>
+  <?php
+  }
+  ?>
   <link rel="icon" href="<?php echo $root_path; ?>logo4.jpg" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css" />
@@ -340,31 +364,6 @@ foreach ($posts as $i) {
     </div>
   </div>
 </body>
-<?php
-  foreach($allPost as $i){
-    $post_selector=$i['post_id'];
-?>
-<script>
-  function <?php echo $post_selector;?>dropdownbtn() {
-    document.getElementById("<?php echo $post_selector;?>myDropdown").classList.toggle("show");
-  }
-  </script>
-  <?php
-  }
-  ?>
-
-<?php
-  foreach($allComments as $i){
-    $comment_selector=$i['comment_id'];
-?>
-<script>
-  function <?php echo $comment_selector;?>dropdownbtn() {
-    document.getElementById("<?php echo $comment_selector;?>myDropdown").classList.toggle("show");
-  }
-  </script>
-  <?php
-  }
-  ?>
 
 <script>
   function dropdownbtnNew() {
