@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 17, 2022 at 09:53 AM
+-- Generation Time: Oct 19, 2022 at 05:42 AM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -39,6 +39,17 @@ CREATE TABLE `assignment` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `assignment_classroom`
+--
+
+CREATE TABLE `assignment_classroom` (
+  `assignment_id` varchar(50) NOT NULL,
+  `class_code` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `classroom`
 --
 
@@ -46,17 +57,18 @@ CREATE TABLE `classroom` (
   `class_code` varchar(20) NOT NULL,
   `classroom_name` text NOT NULL,
   `course_code` varchar(10) DEFAULT NULL,
-  `semester` int(11) DEFAULT NULL
+  `semester` int(11) DEFAULT NULL,
+  `archived` tinyint(1) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `classroom`
 --
 
-INSERT INTO `classroom` (`class_code`, `classroom_name`, `course_code`, `semester`) VALUES
-('jITqBDlL0d', 'Classroom', '105', 5),
-('LwucsgVulu', 'Classroom', '102', 2),
-('oX6MdwrvrG', 'Classroom', '103', 3);
+INSERT INTO `classroom` (`class_code`, `classroom_name`, `course_code`, `semester`, `archived`) VALUES
+('ol8h3VeUJo', 'h', 'a', 8, 1),
+('PkffqRmr4x', 'h', 'h', 9, 1),
+('WYXIQtqScQ', 'Linear Algebra', 'CSE 4341', 3, 0);
 
 -- --------------------------------------------------------
 
@@ -72,6 +84,24 @@ CREATE TABLE `comments` (
   `post_id` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `comments`
+--
+
+INSERT INTO `comments` (`comment_id`, `comment_message`, `comment_datetime`, `email`, `post_id`) VALUES
+('vJIed1B80T9PjIRHhBXlF9oBhhi9kAL0MKdXxamJ3h8nEPcR5t', 'New comment', '2022-10-19 05:33:45', 'e048ab739a2f106de400f8139f08aa426de8f45737d9490527866de3f786cbe985fd736b21d541cae545a589f8706e1426deb06f0d486686fcd28ed8225600fa', 'jMisUQyzyepLaSTQz0OdlEVxTxj4LziSQHG5z0DYGyHVaGbtcR');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `comment_post`
+--
+
+CREATE TABLE `comment_post` (
+  `comment_id` varchar(50) NOT NULL,
+  `post_id` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- --------------------------------------------------------
 
 --
@@ -81,7 +111,8 @@ CREATE TABLE `comments` (
 CREATE TABLE `event` (
   `event_id` varchar(50) NOT NULL,
   `event_datetime` datetime DEFAULT NULL,
-  `event_type` set('holiday','deadline') DEFAULT NULL
+  `event_type` set('holiday','deadline') DEFAULT NULL,
+  `event_title` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -114,8 +145,7 @@ CREATE TABLE `post` (
 --
 
 INSERT INTO `post` (`post_id`, `email`, `post_datetime`, `post_message`) VALUES
-('AGV3qlZOOnUrdbHpbr5S8aJVVD9Il9X1MDwhfoj7cUF7hjPZ3V', '90dc560460a215b93c5f067672aafd855e2b1fc411e0f5aba890e170ccb75ebb8941fa653b50396ba493a3d812b1857d4d140dc6bb4d500abf773762bb49a36d', '2022-10-17 09:42:39', 'This is another post'),
-('Rko8PTlqFmy4h2XpNC9NtGSB7aEm9kFbH0RqS9qdGbBbUbNEsd', '90dc560460a215b93c5f067672aafd855e2b1fc411e0f5aba890e170ccb75ebb8941fa653b50396ba493a3d812b1857d4d140dc6bb4d500abf773762bb49a36d', '2022-10-17 09:41:56', 'hello world');
+('jMisUQyzyepLaSTQz0OdlEVxTxj4LziSQHG5z0DYGyHVaGbtcR', 'e048ab739a2f106de400f8139f08aa426de8f45737d9490527866de3f786cbe985fd736b21d541cae545a589f8706e1426deb06f0d486686fcd28ed8225600fa', '2022-10-19 05:05:41', 'this is a post');
 
 -- --------------------------------------------------------
 
@@ -133,8 +163,7 @@ CREATE TABLE `post_classroom` (
 --
 
 INSERT INTO `post_classroom` (`post_id`, `class_code`) VALUES
-('AGV3qlZOOnUrdbHpbr5S8aJVVD9Il9X1MDwhfoj7cUF7hjPZ3V', 'LwucsgVulu'),
-('Rko8PTlqFmy4h2XpNC9NtGSB7aEm9kFbH0RqS9qdGbBbUbNEsd', 'LwucsgVulu');
+('jMisUQyzyepLaSTQz0OdlEVxTxj4LziSQHG5z0DYGyHVaGbtcR', 'PkffqRmr4x');
 
 -- --------------------------------------------------------
 
@@ -149,6 +178,17 @@ CREATE TABLE `quiz` (
   `semester` int(11) DEFAULT NULL,
   `marks` int(11) DEFAULT NULL,
   `question_url` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `quiz_classroom`
+--
+
+CREATE TABLE `quiz_classroom` (
+  `quiz_id` varchar(50) NOT NULL,
+  `class_code` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -170,6 +210,17 @@ CREATE TABLE `resources` (
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `resources_classroom`
+--
+
+CREATE TABLE `resources_classroom` (
+  `resource_id` varchar(50) NOT NULL,
+  `class_code` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `student`
 --
 
@@ -183,8 +234,7 @@ CREATE TABLE `student` (
 --
 
 INSERT INTO `student` (`email`, `semester`) VALUES
-('6195c42a51e25675263f44e92844da2ecc063f71fdd909d3b2a5e9d4339b332115d52b1877c9716698305f13fbf392387f11c78699ed6d1b0d524896c3525f72', NULL),
-('e048ab739a2f106de400f8139f08aa426de8f45737d9490527866de3f786cbe985fd736b21d541cae545a589f8706e1426deb06f0d486686fcd28ed8225600fa', NULL);
+('2e21444b94845891b0f714470a2b8c12ff69fcaed1fe33b18aa09b1ed91e4bf3f8bf59e5cb43fb73a8c66c6d84efe3709de85ecdde86c179d2327a70c18a232e', NULL);
 
 -- --------------------------------------------------------
 
@@ -202,7 +252,9 @@ CREATE TABLE `student_classroom` (
 --
 
 INSERT INTO `student_classroom` (`email`, `class_code`) VALUES
-('e048ab739a2f106de400f8139f08aa426de8f45737d9490527866de3f786cbe985fd736b21d541cae545a589f8706e1426deb06f0d486686fcd28ed8225600fa', 'LwucsgVulu');
+('2e21444b94845891b0f714470a2b8c12ff69fcaed1fe33b18aa09b1ed91e4bf3f8bf59e5cb43fb73a8c66c6d84efe3709de85ecdde86c179d2327a70c18a232e', 'ol8h3VeUJo'),
+('2e21444b94845891b0f714470a2b8c12ff69fcaed1fe33b18aa09b1ed91e4bf3f8bf59e5cb43fb73a8c66c6d84efe3709de85ecdde86c179d2327a70c18a232e', 'PkffqRmr4x'),
+('2e21444b94845891b0f714470a2b8c12ff69fcaed1fe33b18aa09b1ed91e4bf3f8bf59e5cb43fb73a8c66c6d84efe3709de85ecdde86c179d2327a70c18a232e', 'WYXIQtqScQ');
 
 -- --------------------------------------------------------
 
@@ -220,7 +272,8 @@ CREATE TABLE `teacher` (
 --
 
 INSERT INTO `teacher` (`email`, `designation`) VALUES
-('90dc560460a215b93c5f067672aafd855e2b1fc411e0f5aba890e170ccb75ebb8941fa653b50396ba493a3d812b1857d4d140dc6bb4d500abf773762bb49a36d', NULL);
+('90dc560460a215b93c5f067672aafd855e2b1fc411e0f5aba890e170ccb75ebb8941fa653b50396ba493a3d812b1857d4d140dc6bb4d500abf773762bb49a36d', NULL),
+('e048ab739a2f106de400f8139f08aa426de8f45737d9490527866de3f786cbe985fd736b21d541cae545a589f8706e1426deb06f0d486686fcd28ed8225600fa', NULL);
 
 -- --------------------------------------------------------
 
@@ -238,9 +291,21 @@ CREATE TABLE `teacher_classroom` (
 --
 
 INSERT INTO `teacher_classroom` (`email`, `class_code`) VALUES
-('90dc560460a215b93c5f067672aafd855e2b1fc411e0f5aba890e170ccb75ebb8941fa653b50396ba493a3d812b1857d4d140dc6bb4d500abf773762bb49a36d', 'jITqBDlL0d'),
-('90dc560460a215b93c5f067672aafd855e2b1fc411e0f5aba890e170ccb75ebb8941fa653b50396ba493a3d812b1857d4d140dc6bb4d500abf773762bb49a36d', 'LwucsgVulu'),
-('90dc560460a215b93c5f067672aafd855e2b1fc411e0f5aba890e170ccb75ebb8941fa653b50396ba493a3d812b1857d4d140dc6bb4d500abf773762bb49a36d', 'oX6MdwrvrG');
+('90dc560460a215b93c5f067672aafd855e2b1fc411e0f5aba890e170ccb75ebb8941fa653b50396ba493a3d812b1857d4d140dc6bb4d500abf773762bb49a36d', 'ol8h3VeUJo'),
+('90dc560460a215b93c5f067672aafd855e2b1fc411e0f5aba890e170ccb75ebb8941fa653b50396ba493a3d812b1857d4d140dc6bb4d500abf773762bb49a36d', 'PkffqRmr4x'),
+('e048ab739a2f106de400f8139f08aa426de8f45737d9490527866de3f786cbe985fd736b21d541cae545a589f8706e1426deb06f0d486686fcd28ed8225600fa', 'ol8h3VeUJo'),
+('e048ab739a2f106de400f8139f08aa426de8f45737d9490527866de3f786cbe985fd736b21d541cae545a589f8706e1426deb06f0d486686fcd28ed8225600fa', 'PkffqRmr4x');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `token_table`
+--
+
+CREATE TABLE `token_table` (
+  `email` varchar(200) NOT NULL,
+  `code` varchar(12) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -266,9 +331,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`email`, `name`, `password`, `institution`, `dob`, `mobileNumber`, `department`, `country`, `profile_picture`, `Verified`) VALUES
-('6195c42a51e25675263f44e92844da2ecc063f71fdd909d3b2a5e9d4339b332115d52b1877c9716698305f13fbf392387f11c78699ed6d1b0d524896c3525f72', 'sadnam', '$2y$10$GybDNB8WwmaOtBMhFhJdhOrO90cW4cAfXl2MrwOQTyDMN0pyhSV0O', 'IUT', '2022-10-04', NULL, NULL, NULL, NULL, 1),
-('90dc560460a215b93c5f067672aafd855e2b1fc411e0f5aba890e170ccb75ebb8941fa653b50396ba493a3d812b1857d4d140dc6bb4d500abf773762bb49a36d', 'Mirza Azwad(TEACHER)', '$2y$10$jMPHMfIEQgtgPkFBKJ/eC.04q9LJRNc3fha5MIiEN3eLYdQ2X6jNi', 'IUT', '2022-10-04', NULL, NULL, NULL, NULL, 1),
-('e048ab739a2f106de400f8139f08aa426de8f45737d9490527866de3f786cbe985fd736b21d541cae545a589f8706e1426deb06f0d486686fcd28ed8225600fa', 'Mirza Azwad(STUDENT)', '$2y$10$dq9L9OvvKZhREVpL53s55OpMzbuMvmP8c3UipbIZQ3mX3.57iMriG', 'IUT', '2022-09-28', NULL, NULL, NULL, NULL, 1);
+('2e21444b94845891b0f714470a2b8c12ff69fcaed1fe33b18aa09b1ed91e4bf3f8bf59e5cb43fb73a8c66c6d84efe3709de85ecdde86c179d2327a70c18a232e', 'STUDENT', '$2y$10$oKyMVoLaGLiZrOvwJcUyT.7rhHube2GWsvNUsjbACs8nxuffJrUQa', 'IUT', '2022-10-12', NULL, NULL, NULL, NULL, 1),
+('90dc560460a215b93c5f067672aafd855e2b1fc411e0f5aba890e170ccb75ebb8941fa653b50396ba493a3d812b1857d4d140dc6bb4d500abf773762bb49a36d', 'Mirza', '$2y$10$U86VAOx3GtKnrP6ubunTl.7/Stp5Kq3vrt1eaan5svI/G2Si.e91q', 'IUT', '2022-10-11', NULL, NULL, NULL, NULL, 1),
+('e048ab739a2f106de400f8139f08aa426de8f45737d9490527866de3f786cbe985fd736b21d541cae545a589f8706e1426deb06f0d486686fcd28ed8225600fa', 'Mirza Mohammad Azwad', '$2y$10$uXyj7qZ/b8/XmyQX7YzUAe0fax3BUN3yWrrH/r62A5qdNZEbzjNEe', 'IUT', '2022-10-05', NULL, NULL, NULL, NULL, 1);
 
 --
 -- Indexes for dumped tables
@@ -279,6 +344,13 @@ INSERT INTO `users` (`email`, `name`, `password`, `institution`, `dob`, `mobileN
 --
 ALTER TABLE `assignment`
   ADD PRIMARY KEY (`assignment_id`);
+
+--
+-- Indexes for table `assignment_classroom`
+--
+ALTER TABLE `assignment_classroom`
+  ADD PRIMARY KEY (`assignment_id`,`class_code`),
+  ADD KEY `fk_assignment_classroom` (`class_code`);
 
 --
 -- Indexes for table `classroom`
@@ -295,6 +367,13 @@ ALTER TABLE `comments`
   ADD PRIMARY KEY (`comment_id`),
   ADD KEY `fk_comments_users` (`email`),
   ADD KEY `fk_comments_posts` (`post_id`);
+
+--
+-- Indexes for table `comment_post`
+--
+ALTER TABLE `comment_post`
+  ADD PRIMARY KEY (`comment_id`,`post_id`),
+  ADD KEY `fk_post_comments` (`post_id`);
 
 --
 -- Indexes for table `event`
@@ -329,10 +408,24 @@ ALTER TABLE `quiz`
   ADD PRIMARY KEY (`quiz_id`);
 
 --
+-- Indexes for table `quiz_classroom`
+--
+ALTER TABLE `quiz_classroom`
+  ADD PRIMARY KEY (`quiz_id`,`class_code`),
+  ADD KEY `fk_quiz_classroom` (`class_code`);
+
+--
 -- Indexes for table `resources`
 --
 ALTER TABLE `resources`
   ADD PRIMARY KEY (`resource_id`);
+
+--
+-- Indexes for table `resources_classroom`
+--
+ALTER TABLE `resources_classroom`
+  ADD PRIMARY KEY (`resource_id`,`class_code`),
+  ADD KEY `fk_resources_classroom` (`class_code`);
 
 --
 -- Indexes for table `student`
@@ -366,6 +459,12 @@ ALTER TABLE `teacher_classroom`
   ADD KEY `fk_teacher_classroom2` (`class_code`);
 
 --
+-- Indexes for table `token_table`
+--
+ALTER TABLE `token_table`
+  ADD PRIMARY KEY (`email`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -376,11 +475,25 @@ ALTER TABLE `users`
 --
 
 --
+-- Constraints for table `assignment_classroom`
+--
+ALTER TABLE `assignment_classroom`
+  ADD CONSTRAINT `fk_assignment_classroom` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_assignment_classroom2` FOREIGN KEY (`assignment_id`) REFERENCES `assignment` (`assignment_id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `comments`
 --
 ALTER TABLE `comments`
   ADD CONSTRAINT `fk_comments_posts` FOREIGN KEY (`post_id`) REFERENCES `post` (`post_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_comments_users` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `comment_post`
+--
+ALTER TABLE `comment_post`
+  ADD CONSTRAINT `fk_post_comments` FOREIGN KEY (`post_id`) REFERENCES `post` (`post_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_post_comments2` FOREIGN KEY (`comment_id`) REFERENCES `comments` (`comment_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `post`
@@ -396,6 +509,20 @@ ALTER TABLE `post_classroom`
   ADD CONSTRAINT `fk_post_classroom` FOREIGN KEY (`post_id`) REFERENCES `post` (`post_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_post_classroom2` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_post_classroom_user` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `quiz_classroom`
+--
+ALTER TABLE `quiz_classroom`
+  ADD CONSTRAINT `fk_quiz_classroom` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_quiz_classroom2` FOREIGN KEY (`quiz_id`) REFERENCES `quiz` (`quiz_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `resources_classroom`
+--
+ALTER TABLE `resources_classroom`
+  ADD CONSTRAINT `fk_resources_classroom` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_resources_classroom2` FOREIGN KEY (`resource_id`) REFERENCES `resources` (`resource_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `student`
