@@ -38,6 +38,7 @@ if (isset($_POST['email'])) {
     } else {
         $error = 'Email is not a valid/registered email address';
     }
+    unset($_SESSION['error']);
 }
 ?>
 <!DOCTYPE HTML>
