@@ -9,25 +9,19 @@ session::profile_not_set($root_path);
 
 $temp=hash('sha512',$_SESSION['email']);
 $tableName=$_SESSION['tableName'];
-if($tableName==='teacher'){
-    $src="../TeacherProfile/index.php";
-}
-else{
-    $src="../StudentProfile/index.php";
-}
 $error="";
 if(isset($_REQUEST['updatePassword'])){
     $oldPassword=$_REQUEST['opassword'];
     $oldPassword=hash('sha512',$oldPassword);
-    $existence_name = "SELECT * FROM user WHERE email = '$temp'";
+    $existence_name = "SELECT * FROM users WHERE email = '$temp'";
     $result = $database->performQuery($existence_name);
     $row = mysqli_fetch_assoc($result);
     $password=hash('sha512',$_REQUEST['password']);
     $password=password_hash($password,PASSWORD_BCRYPT);
     if(password_verify($oldPassword,$row['password'])){
-        $sql="UPDATE user SET password='$password' WHERE email='$temp'";
+        $sql="UPDATE users SET password='$password' WHERE email='$temp'";
         $res=$database->performQuery($sql);
-        header('Location: '.$src.'');
+        session::redirectProfile($tableName);
     }
     else{
         $error="Old password field should contain the current password, old password incorrect";
@@ -39,7 +33,7 @@ if(isset($_REQUEST['updatePassword'])){
 <!DOCTYPE HTML>
 <html>
 <head>
-<link rel="icon" href="../logo4.jpg" />
+<link rel="icon" href="<?php echo $root_path; ?>logo4.jpg" />
 <title>
     Change Password
 </title>

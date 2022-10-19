@@ -203,7 +203,7 @@ if ($semester == -1) {
 
                   </div>
                   <div class="col-md-12 mb-3">
-                    <a href="../UpdatePassword/index.php"><button type="button" class="btn btn-dark col-md-auto me-5">Change Password</button></a>
+                  <a href="<?php echo $root_path; ?>UserProfiles/UpdatePassword/index.php"><button type="button" class="btn btn-dark col-xs-5">Change Password</button></a>
                   </div>
                 </div>
                 <div class="col-md-12 mb-3">
