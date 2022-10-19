@@ -28,11 +28,13 @@ body{
     --bs-btn-hover-bg:#2e6a88;
 }
 .myLeftCtn{
-    position:realtive;
+    position:relative;
     background: #fff;
     border-radius : 25px;
+    width:fit-content;
     height : 100%;
     padding :25px;
+    margin: auto!important;
     padding-left: 50px;
 }
 .myLeftCtn header{
