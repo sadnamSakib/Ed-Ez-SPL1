@@ -7,7 +7,7 @@ include $root_path . 'LibraryFiles/SessionStore/session.php';
 session::create_or_resume_session();
 session::stay_in_session();
 
-$error = '';
+$error = $_SESSION['error'];
 if (isset($_POST['email'])) {
     $error = "An Email Has Been Sent, Check Your Registered Email Address. If you didn't receive the email within 5 minutes, Try Again";
     $email = $_POST['email'];
@@ -23,7 +23,17 @@ if (isset($_POST['email'])) {
         $pass = md5($row['password']);
         $link = "<a href='" . URLPath::getDirectoryURL() . "/ResetPassword/index.php?key=" . $email . "&reset=" . $pass . "'>Click To Reset password</a>";
         $emailContent = new Email($temp, 'Please click here to reset your password ' . $link . ' ', 'Reset Password');
-        $smtp = new SMTP($emailContent);
+        try{
+            $smtp = new SMTP($emailContent);
+            if(!$smtp->send($_SESSION['error'])){
+                header('Location: index.php');
+            }
+        }
+        catch(Exception $e){
+            $_SESSION['error']='MailServer Failure could not validate email address';
+            header('Location: index.php');
+        }
+        
         $error = $smtp->sendMail();
     } else {
         $error = 'Email is not a valid/registered email address';
