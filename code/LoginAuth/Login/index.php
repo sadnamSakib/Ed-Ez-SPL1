@@ -93,15 +93,13 @@ if (isset($_REQUEST['submit'])) {
 </title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="style.css" />
-<link rel="stylesheet" href="css/bootstrap.css" />
+<link rel="stylesheet" href="<?php echo $root_path; ?>css/bootstrap.css" />
 <script defer src="script.js"></script>
 <script src="https://kit.fontawesome.com/d0f239b9af.js" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jsSHA/2.0.2/sha.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <body>
-<script src="js/bootstrap.js"></script>
+<script src="<?php echo $root_path; ?>js/bootstrap.js"></script>
 <div class="container col-md-4">
     <div class="myCard">
     <div class="row">
