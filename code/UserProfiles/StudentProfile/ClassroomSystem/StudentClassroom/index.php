@@ -72,31 +72,6 @@ $allComments = $database->performQuery("SELECT * FROM comments;");
 <head>
   <meta charset="UTF-8">
   <title>Classroom</title>
-  <?php
-  foreach($allPost as $i){
-    $post_selector=$i['post_id'];
-?>
-<script>
-  function <?php echo $post_selector;?>dropdownbtn() {
-    document.getElementById("<?php echo $post_selector;?>myDropdown").classList.toggle("show");
-  }
-  </script>
-  <?php
-  }
-  ?>
-
-<?php
-  foreach($allComments as $i){
-    $comment_selector=$i['comment_id'];
-?>
-<script>
-  function <?php echo $comment_selector;?>dropdownbtn() {
-    document.getElementById("<?php echo $comment_selector;?>myDropdown").classList.toggle("show");
-  }
-  </script>
-  <?php
-  }
-  ?>
   <link rel="icon" href="<?php echo $root_path; ?>title_icon.jpg" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css" />
@@ -105,65 +80,8 @@ $allComments = $database->performQuery("SELECT * FROM comments;");
   <script src="https://kit.fontawesome.com/d0f239b9af.js" crossorigin="anonymous"></script>
   <link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet" />
   <script defer src="script.js"></script>
-  <style>
-
-<?php
-  foreach($allPost as $j){
-    $i=$j['post_id'];
-?>
-<?php echo '#'.$i ?>myDropdown{
-  transition: all 0.3s;
-}
-
-<?php echo '.'.$i ?>dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: white;
-  min-width: 160px;
-  border-radius: 1.5px;
-  overflow: auto;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-  transition: all 0.3s;
-}
-
-<?php echo '.'.$i ?>dropdown-content a {
-  color: black;
-  text-decoration: none;
-  display: block;
-}
-<?php
-  }
-?>
-<?php
-  foreach($allComments as $j){
-    $i=$j['comment_id'];
-?>
-<?php echo '#'.$i ?>myDropdown{
-  transition: all 0.3s;
-}
-
-<?php echo '.'.$i ?>dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: white;
-  min-width: 160px;
-  border-radius: 1.5px;
-  overflow: auto;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-  transition: all 0.3s;
-}
-
-<?php echo '.'.$i ?>dropdown-content a {
-  color: black;
-  text-decoration: none;
-  display: block;
-}
-<?php
-  }
-?>
-</style>
+  <?php include 'dropdownscript.php';?>
+  <?php include 'dropdownstyle.php'; ?>
 </head>
 
 <body>
@@ -311,23 +229,4 @@ $allComments = $database->performQuery("SELECT * FROM comments;");
 
 
 </body>
-
-<script>
-  function dropdownbtnNew() {
-    document.getElementById("myDropdown2").classList.toggle("show");
-  }
-  // Close the dropdown if the user clicks outside of it
-  window.onclick = function(event) {
-    if (!event.target.matches('.dropbtn')) {
-      var dropdowns = document.getElementsByClassName("dropdown-content");
-      var i;
-      for (i = 0; i < dropdowns.length; i++) {
-        var openDropdown = dropdowns[i];
-        if (openDropdown.classList.contains('show')) {
-          openDropdown.classList.remove('show');
-        }
-      }
-    }
-  }
-</script>
 </html>

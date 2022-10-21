@@ -7,15 +7,16 @@ include $root_path . 'LibraryFiles/SessionStore/session.php';
 session::create_or_resume_session();
 session::stay_in_session();
 
-$error = $_SESSION['error'];
+$errorMessage = $_SESSION['error'];
+unset($_SESSION['error']);
 if (isset($_POST['email'])) {
-    $error = "An Email Has Been Sent, Check Your Registered Email Address. If you didn't receive the email within 5 minutes, Try Again";
+    $errorMessage = "An Email Has Been Sent, Check Your Registered Email Address. If you didn't receive the email within 5 minutes, Try Again";
     $email = $_POST['email'];
     $temp = $email;
     $email = hash('sha512', $email);
     $select = $database->performQuery("select email,password from users where email='$email'");
     if(!isEmailValid($email)){
-        $error="Email is not a valid/registered email address";
+        $errorMessage="Email is not a valid/registered email address";
     }
     else if ($select->num_rows == 1) {
         $row = mysqli_fetch_assoc($select);
@@ -34,9 +35,9 @@ if (isset($_POST['email'])) {
             header('Location: index.php');
         }
         
-        $error = $smtp->sendMail();
+        $errorMessage = $smtp->sendMail();
     } else {
-        $error = 'Email is not a valid/registered email address';
+        $errorMessage = 'Email is not a valid/registered email address';
     }
     unset($_SESSION['error']);
 }
@@ -67,8 +68,8 @@ if (isset($_POST['email'])) {
                     <div class="myLeftCtn">
                         <form id="form1" class="myForm text-center" action="" method="POST">
                             <header>Have an account? Log in!</header>
-                            <div class="form-group" id="error2" style="color:red">
-                                <p><?php echo $error ?></p>
+                            <div class="form-group" id="errorMessage2" style="color:red">
+                                <p><?php echo $errorMessage ?></p>
                             </div>
                             <div class="form-group">
                                 <i class="fas fa-envelope"> </i>

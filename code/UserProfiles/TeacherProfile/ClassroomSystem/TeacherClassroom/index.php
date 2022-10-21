@@ -1,6 +1,6 @@
 <?php
 $root_path = '../../../../';
-$profile_path='../../';
+$profile_path = '../../';
 include $root_path . 'LibraryFiles/DatabaseConnection/config.php';
 include $root_path . 'LibraryFiles/URLFinder/URLPath.php';
 include $root_path . 'LibraryFiles/SessionStore/session.php';
@@ -14,22 +14,22 @@ if ($authentication->num_rows == 0) {
   session::redirectProfile('teacher');
 }
 
-$allPost = $database->performQuery("SELECT * FROM post;");
-foreach($allPost as $j){
-  $i=$j['post_id'];
-  if(isset($_REQUEST[$i.'POST'])){
-    $database->performQuery("DELETE FROM post WHERE post_id='$i'");
+$allPost = $database->performQuery("SELECT * FROM post WHERE active='1';");
+foreach ($allPost as $j) {
+  $i = $j['post_id'];
+  if (isset($_REQUEST[$i . 'POST'])) {
+    $database->performQuery("UPDATE post SET active='0' WHERE post_id='$i'");
   }
 }
-$allComments = $database->performQuery("SELECT * FROM comments;");
-foreach($allComments as $j){
-  $i=$j['comment_id'];
-  if(isset($_REQUEST[$i.'COMMENT'])){
-    $database->performQuery("DELETE FROM comments WHERE comment_id='$i'");
+$allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';");
+foreach ($allComments as $j) {
+  $i = $j['comment_id'];
+  if (isset($_REQUEST[$i . 'COMMENT'])) {
+    $database->performQuery("UPDATE comments SET active='0' WHERE comment_id='$i'");
   }
 }
 
-$classroom_records = mysqli_fetch_assoc($database->performQuery("SELECT * FROM classroom WHERE class_code = '$classCode'"));
+$classroom_records = mysqli_fetch_assoc($database->performQuery("SELECT * FROM classroom WHERE class_code = '$classCode' and active='1'"));
 $teacher_records = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email = '$dummy_email'"));
 if (isset($_REQUEST['post_msg'])) {
   $post_date = date('Y-m-d H:i:s');
@@ -53,7 +53,7 @@ if (isset($_REQUEST['comment_msg'])) {
   }
 }
 
-$posts = $database->performQuery("SELECT * FROM post,post_classroom WHERE post.post_id=post_classroom.post_id and post_classroom.class_code='$classCode' order by post_datetime desc;");
+$posts = $database->performQuery("SELECT * FROM post,post_classroom WHERE post.post_id=post_classroom.post_id and post_classroom.class_code='$classCode' and active='1' order by post_datetime desc;");
 foreach ($posts as $i) {
   $post_id = $i['post_id'];
   if (isset($_REQUEST[$post_id . 'comment_msg'])) {
@@ -69,8 +69,8 @@ foreach ($posts as $i) {
     unset($_REQUEST[$post_id . 'comment_msg']);
   }
 }
-$allPost = $database->performQuery("SELECT * FROM post;");
-$allComments = $database->performQuery("SELECT * FROM comments;");
+$allPost = $database->performQuery("SELECT * FROM post WHERE active='1';");
+$allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';");
 ?>
 
 <!DOCTYPE html>
@@ -79,31 +79,6 @@ $allComments = $database->performQuery("SELECT * FROM comments;");
 <head>
   <meta charset="UTF-8">
   <title>Classroom</title>
-  <?php
-  foreach($allPost as $i){
-    $post_selector=$i['post_id'];
-?>
-<script>
-  function <?php echo $post_selector;?>dropdownbtn() {
-    document.getElementById("<?php echo $post_selector;?>myDropdown").classList.toggle("show");
-  }
-  </script>
-  <?php
-  }
-  ?>
-
-<?php
-  foreach($allComments as $i){
-    $comment_selector=$i['comment_id'];
-?>
-<script>
-  function <?php echo $comment_selector;?>dropdownbtn() {
-    document.getElementById("<?php echo $comment_selector;?>myDropdown").classList.toggle("show");
-  }
-  </script>
-  <?php
-  }
-  ?>
   <link rel="icon" href="<?php echo $root_path; ?>title_icon.jpg" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="style.css" />
@@ -113,242 +88,162 @@ $allComments = $database->performQuery("SELECT * FROM comments;");
   <link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet" />
   <script defer src="script.js"></script>
   <script src="<?php echo $root_path; ?>js/bootstrap.min.js"></script>
-  <style>
-
-<?php
-  foreach($allPost as $j){
-    $i=$j['post_id'];
-?>
-<?php echo '#'.$i ?>myDropdown{
-  transition: all 0.3s;
-}
-
-<?php echo '.'.$i ?>dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: white;
-  min-width: 160px;
-  border-radius: 1.5px;
-  overflow: auto;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-  transition: all 0.3s;
-}
-
-<?php echo '.'.$i ?>dropdown-content a {
-  color: black;
-  text-decoration: none;
-  display: block;
-}
-<?php
-  }
-?>
-<?php
-  foreach($allComments as $j){
-    $i=$j['comment_id'];
-?>
-<?php echo '#'.$i ?>myDropdown{
-  transition: all 0.3s;
-}
-
-<?php echo '.'.$i ?>dropdown-content {
-  display: none;
-  position: absolute;
-  background-color: white;
-  min-width: 160px;
-  border-radius: 1.5px;
-  overflow: auto;
-  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-  z-index: 1;
-  transition: all 0.3s;
-}
-
-<?php echo '.'.$i ?>dropdown-content a {
-  color: black;
-  text-decoration: none;
-  display: block;
-}
-<?php
-  }
-?>
-</style>
+  <?php include 'dropdownstyle.php'; ?>
+  <?php include 'dropdownscript.php'; ?>
 </head>
 
 <body>
-
-
   <div class="main-container d-flex">
-    <?php 
-        include $profile_path.'navbar.php';
-        teacher_navbar($root_path);
-      ?>
-      <section class="content-section px-2 py-2">
-        <div class="container-fluid bg-white rounded mt-5 mb-5"></div>
-        <!-- <h2 class="fs-5">Profile</h2> -->
-        <div class="row justify-content-center">
-          <div class="col-md-6 col-sm-6">
-            <div class="card intro-card text-bg-secondary mb-3">
-              <div class="card-body px-4">
-                <h1 class="card-title"><?php echo $classroom_records['classroom_name'] ?></h1>
-                <h4 class="card-text"><?php echo 'Course Code: ' . $classroom_records['course_code'] ?></h4>
-                <p class="card-text"><?php echo 'Semester: ' . $classroom_records['semester'] ?></p>
-                <p class="card-text"><?php echo 'Instructor: ' . $teacher_records['name'] ?></p>
-              </div>
+    <?php
+    include $profile_path . 'navbar.php';
+    teacher_navbar($root_path);
+    ?>
+    <section class="content-section px-2 py-2">
+      <div class="container-fluid bg-white rounded mt-5 mb-5"></div>
+      <!-- <h2 class="fs-5">Profile</h2> -->
+      <div class="row justify-content-center">
+        <div class="col-md-6 col-sm-6">
+          <div class="card intro-card text-bg-secondary mb-3">
+            <div class="card-body px-4">
+              <h1 class="card-title"><?php echo $classroom_records['classroom_name'] ?></h1>
+              <h4 class="card-text"><?php echo 'Course Code: ' . $classroom_records['course_code'] ?></h4>
+              <p class="card-text"><?php echo 'Semester: ' . $classroom_records['semester'] ?></p>
+              <p class="card-text"><?php echo 'Instructor: ' . $teacher_records['name'] ?></p>
+            </div>
 
+          </div>
+        </div>
+        <div class="col-md-3 col-sm-6 border-end">
+          <div class="card text-bg-primary  mb-3">
+            <div class="card-header task-card" style="height:50px">
+              <h4 style="text-align:center">Assigned Tasks</h4>
+            </div>
+            <div class="card-body ">
+              <p class="card-text" style="text-align:center">No assigned tasks.</p>
             </div>
           </div>
-          <div class="col-md-3 col-sm-6 border-end">
-            <div class="card text-bg-primary  mb-3">
-              <div class="card-header task-card" style="height:50px">
-                <h4 style="text-align:center">Assigned Tasks</h4>
-              </div>
-              <div class="card-body ">
-                <p class="card-text" style="text-align:center">No assigned tasks.</p>
-              </div>
-            </div>
-            <div class="card-footer row justify-content-center">
-              <div class="dropdown col-lg-5 col-sm-6 col-md-3">
-                <button onclick="dropdownbtnNew()" class="dropbtn btn btn-lg btn-outline-primary btn-join dropdown-toggle">Create Task</button>
-                <div id="myDropdown2" class="dropdown-content dropdown-menu">
-                  <a href="#home" class="dropdown-item">Create Quiz</a>
-                  <a href="#about" class="dropdown-item">Create Assignment</a>
-                </div>
+          <div class="card-footer row justify-content-center">
+            <div class="dropdown col-lg-5 col-sm-6 col-md-3">
+              <button onclick="dropdownbtnNew()" class="dropbtn btn btn-lg btn-outline-primary btn-join dropdown-toggle">Create Task</button>
+              <div id="myDropdown2" class="dropdown-content dropdown-menu">
+                <a href="#home" class="dropdown-item">Create Quiz</a>
+                <a href="#about" class="dropdown-item">Create Assignment</a>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
 
 
-        <div class="row justify-content-center my-3 post">
+      <div class="row justify-content-center my-3 post">
+        <div class="col-md-6 col-sm-6 border-end">
+          <form id="Post" name="Post" action="#post_section" method="POST">
+            <a name="post_section"></a>
+            <textarea class="form-control" name="post_value" id="exampleFormControlTextarea1" placeholder="Write a post..." rows="3"></textarea>
+            <div class="d-flex flex-column-reverse pt-2">
+              <input type="submit" class="btn btn-primary" name="post_msg" value="Post">
+            </div>
+          </form>
+        </div>
+        <div class="col-md-3 col-sm-6 border-end">
+        </div>
+      </div>
+      <!-- POST STARTS HERE -->
+      <?php
+
+      foreach ($posts as $i) {
+        $post_ID = $i['post_id'];
+      ?>
+        <div class="row justify-content-center">
           <div class="col-md-6 col-sm-6 border-end">
-            <form id="Post" name="Post" action="#post_section" method="POST">
-              <a name="post_section"></a>
-              <textarea class="form-control" name="post_value" id="exampleFormControlTextarea1" placeholder="Write a post..." rows="3"></textarea>
-              <div class="d-flex flex-column-reverse pt-2">
-                <input type="submit" class="btn btn-primary" name="post_msg" value="Post">
+            <div class="card  text-bg-light mb-3">
+              <div class="card-header">
+
+                <div class="row">
+                  Posted by <?php
+                            $user_record = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='" . $i['email'] . "';"));
+                            echo $user_record['name'];
+                            ?>
+                  <div class="dropdown col-lg-auto col-sm-6 col-md-3">
+                    <?php
+                    if ($dummy_email === $user_record['email']) {
+                      echo "<i onclick=\"" . $post_ID . "dropdownbtn()\" class=\"dropbtn bx bx-dots-horizontal-rounded\"></i>";
+                    }
+                    ?>
+                    <div id="<?php echo $post_ID; ?>myDropdown" class="dropdown-content dropdown-menu">
+                      <form id="<?php echo $post_ID; ?>deletePost" action="" method="POST">
+                        <input type="submit" value="Delete" class="dropdown-item" name="<?php echo $post_ID . 'POST'; ?>">
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <p class="card-text"><?php echo $i['post_message']; ?></p>
+              </div>
+              <div>
+                <button class="btn btn-dark w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample<?php echo $i['post_id']; ?>" aria-expanded="false" aria-controls="collapseExample">
+                  <?php
+                  $comments = mysqli_fetch_assoc($database->performQuery("SELECT count(*)count_comments FROM comments WHERE post_id='" . $i['post_id'] . "'"));
+                  echo $comments['count_comments'] . " comments";
+
+                  ?>
+                </button>
+              </div>
+              <div class="collapse multi-collapse" id="collapseExample<?php echo $i['post_id']; ?>">
+                <?php
+                $post_id = $i['post_id'];
+                $sql = $database->performQuery("SELECT * FROM comments WHERE post_id='" . $post_id . "' order by comment_datetime desc");
+                foreach ($sql as $j) {
+                  $comment_id = $j['comment_id'];
+                  $users_email = $j['email'];
+                  $users_records = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='$users_email'"));
+                ?>
+                  <div class="card p-1">
+                    <div class="card-header">Commented by <?php echo $users_records['name']; ?></div>
+                    <div class="card card-body">
+                      <div class="row">
+                        <p class="col py-2"><?php echo $j['comment_message']; ?> </p>
+                        <div class="dropdown col-lg-auto col-sm-6 col-md-3">
+                          <?php
+                          if ($dummy_email === $users_email) {
+                            echo "<i onclick=\"" . $comment_id . "dropdownbtn()\" class=\"dropbtn bx bx-dots-horizontal-rounded\"></i>";
+                          }
+                          ?>
+                          <div id="<?php echo $comment_id; ?>myDropdown" class="dropdown-content dropdown-menu">
+                            <form id="<?php echo $comment_ID; ?>deleteComment" action="" method="POST">
+                              <input type="submit" value="Delete" class="dropdown-item" name="<?php echo $comment_id . 'COMMENT'; ?>">
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                <?php
+                }
+                ?>
+              </div>
+            </div>
+            <?php $post_id = $i['post_id']; ?>
+            <form id="comment" name="<?php echo $post_id . 'Comment'; ?>" method="POST" action="#<?php echo $post_id; ?>comment_section">
+              <div class="input-group mb-3 pb-3">
+                <a name="<?php echo $post_id; ?>comment_section"></a>
+                <input type="text" class="form-control" placeholder="Leave a comment" aria-label="Leave a comment" aria-describedby="button-addon2" name="<?php echo $post_id . 'comment_text'; ?>">
+                <input type="submit" class="btn btn-primary" id="button-addon2" value="comment" name="<?php echo $post_id . 'comment_msg'; ?>">
               </div>
             </form>
           </div>
           <div class="col-md-3 col-sm-6 border-end">
           </div>
         </div>
-        <!-- POST STARTS HERE -->
-        <?php
+      <?php
+      }
+      ?>
 
-        foreach ($posts as $i) {
-          $post_ID=$i['post_id'];
-        ?>
-          <div class="row justify-content-center">
-            <div class="col-md-6 col-sm-6 border-end">
-              <div class="card  text-bg-light mb-3">
-              <div class="card-header">
-                  
-                  <div class="row">
-                  Posted by <?php
-                              $user_record = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='" . $i['email'] . "';"));
-                              echo $user_record['name'];
-                              ?>
-                            <div class="dropdown col-lg-auto col-sm-6 col-md-3">
-                              <?php
-                                  if($dummy_email===$user_record['email']){
-                                    echo "<i onclick=\"".$post_ID."dropdownbtn()\" class=\"dropbtn bx bx-dots-horizontal-rounded\"></i>";
-                                  }
-                              ?>
-                              <div id="<?php echo $post_ID;?>myDropdown" class="dropdown-content dropdown-menu">
-                                <form id="<?php echo $post_ID; ?>deletePost" action="" method="POST">
-                                  <input type="submit" value="Delete" class="dropdown-item" name="<?php echo $post_ID.'POST';?>">
-                                </form>
-                              </div>
-                            </div>
-                          </div>
-                </div>
-                <div class="card-body">
-                  <p class="card-text"><?php echo $i['post_message']; ?></p>
-                </div>
-                <div>
-                  <button class="btn btn-dark w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample<?php echo $i['post_id']; ?>" aria-expanded="false" aria-controls="collapseExample">
-                    <?php
-                    $comments = mysqli_fetch_assoc($database->performQuery("SELECT count(*)count_comments FROM comments WHERE post_id='" . $i['post_id'] . "'"));
-                    echo $comments['count_comments'] . " comments";
-
-                    ?>
-                  </button>
-                </div>
-                <div class="collapse multi-collapse" id="collapseExample<?php echo $i['post_id']; ?>">
-                  <!--START-->
-                  <?php
-                  $post_id = $i['post_id'];
-                  $sql = $database->performQuery("SELECT * FROM comments WHERE post_id='" . $post_id . "' order by comment_datetime desc");
-                  foreach ($sql as $j) {
-                    $comment_id=$j['comment_id'];
-                    $users_email = $j['email'];
-                    $users_records = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='$users_email'"));
-                  ?>
-                    <div class="card p-1">
-                      <div class="card-header">Commented by <?php echo $users_records['name']; ?></div>
-                      <div class="card card-body">
-                        <div class="row">
-                          <p class="col py-2"><?php echo $j['comment_message']; ?> </p>
-                          <div class="dropdown col-lg-auto col-sm-6 col-md-3">
-                          <?php  
-                                  if($dummy_email===$users_email){
-                                    echo "<i onclick=\"".$comment_id."dropdownbtn()\" class=\"dropbtn bx bx-dots-horizontal-rounded\"></i>";
-                                  }
-                              ?>
-                            <div id="<?php echo $comment_id; ?>myDropdown" class="dropdown-content dropdown-menu">
-                                <form id="<?php echo $comment_ID; ?>deleteComment" action="" method="POST">
-                                  <input type="submit" value="Delete" class="dropdown-item" name="<?php echo $comment_id.'COMMENT';?>">
-                                </form>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  <?php
-                  }
-                  ?>
-                  <!--END-->
-                </div>
-              </div>
-              <?php $post_id = $i['post_id']; ?>
-              <form id="comment" name="<?php echo $post_id . 'Comment'; ?>" method="POST" action="#<?php echo $post_id; ?>comment_section">
-                <div class="input-group mb-3 pb-3">
-                  <a name="<?php echo $post_id; ?>comment_section"></a>
-                  <input type="text" class="form-control" placeholder="Leave a comment" aria-label="Leave a comment" aria-describedby="button-addon2" name="<?php echo $post_id . 'comment_text'; ?>">
-                  <input type="submit" class="btn btn-primary" id="button-addon2" value="comment" name="<?php echo $post_id . 'comment_msg'; ?>">
-                </div>
-              </form>
-            </div>
-            <div class="col-md-3 col-sm-6 border-end">
-            </div>
-          </div>
-        <?php
-        }
-        ?>
-        <!-- POST ENDS HERE -->
-
-      </section>
-    </div>
+    </section>
+  </div>
   </div>
 </body>
 
-<script>
-  function dropdownbtnNew() {
-    document.getElementById("myDropdown2").classList.toggle("show");
-  }
-  // Close the dropdown if the user clicks outside of it
-  window.onclick = function(event) {
-    if (!event.target.matches('.dropbtn')) {
-      var dropdowns = document.getElementsByClassName("dropdown-content");
-      var i;
-      for (i = 0; i < dropdowns.length; i++) {
-        var openDropdown = dropdowns[i];
-        if (openDropdown.classList.contains('show')) {
-          openDropdown.classList.remove('show');
-        }
-      }
-    }
-  }
-</script>
 </html>
