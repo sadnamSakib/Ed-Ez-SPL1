@@ -33,7 +33,7 @@ if(isset($_REQUEST['updatePassword'])){
 <!DOCTYPE HTML>
 <html>
 <head>
-<link rel="icon" href="<?php echo $root_path; ?>logo4.jpg" />
+<link rel="icon" href="<?php echo $root_path; ?>title_icon.jpg" />
 <title>
     Change Password
 </title>

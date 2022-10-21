@@ -87,7 +87,7 @@ if (isset($_REQUEST['submit'])) {
 <!DOCTYPE HTML>
 <html>
 <head>
-<link rel="icon" href="<?php echo $root_path; ?>logo4.jpg" />
+<link rel="icon" href="<?php echo $root_path; ?>title_icon.jpg" />
 <title>
     Login
 </title>

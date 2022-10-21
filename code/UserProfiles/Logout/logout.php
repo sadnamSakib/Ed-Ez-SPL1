@@ -6,6 +6,6 @@ include $root_path.'LibraryFiles/SessionStore/session.php';
 session::create_or_resume_session();
 session_destroy();
 
-header("Location: ".$root_path."index.php");
+header("Location: ".$root_path."Landing/index.php");
 
 ?>

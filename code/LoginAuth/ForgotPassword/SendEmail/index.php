@@ -45,7 +45,7 @@ if (isset($_POST['email'])) {
 <html>
 
 <head>
-    <link rel="icon" href="<?php echo $root_path; ?>logo4.jpg" />
+    <link rel="icon" href="<?php echo $root_path; ?>title_icon.jpg" />
     <title>
         ForgotPassword
     </title>
