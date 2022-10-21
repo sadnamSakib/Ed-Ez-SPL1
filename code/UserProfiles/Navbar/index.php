@@ -23,7 +23,7 @@
         <div class="container-fluid mx-5 px-4">
           <div class="d-flex justify-content-between d-block">
             <button class="btn btn-primary open-btn me-2"><i class='bx bx-menu'></i></i></button>
-            <a href="#" class="navbar-brand fs-5 px-3 mx-4" href="#"><img src="<?php echo $root_path; ?>logo2.jpg" class="img-fluid" height="40" width= "200"/></a>
+            <a href="#" class="navbar-brand fs-5 px-3 mx-4" href="#"><img src="<?php echo $root_path; ?>title_icon.jpg" class="img-fluid" height="40" width= "200"/></a>
           </div>
           <!-- <button class="navbar-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <i class="fal fa-bars"></i>

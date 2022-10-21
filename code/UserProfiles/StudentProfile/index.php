@@ -39,6 +39,7 @@ if (isset($_POST['UpdateProfile'])) {
   $semester = $_REQUEST['semester'];
   $country = $_REQUEST['country'];
   $password = $_REQUEST['password'];
+  $studentID= $_REQUEST['studentID'];
   $password = hash('sha512', $password);
   $existanceCheck = "SELECT * FROM users WHERE email = '$temp'";
   $result = $database->performQuery($existanceCheck);
@@ -54,7 +55,7 @@ if (isset($_POST['UpdateProfile'])) {
       $semester = -1;
     }
     $database->performQuery("UPDATE users SET name='$name',mobileNumber='$mobileNumber',country='$country',department='$department' WHERE email='$temp'");
-    $database->performQuery("UPDATE student SET semester='$semester' WHERE email = '$temp'");
+    $database->performQuery("UPDATE student SET semester='$semester',studentID='$studentID' WHERE email = '$temp'");
   } else {
     $error = "Incorrect Password, Cannot make changes to profile";
     $errorColor = "red";
@@ -176,6 +177,10 @@ if ($semester == -1) {
                     this.setAttribute('min',1);
                     this.setAttribute('max',20);
                     ">
+              </div>
+              <div class="col-md-12 mb-3">
+                <label class="form-label">Student ID</label>
+                <input type="text" class="form-control" id="studentID" name="studentID" placeholder="Enter Student ID" value="<?php echo $studentID ?>">
               </div>
               <div class="col-md-12 mb-3">
                 <label class="form-label">Country</label>
