@@ -103,10 +103,7 @@
     $database=new Database("UserManager","localhost","12345678","user");
     // Check connection
     $database->connect();
-
     error_reporting(0);
-
     session_start();
-    clearstatcache(true);
 
     ?>
