@@ -1,5 +1,6 @@
 <?php
 $root_path = '../../../';
+$profile_path='../';
 include $root_path . 'LibraryFiles/DatabaseConnection/config.php';
 include $root_path . 'LibraryFiles/URLFinder/URLPath.php';
 include $root_path . 'LibraryFiles/SessionStore/session.php';
@@ -70,40 +71,10 @@ foreach ($classrooms as $dummy_classroom) {
   <script src="<?php echo $root_path; ?>js/bootstrap.js"></script>
   <script src="main.min.js"></script>
   <div class="main-container d-flex">
-    <div class="sidebar" id="side_nav">
-      <div class="header-box px-2 pt-3 pb-4 d-flex justify-content-between ">
-        <h1 class="fs-4"><span class="bg-white text-dark rounded shadow px-4 mx-4 my-5"><span class="text-whte"> Ed-Ez</span></span></h1>
-        <button class="btn d-block close-btn text-white"><i class='bx bx-menu'></i></button>
-      </div>
-      <ul class="list-unstyled px-2">
-        <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-dashboard pe-2'></i>Dashboard</a></li>
-        <li class=""><a href="<?php echo $root_path ?>UserProfiles/TeacherProfile/index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-user-circle pe-2'></i>Profile</a></li>
-        <li class=""><a href="index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-calendar-plus pe-2'></i>Schedule</a></li>
-        <li class=""><a href="<?php echo $root_path ?>UserProfiles/TeacherProfile/ClassroomSystem/index.php" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-chalkboard pe-2'></i>Classrooms</a></li>
-        <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-bar-chart-alt-2 pe-2'></i>Grades</a></li>
-      </ul>
-    </div>
-    <div class="content">
-      <nav class="navbar navbar-expand p-3" style="background-color: #4596be;">
-        <div class="container-fluid mx-5 px-4">
-          <div class="d-flex justify-content-between d-block">
-            <button class="btn btn-primary open-btn me-2"><i class='bx bx-menu'></i></i></button>
-            <a href="#" class="navbar-brand fs-5 px-3 mx-4" href="#"><img src="../../../logo2.jpg" class="img-fluid" height="40" width= "200"/></a>
-          </div>
-          <!-- <button class="navbar-toggle" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <i class="fal fa-bars"></i>
-          </button> -->
-          <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-            <ul class="navbar-nav mb-2 mb-lg-0">
-              <li class="nav-item">
-              <button type="button" onclick="window.location.href='<?php echo $root_path; ?>UserProfiles/Logout/logout.php'" class="btn btn-primary me-2 d-flex">
-                      Log Out
-                </button>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
+  <?php 
+      include $profile_path.'navbar.php';
+      student_navbar($root_path);
+    ?>
       <div class="container">
       <div id='calendar'></div>
       </div>

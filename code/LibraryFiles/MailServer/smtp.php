@@ -44,8 +44,8 @@ class SMTP{
         $this->mail->isSMTP();
         $this->mail->Host ='smtp-relay.sendinblue.com';
         $this->mail->SMTPAuth = true;
-        $this->mail->Username = '####';
-        $this->mail->Password = '####';
+        $this->mail->Username = '';
+        $this->mail->Password = '';
         $this->mail->SMTPSecure = 'tls';
         $this->mail->Port = 587;
     }

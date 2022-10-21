@@ -29,5 +29,7 @@ class session{
     }
 }
 
+clearstatcache(true);
+
 
 ?>
