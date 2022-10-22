@@ -79,17 +79,6 @@ CREATE TABLE `comments` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `comment_post`
---
-
-CREATE TABLE `comment_post` (
-  `comment_id` varchar(50) NOT NULL,
-  `post_id` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `event`
 --
 
@@ -98,18 +87,6 @@ CREATE TABLE `event` (
   `event_datetime` datetime DEFAULT NULL,
   `event_type` set('holiday','deadline') DEFAULT NULL,
   `event_title` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `holiday`
---
-
-CREATE TABLE `holiday` (
-  `holiday_id` varchar(50) NOT NULL,
-  `event_id` varchar(50) DEFAULT NULL,
-  `holiday_name` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -324,11 +301,6 @@ ALTER TABLE `comments`
   ADD KEY `fk_comments_posts` (`post_id`);
 
 --
--- Indexes for table `comment_post`
---
-ALTER TABLE `comment_post`
-  ADD PRIMARY KEY (`comment_id`,`post_id`),
-  ADD KEY `fk_post_comments` (`post_id`);
 
 --
 -- Indexes for table `event`
@@ -337,11 +309,6 @@ ALTER TABLE `event`
   ADD PRIMARY KEY (`event_id`);
 
 --
--- Indexes for table `holiday`
---
-ALTER TABLE `holiday`
-  ADD PRIMARY KEY (`holiday_id`);
-
 --
 -- Indexes for table `post`
 --
@@ -444,26 +411,19 @@ ALTER TABLE `comments`
   ADD CONSTRAINT `fk_comments_users` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE;
 
 --
--- Constraints for table `comment_post`
---
-ALTER TABLE `comment_post`
-  ADD CONSTRAINT `fk_post_comments` FOREIGN KEY (`post_id`) REFERENCES `post` (`post_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_post_comments2` FOREIGN KEY (`comment_id`) REFERENCES `comments` (`comment_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `post`
 --
 ALTER TABLE `post`
-  ADD CONSTRAINT `fk_post_user` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_user_post` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE;
+  ADD CONSTRAINT `fk_post_user` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `post_classroom`
 --
 ALTER TABLE `post_classroom`
   ADD CONSTRAINT `fk_post_classroom` FOREIGN KEY (`post_id`) REFERENCES `post` (`post_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_post_classroom2` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_post_classroom_user` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE;
+  ADD CONSTRAINT `fk_post_classroom2` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `quiz_classroom`
@@ -490,9 +450,7 @@ ALTER TABLE `student`
 --
 ALTER TABLE `student_classroom`
   ADD CONSTRAINT `fk_student_classroom` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_student_classroom2` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE,
-  ADD CONSTRAINT `student_classroom_ibfk_1` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE,
-  ADD CONSTRAINT `student_classroom_ibfk_2` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE;
+  ADD CONSTRAINT `fk_student_classroom2` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `teacher`
@@ -505,9 +463,7 @@ ALTER TABLE `teacher`
 --
 ALTER TABLE `teacher_classroom`
   ADD CONSTRAINT `fk_teacher_classroom` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_teacher_classroom2` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE,
-  ADD CONSTRAINT `teacher_classroom_ibfk_1` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE,
-  ADD CONSTRAINT `teacher_classroom_ibfk_2` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE;
+  ADD CONSTRAINT `fk_teacher_classroom2` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
