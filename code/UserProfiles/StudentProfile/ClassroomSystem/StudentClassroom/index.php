@@ -14,14 +14,14 @@ if ($authentication->num_rows == 0) {
   session::redirectProfile('student');
 }
 
-$allPost = $database->performQuery("SELECT * FROM post;");
+$allPost = $database->performQuery("SELECT * FROM post WHERE active='1';");
 foreach($allPost as $j){
   $i=$j['post_id'];
   if(isset($_REQUEST[$i.'POST'])){
     $database->performQuery("DELETE FROM post WHERE post_id='$i'");
   }
 }
-$allComments = $database->performQuery("SELECT * FROM comments;");
+$allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';");
 foreach($allComments as $j){
   $i=$j['comment_id'];
   if(isset($_REQUEST[$i.'COMMENT'])){
@@ -29,7 +29,7 @@ foreach($allComments as $j){
   }
 }
 
-$classroom_records = mysqli_fetch_assoc($database->performQuery("SELECT * FROM classroom WHERE class_code = '$classCode'"));
+$classroom_records = mysqli_fetch_assoc($database->performQuery("SELECT * FROM classroom WHERE class_code = '$classCode' and active='1'"));
 $teacher_records = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users,teacher_classroom,classroom WHERE users.email=teacher_classroom.email and classroom.class_code='$classCode';"));
 if (isset($_REQUEST['post_msg']) && !is_null($_REQUEST['post_value'])) {
   $post_date = date('Y-m-d H:i:s');
@@ -45,7 +45,7 @@ if (isset($_REQUEST['post_msg']) && !is_null($_REQUEST['post_value'])) {
   }
 }
 
-$posts = $database->performQuery("SELECT * FROM post,post_classroom WHERE post.post_id=post_classroom.post_id and post_classroom.class_code='$classCode' order by post_datetime desc;");
+$posts = $database->performQuery("SELECT * FROM post,post_classroom WHERE post.post_id=post_classroom.post_id and post_classroom.class_code='$classCode' and active='1' order by post_datetime desc;");
 foreach ($posts as $i) {
   $post_id = $i['post_id'];
   if (isset($_REQUEST[$post_id . 'comment_msg'])) {
@@ -62,8 +62,8 @@ foreach ($posts as $i) {
     unset($_REQUEST[$post_id . 'comment_msg']);
   }
 }
-$allPost = $database->performQuery("SELECT * FROM post;");
-$allComments = $database->performQuery("SELECT * FROM comments;");
+$allPost = $database->performQuery("SELECT * FROM post WHERE active='1';");
+$allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';");
 ?>
 
 <!DOCTYPE html>
@@ -103,6 +103,7 @@ $allComments = $database->performQuery("SELECT * FROM comments;");
                 <h4 class="card-text"><?php echo 'Course Code: ' . $classroom_records['course_code'] ?></h4>
                 <p class="card-text"><?php echo 'Semester: ' . $classroom_records['semester'] ?></p>
                 <p class="card-text"><?php echo 'Instructor: ' . $teacher_records['name'] ?></p>
+                <p class="card-text"><?php echo 'Class Code: ' . $classroom_records['class_code'] ?></p>
               </div>
             </div>
           </div>
@@ -145,6 +146,7 @@ $allComments = $database->performQuery("SELECT * FROM comments;");
                               $user_record = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='" . $i['email'] . "';"));
                               echo $user_record['name'];
                               ?>
+                               at <?php echo date("d/m/Y h:m:s", strtotime($i['post_datetime'])); ?> 
                             <div class="dropdown col-lg-auto col-sm-6 col-md-3">
                               <?php
                                   if($dummy_email===$user_record['email']){
@@ -165,7 +167,7 @@ $allComments = $database->performQuery("SELECT * FROM comments;");
                 <div>
                   <button class="btn btn-dark w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample<?php echo $i['post_id'] ?>" aria-expanded="false" aria-controls="collapseExample">
                     <?php
-                    $comments = mysqli_fetch_assoc($database->performQuery("SELECT count(*)count_comments FROM comments WHERE post_id='" . $i['post_id'] . "'"));
+                    $comments = mysqli_fetch_assoc($database->performQuery("SELECT count(*)count_comments FROM comments WHERE post_id='" . $i['post_id'] . "' and active='1'"));
                     echo $comments['count_comments'] . " comments";
 
                     ?>
@@ -174,14 +176,18 @@ $allComments = $database->performQuery("SELECT * FROM comments;");
                 <div class="collapse multi-collapse" id="collapseExample<?php echo $i['post_id'] ?>">
                   <?php
                   $post_id = $i['post_id'];
-                  $sql = $database->performQuery("SELECT * FROM comments WHERE post_id='" . $post_id . "' order by comment_datetime desc;");
+                  $sql = $database->performQuery("SELECT * FROM comments WHERE post_id='" . $post_id . "' and active='1' order by comment_datetime desc;");
                   foreach ($sql as $j) {
                     $comment_id=$j['comment_id'];
                     $users_email = $j['email'];
                     $users_records = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='$users_email'"));
                   ?>
                     <div class="card p-1">
-                      <div class="card-header">Commented by <?php echo $users_records['name']; ?></div>
+                      <div class="card-header">
+                        Commented by <?php echo $users_records['name']; ?>
+                        at <?php echo date("d/m/Y h:m:s", strtotime($j['comment_datetime'])); ?> 
+                    
+                    </div>
                       <div class="card card-body">
                         <div class="row">
                           <p class="col py-2"><?php echo $j['comment_message']; ?> </p>
