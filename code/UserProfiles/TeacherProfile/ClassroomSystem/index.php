@@ -76,7 +76,7 @@ foreach ($classrooms as $dummy_classroom) {
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="<?php echo $root_path; ?>css/bootstrap.css" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet" />
+  <link href="<?php echo $root_path;?>boxicons-2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <script defer src="script.js"></script>
   <?php include 'ClassroomSystemScript.php';?>
   <?php include 'ClassroomSystemStyle.php';?>
