@@ -95,7 +95,6 @@ if ($semester == -1) {
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="<?php echo $root_path; ?>css/bootstrap.css" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://kit.fontawesome.com/d0f239b9af.js" crossorigin="anonymous"></script>
   <link href="https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css" rel="stylesheet" />
   <script defer src="script.js"></script>
 </head>
