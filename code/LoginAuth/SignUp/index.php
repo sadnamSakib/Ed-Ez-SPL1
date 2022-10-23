@@ -166,7 +166,7 @@ if (isset($_POST['submit'])) {
                         <label>
                             <input id="check_1" name="check_1" type="checkbox" required>
                             <small>
-                                I read and agree to <a href="tc.html" target="_blank">Terms & Conditions<a>
+                                I read and agree to <a href="TermsAndConditions.html" target="_blank">Terms & Conditions<a>
                             </small>
                         <div class="invalid-feedback">You must check the box.</div>
                         </label>
