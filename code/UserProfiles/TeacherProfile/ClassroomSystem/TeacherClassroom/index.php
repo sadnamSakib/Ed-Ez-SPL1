@@ -149,9 +149,7 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
         <div class="col-md-3 col-sm-6 border-end">
         </div>
       </div>
-      <!-- POST STARTS HERE -->
       <?php
-
       foreach ($posts as $i) {
         $post_ID = $i['post_id'];
       ?>
