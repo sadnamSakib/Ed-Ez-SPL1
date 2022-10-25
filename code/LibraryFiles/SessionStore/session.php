@@ -9,7 +9,7 @@ class session{
     }
 
     public static function redirectProfile($tableName){
-        if($tableName=='teacher'){
+        if($tableName==='teacher'){
             header("Location: ../../UserProfiles/TeacherProfile/index.php");
         }
         else{
@@ -28,8 +28,5 @@ class session{
           }
     }
 }
-
-clearstatcache(true);
-
-
+session::create_or_resume_session();
 ?>

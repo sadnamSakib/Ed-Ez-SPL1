@@ -5,10 +5,11 @@ include $root_path.'LibraryFiles/DatabaseConnection/config.php';
 include $root_path.'LibraryFiles/URLFinder/URLPath.php';
 include $root_path.'LibraryFiles/SessionStore/session.php';
 include $root_path.'LibraryFiles/MailServer/smtp.php';
-session::create_or_resume_session();
+include $root_path.'LibraryFiles/Utility/Utility.php';
+session::stay_in_session();
 $email=$_SESSION['email'];
 $temp_email=hash('sha512',$email);
-$code=generateRandomString(12);
+$code=$utility->generateRandomString(12);
 if($database->performQuery("SELECT * FROM token_table WHERE email = '$temp_email'")->num_rows>0){
     $database->performQuery("DELETE FROM token_table WHERE email = '$temp_email'");
 }
@@ -23,6 +24,7 @@ try{
         $database->performQuery("DELETE FROM token_table WHERE email='$temp_email';");
         header('Location: ../index.php');
     }
+    unset($_SESSION['error']);
 }
 catch(Exception $e){
     $_SESSION['error']='MailServer Failure could not validate email address';

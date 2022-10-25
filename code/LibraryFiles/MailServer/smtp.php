@@ -5,7 +5,7 @@ use PHPMailer\PHPMailer\Exception;
 
 require 'vendor/autoload.php';
 
-class email{
+class Email{
     private $email_address;
     private $email_body;
     private $email_subject;
@@ -42,12 +42,15 @@ class SMTP{
 
     private function setMail(){
         $this->mail->isSMTP();
-        $this->mail->Host ='smtp-relay.sendinblue.com';
+        $MailServer=new MySQLDatabaseConnector("UserManager","localhost","12345678","mailserver");
+        $MailServer->fetch_results($credentials,"SELECT * FROM smtp");
+        $this->mail->Host =$credentials['host'];
         $this->mail->SMTPAuth = true;
-        $this->mail->Username = '';
-        $this->mail->Password = '';
+        $this->mail->Username = $credentials['username'];
+        $this->mail->Password = $credentials['password'];
         $this->mail->SMTPSecure = 'tls';
-        $this->mail->Port = 587;
+        $this->mail->Port = $credentials['port'];
+        unset($MailServer);
     }
 
     private function prepareMail($email){
