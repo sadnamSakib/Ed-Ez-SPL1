@@ -24,7 +24,7 @@ Those who contributed to this project:
 
 We used bootsrap as our CSS modules that helped further improve the presentation of our website and helped ensure responsiveness.
 
-Vanilla Javascript was used as the requirement of this project was that no frameworks could be used for client-side or server-side scripting
+Vanilla Javascript was used as the requirement of this project was that no frameworks could be used for client-side or server-side scripting. But we did use JQuery for better responsiveness.
 
 Also Vanilla Php was used due to the same constraint
 
