@@ -100,7 +100,7 @@ $country = $row['country'];
   <script src="<?php echo $root_path; ?>js/bootstrap.js"></script>
   <div class="main-container d-flex">
        <?php 
-        include 'navbar.php';
+        include 'navbarProfile.php';
         teacher_navbar($root_path);
       ?> 
       <section class="content-section m-auto px-5">
