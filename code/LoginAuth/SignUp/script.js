@@ -154,3 +154,8 @@ function ValidateEmail(inputText) {
         return false;
     }
 }
+$(document).ready(function () {
+    $('institution').selectize({
+        sortField: 'text'
+    });
+});
