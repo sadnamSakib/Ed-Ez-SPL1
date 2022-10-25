@@ -334,6 +334,9 @@ if (isset($_POST['submit'])) {
                         else if(isset($validate)){
                             echo "block";
                         }
+                        else{
+                            echo "none";
+                        }
                     ?>">
                             <?php 
                             if(isset($validate)){
