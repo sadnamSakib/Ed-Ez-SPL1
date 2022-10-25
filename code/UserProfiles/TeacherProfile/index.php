@@ -130,7 +130,7 @@ $country = $row['country'];
                 <h4>Teacher Profile</h4>
               </div>
               <form id='form' action="" method="POST">
-                <div id="errorPass form-label" style="color:<?php echo $errorColor ?>"><?php echo $error ?></div>
+                
                 <div class="row mt-3">
                   <div class="col-md-12 mb-3">
                     <label class="form-label">Full Name</label>
