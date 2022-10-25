@@ -9,22 +9,23 @@ session::profile_not_set($root_path);
 
 $temp=hash('sha512',$_SESSION['email']);
 $tableName=$_SESSION['tableName'];
-$error="";
+$error=null;
 if(isset($_REQUEST['updatePassword'])){
     $oldPassword=$_REQUEST['opassword'];
     $oldPassword=hash('sha512',$oldPassword);
-    $existence_name = "SELECT * FROM users WHERE email = '$temp'";
-    $result = $database->performQuery($existence_name);
-    $row = mysqli_fetch_assoc($result);
-    $password=hash('sha512',$_REQUEST['password']);
-    $password=password_hash($password,PASSWORD_BCRYPT);
-    if(password_verify($oldPassword,$row['password'])){
-        $sql="UPDATE users SET password='$password' WHERE email='$temp'";
+    $database->fetch_results($row,"SELECT * FROM users WHERE email = '$temp'");
+    $password=new PasswordValidator(filter_input(INPUT_POST,'password',FILTER_SANITIZE_SPECIAL_CHARS));
+    if(!$password->constraint_check() || !$password->password_match($_POST['cfpassword'])){
+        $password->constraint_check();
+        $password->password_match($_POST['cfpassword']);
+    }
+    else if(password_verify($oldPassword,$row['password'])){
+        $sql="UPDATE users SET password='".$password->get_password()."' WHERE email='$temp'";
         $res=$database->performQuery($sql);
         session::redirectProfile($tableName);
     }
     else{
-        $error="Old password field should contain the current password, old password incorrect";
+        $error="Old password field should contain the current password or existing password, old password incorrect";
     }
 }
 
@@ -56,8 +57,15 @@ if(isset($_REQUEST['updatePassword'])){
             <div class="myLeftCtn">
                 <form id="form" class="myForm text-center" action="" method="POST">
                     <header>Change Account Password</header>
-                    <div class="form-group" id="error" style="color:red">
-                            <p><?php echo $error ?></p>
+                    <div class="form-group" id="error" style="color:red;display:<?php 
+                        if(!is_null($error)){
+                            echo "block";
+                        }
+                        else{
+                            echo "none";
+                        }
+                    ?>">
+                            <p><?php echo $error; ?></p>
                     </div>
                     <div class="form-group">
                     <i class="fas fa-lock"> </i>
@@ -65,10 +73,30 @@ if(isset($_REQUEST['updatePassword'])){
                         <div class="invalid-feedback">Please fill out this field.</div>
                         <i class="fas fa-eye-slash" id="togglePassword3"></i>
                     </div>
+                    <div class="form-group" id="password_error" style="color:red;display:<?php 
+                        if(!is_null($password->password_error)){
+                            echo "block";
+                        }
+                        else{
+                            echo "none";
+                        }
+                    ?>">
+                            <p><?php echo $password->password_error; ?></p>
+                    </div>
                     <div class="form-group">
                         <i class="fas fa-lock"> </i>
                         <input class="myInput" placeholder="Password" type="password" id="password" name="password" required>
                         <i class="fas fa-eye-slash" id="togglePassword"></i>
+                    </div>
+                    <div class="form-group" id="confirm_error" style="color:red;display:<?php 
+                        if(!is_null($password->confirm_error)){
+                            echo "block";
+                        }
+                        else{
+                            echo "none";
+                        }
+                    ?>">
+                            <p><?php echo $password->confirm_error; ?></p>
                     </div>
                     <div class="form-group">
                         <i class="fas fa-lock"> </i>

@@ -99,7 +99,6 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
     ?>
     <section class="content-section px-2 py-2">
       <div class="container-fluid bg-white rounded mt-5 mb-5"></div>
-      <!-- <h2 class="fs-5">Profile</h2> -->
       <div class="row justify-content-center">
         <div class="col-md-6 col-sm-6">
           <div class="card intro-card text-bg-secondary mb-3">
