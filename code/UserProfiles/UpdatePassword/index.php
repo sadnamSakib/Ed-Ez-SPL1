@@ -4,7 +4,7 @@ $root_path = '../../';
 include $root_path . 'LibraryFiles/DatabaseConnection/config.php';
 include $root_path . 'LibraryFiles/URLFinder/URLPath.php';
 include $root_path . 'LibraryFiles/SessionStore/session.php';
-session::create_or_resume_session();
+include $root_path.'LibraryFiles/ValidationPhp/InputValidation.php';
 session::profile_not_set($root_path);
 
 $temp=hash('sha512',$_SESSION['email']);
