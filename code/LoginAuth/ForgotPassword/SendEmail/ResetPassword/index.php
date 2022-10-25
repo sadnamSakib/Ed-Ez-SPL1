@@ -4,7 +4,6 @@ $parent_path='../../';
 include $root_path.'LibraryFiles/DatabaseConnection/config.php';
 include $root_path.'LibraryFiles/SessionStore/session.php';
 include $root_path.'LibraryFiles/ValidationPhp/InputValidation.php';
-session::create_or_resume_session();
 session::stay_in_session();
 
 if (isset($_POST['submit_password'])) {
