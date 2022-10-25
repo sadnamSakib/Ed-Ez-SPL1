@@ -53,7 +53,7 @@ error_reporting(0);
           <h3>Education Made Easy.</h3>
           <a href="#" class="btn btn-default btn-lg">Get Started</a>
         </div>
-        <div class="bgobject col">
+        <div class="bgobject col justify-content-end">
           <object data="bgimage.svg" width="500" height="500"></object>
         </div>
       </div>
