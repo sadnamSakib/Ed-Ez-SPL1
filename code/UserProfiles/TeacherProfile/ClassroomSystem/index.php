@@ -76,10 +76,10 @@ foreach ($classrooms as $dummy_classroom) {
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="<?php echo $root_path; ?>css/bootstrap.css" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <link href="<?php echo $root_path;?>boxicons-2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <link href="<?php echo $root_path; ?>boxicons-2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <script defer src="script.js"></script>
-  <?php include 'ClassroomSystemScript.php';?>
-  <?php include 'ClassroomSystemStyle.php';?>
+  <?php include 'ClassroomSystemScript.php'; ?>
+  <?php include 'ClassroomSystemStyle.php'; ?>
 </head>
 
 <body>
@@ -137,7 +137,17 @@ foreach ($classrooms as $dummy_classroom) {
                         <input type="text" id="courseCode" name="courseCode" class="form-control" placeholder="Enter Course Code" aria-label="Leave a comment">
                       </div>
                       <div class="mb-3">
-                        <input type="text" id="semester" name="semester" class="form-control" placeholder="Enter Semester" aria-label="Leave a comment">
+                        <select class="form-select" aria-label="selectSemester" name="semester" id="semester">
+                          <option selected>Select Semester</option>
+                          <option value="1">1</option>
+                          <option value="2">2</option>
+                          <option value="3">3</option>
+                          <option value="4">4</option>
+                          <option value="5">5</option>
+                          <option value="6">6</option>
+                          <option value="7">7</option>
+                          <option value="8">8</option>
+                        </select>
                       </div>
 
                   </div>
