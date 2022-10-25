@@ -137,7 +137,7 @@ foreach ($classrooms as $dummy_classroom) {
                         <input type="text" id="courseCode" name="courseCode" class="form-control" placeholder="Enter Course Code" aria-label="Leave a comment">
                       </div>
                       <div class="mb-3">
-                        <select class="form-select" aria-label="selectSemester">
+                        <select class="form-select" aria-label="selectSemester" name="semester" id="semester">
                           <option selected>Select Semester</option>
                           <option value="1">1</option>
                           <option value="2">2</option>

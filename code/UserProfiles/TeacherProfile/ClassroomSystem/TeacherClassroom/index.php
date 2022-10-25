@@ -104,13 +104,12 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
         <div class="col-md-6 col-sm-6">
           <div class="card intro-card text-bg-secondary mb-3">
             <div class="card-body px-4">
-              <h1 class="card-title"><?php echo $classroom_records['classroom_name'] ?></h1>
+              <h2 class="card-title"><?php echo $classroom_records['classroom_name'] ?></h2>
               <h4 class="card-text"><?php echo 'Course Code: ' . $classroom_records['course_code'] ?></h4>
               <p class="card-text"><?php echo 'Semester: ' . $classroom_records['semester'] ?></p>
               <p class="card-text"><?php echo 'Instructor: ' . $teacher_records['name'] ?></p>
               <p class="card-text"><?php echo 'Class Code: ' . $classroom_records['class_code'] ?></p>
             </div>
-
           </div>
         </div>
         <div class="col-md-3 col-sm-6 border-end">
