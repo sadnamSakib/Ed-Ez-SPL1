@@ -73,12 +73,12 @@ function passwordVerification() {
             }
         }
         if (charPresentSmall === false || charPresentBig === false || numPresent === false || symbolPresent === false) {
-            password_message.push("Password must contain minimum of 8 characters which must include numbers, letters of both cases and symbols")
+            password_message.push("Password must contain minimum of 8 characters including numbers, letters of both cases and symbols")
         }
 
     }
     else {
-        password_message.push('Password must contain minimum of 8 characters which must include numbers, letters of both cases and symbols')
+        password_message.push('Password must contain minimum of 8 characters including numbers, letters of both cases and symbols')
     }
     if (password_message.length > 0) {
         errorPassword.style.display = "block"
