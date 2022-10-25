@@ -20,11 +20,10 @@ Those who contributed to this project:
 3) Javascript (Client-Side Scripting/Front-End)
 4) Php (Server-Side Scripting/Backend)
 5) MySQL (Database)
-6) Full Calendar Plugin Javascript
 
 We used bootsrap as our CSS modules that helped further improve the presentation of our website and helped ensure responsiveness.
 
-Vanilla Javascript was used as the requirement of this project was that no frameworks could be used for client-side or server-side scripting. But we did use JQuery for better responsiveness.
+Vanilla Javascript was used as the requirement of this project was that no frameworks could be used for client-side or server-side scripting. But we did use JQuery for better responsiveness. Full Calendar Plugin was used for event tracking.
 
 Also Vanilla Php was used due to the same constraint
 
