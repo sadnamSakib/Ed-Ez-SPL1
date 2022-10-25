@@ -3,6 +3,7 @@
 $root_path='../../';
 include $root_path.'LibraryFiles/DatabaseConnection/config.php';
 include $root_path.'LibraryFiles/SessionStore/session.php';
+include $root_path.'LibraryFiles/ValidationPhp/InputValidation.php';
 session::create_or_resume_session();
 
 
@@ -10,7 +11,7 @@ session::stay_in_session();
 if (isset($_GET['email']) && isset($_GET['code'])){
     $temp=$_GET['email'];
     $code=$_GET['code'];
-    $record=mysqli_fetch_assoc($database->performQuery("SELECT * FROM token_table WHERE email='$temp'"));
+    $database->fetch_results($record,"SELECT * FROM token_table WHERE email='$temp'");
     if($record['code']===$code){
       $database->performQuery("UPDATE users SET Verified='1' where email='$temp';");
       $database->performQuery("DELETE FROM token_table WHERE email='$temp';");
@@ -26,49 +27,25 @@ else{
     $error='';
 }
 
-if (isset($_REQUEST['submit'])) {
-	$email = $_REQUEST['email'];
-    $original_email=$email;
-    $password = $_REQUEST['password'];
+if (isset($_POST['submit'])) {
+    $email=new EmailValidator(filter_input(INPUT_POST,'email',FILTER_SANITIZE_EMAIL));
+    $password=new PasswordValidator(filter_input(INPUT_POST,'password',FILTER_SANITIZE_SPECIAL_CHARS));
     $button_radio=$_REQUEST['btnradio'];
-    $password=hash('sha512',$password);
-    $email=hash('sha512',$email);
-    $tableName;
-    if($button_radio==='teacher'){
-        $tableName="teacher";
-    }
-    else{
-        $tableName="student";
-    }
-    
-    
-    $existence_name = "SELECT * FROM users INNER JOIN $tableName ON  users.email=$tableName.email WHERE users.email = '$email'";
+    $existence_name = "SELECT * FROM users INNER JOIN $button_radio ON  users.email=$button_radio.email WHERE users.email = '".$email->get_email()."'";
     $result = $database->performQuery($existence_name);
-    $pattern = "/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,})$/i";
-    if(!preg_match($pattern,$original_email)){
-        $error='Invalid email address';
-    }
-    else if(is_null($password)){
-        $error='Please enter your password';
-    }
-    else if(isPasswordValid($password)){
-        $error='Password does not meet the constraints';
-    }
-    else if(!isEmailValid($original_email)){
-        $error="Email is invalid it contains dangerous characters (,),=,;,\\,\',\"";
+    if(!$email->email_validate($email->get_original_email()) || !$password->constraint_check()){
+        $error='Invalid email address/password';
     }
 	else if ($result->num_rows > 0) 
     {
-        
-		$result = $database->performQuery($existence_name);
-        $row=mysqli_fetch_assoc($result);
-		if(password_verify($password,$row['password'])){
+        $database->fetch_results($row,$existence_name);
+		if(password_verify($password->get_store_password(),$row['password'])){
             $_SESSION['name'] = $row['name'];
-            $_SESSION['email'] = $original_email;
-            $_SESSION['tableName']=$tableName;
+            $_SESSION['email'] = $email->get_original_email();
+            $_SESSION['tableName']=$button_radio;
             unset($_POST['password']);
             unset($_POST['email']);	
-		    session::redirectProfile($tableName);
+		    session::redirectProfile($button_radio);
         }
         else{
             $error='Password is incorrect ';

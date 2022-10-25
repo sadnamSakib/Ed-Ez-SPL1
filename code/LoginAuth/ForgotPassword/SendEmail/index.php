@@ -1,29 +1,25 @@
 <?php
 $root_path = '../../../';
-include $root_path . 'LibraryFiles/DatabaseConnection/config.php';
-include $root_path . 'LibraryFiles/MailServer/smtp.php';
+include $root_path.'LibraryFiles/DatabaseConnection/config.php';
+include $root_path.'LibraryFiles/MailServer/smtp.php';
+include $root_path.'LibraryFiles/SessionStore/session.php';
+include $root_path.'LibraryFiles/ValidationPhp/InputValidation.php';
 include $root_path . 'LibraryFiles/URLFinder/URLPath.php';
-include $root_path . 'LibraryFiles/SessionStore/session.php';
 session::create_or_resume_session();
 session::stay_in_session();
-
 $errorMessage = $_SESSION['error'];
 unset($_SESSION['error']);
 if (isset($_POST['email'])) {
     $errorMessage = "An Email Has Been Sent, Check Your Registered Email Address. If you didn't receive the email within 5 minutes, Try Again";
-    $email = $_POST['email'];
-    $temp = $email;
-    $email = hash('sha512', $email);
-    $select = $database->performQuery("select email,password from users where email='$email'");
-    if(!isEmailValid($email)){
+    $email=new EmailValidator(filter_input(INPUT_POST,'email',FILTER_SANITIZE_EMAIL));
+    $select = $database->performQuery("select email,password from users where email='".$email->get_email()."'");
+    if(!$email->email_validate()){
         $errorMessage="Email is not a valid/registered email address";
     }
     else if ($select->num_rows == 1) {
-        $row = mysqli_fetch_assoc($select);
-        $email = md5($row['email']);
-        $pass = md5($row['password']);
-        $link = "<a href='" . URLPath::getDirectoryURL() . "/ResetPassword/index.php?key=" . $email . "&reset=" . $pass . "'>Click To Reset password</a>";
-        $emailContent = new Email($temp, 'Please click here to reset your password ' . $link . ' ', 'Reset Password');
+        $database->fetch_results($row,"select email,password from users where email='".$email->get_email()."'");
+        $link = "<a href='" . URLPath::getDirectoryURL() . "/ResetPassword/index.php?key=" . md5($email->get_email()) . "&reset=" . md5($row['password']) . "'>Click To Reset password</a>";
+        $emailContent = new Email($email->get_original_email(), 'Please Click On The Link to reset your password ' . $link . ' ', 'Reset Password');
         try{
             $smtp = new SMTP($emailContent);
             if(!$smtp->send($_SESSION['error'])){
@@ -44,7 +40,6 @@ if (isset($_POST['email'])) {
 ?>
 <!DOCTYPE HTML>
 <html>
-
 <head>
     <link rel="icon" href="<?php echo $root_path; ?>title_icon.jpg" />
     <title>

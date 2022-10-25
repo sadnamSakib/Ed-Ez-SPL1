@@ -99,7 +99,6 @@ function passwordConfirmation() {
     else {
         return false;
     }
-
 }
 
 form.addEventListener('submit', (e) => {

@@ -23,6 +23,7 @@ try{
         $database->performQuery("DELETE FROM token_table WHERE email='$temp_email';");
         header('Location: ../index.php');
     }
+    unset($_SESSION['error']);
 }
 catch(Exception $e){
     $_SESSION['error']='MailServer Failure could not validate email address';

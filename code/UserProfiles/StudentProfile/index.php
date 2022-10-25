@@ -3,13 +3,13 @@ $root_path = '../../';
 include $root_path . 'LibraryFiles/DatabaseConnection/config.php';
 include $root_path . 'LibraryFiles/URLFinder/URLPath.php';
 include $root_path . 'LibraryFiles/SessionStore/session.php';
+session::profile_not_set($root_path);
 $temp = hash('sha512', $_SESSION['email']);
 $verified = mysqli_fetch_assoc($database->performQuery("SELECT Verified FROM users WHERE email='$temp';"));
 if ($verified['Verified'] !== '1') {
   header('Location: ' . $root_path . 'LoginAuth/SignUp/ConfirmEmail/index.php');
 }
-session::create_or_resume_session();
-session::profile_not_set($root_path);
+
 
 $tableName = $_SESSION['tableName'];
 $_SESSION['url'] = URLPath::getURL();

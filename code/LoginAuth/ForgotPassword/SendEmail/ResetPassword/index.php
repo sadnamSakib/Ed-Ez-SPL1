@@ -3,26 +3,36 @@ $root_path='../../../../';
 $parent_path='../../';
 include $root_path.'LibraryFiles/DatabaseConnection/config.php';
 include $root_path.'LibraryFiles/SessionStore/session.php';
+include $root_path.'LibraryFiles/ValidationPhp/InputValidation.php';
 session::create_or_resume_session();
 session::stay_in_session();
 
 if (isset($_POST['submit_password'])) {
-    $email = $_POST['email'];
-    $pass = $_POST['password'];
-    $pass = hash('sha512', $pass);
-    $pass = password_hash($pass, PASSWORD_BCRYPT);
-    $select = $database->performQuery("update users set password='$pass' where email='$email'");
-    $_SESSION['Password_Reset']=true;
-    header('Location: '.$root_path.'LoginAuth/Login/index.php');
+    $confirm = filter_input(INPUT_POST,'cfpassword',FILTER_SANITIZE_SPECIAL_CHARS);
+    $password=new PasswordValidator(filter_input(INPUT_POST,'password',FILTER_SANITIZE_SPECIAL_CHARS));
+    $confirm = filter_input(INPUT_POST,'cfpassword',FILTER_SANITIZE_SPECIAL_CHARS);
+    if($password->password_match($confirm) && $password->constraint_check()){
+        $select = $database->performQuery("update users set password='".$password->get_password()."' where email='".$_SESSION['email']."'");
+        $_SESSION['Password_Reset']=true;
+        header('Location: '.$root_path.'LoginAuth/Login/index.php');
+    }
+    else{
+        $password->password_match($confirm);
+        $password->constraint_check();
+    }
+    
 }
-else if ($_GET['key'] && $_GET['reset']) {
+
+if ($_GET['key'] && $_GET['reset']) {
     $email = $_GET['key'];
     $pass = $_GET['reset'];
     $select = $database->performQuery("select email,password from users where md5(email)='$email' and md5(password)='$pass'");
     if ($select->num_rows == 1) {
-        $row = mysqli_fetch_assoc($select);
-        $email = $row['email'];
-?>
+        $database->fetch_results($row,"select email,password from users where md5(email)='$email' and md5(password)='$pass'");
+        $_SESSION['email']=$row['email'];
+        }
+    }
+    ?>
 
         <!DOCTYPE HTML>
         <html>
@@ -50,14 +60,30 @@ else if ($_GET['key'] && $_GET['reset']) {
                             <div class="myLeftCtn">
                                 <form id="form" class="myForm text-center" action="" method="POST">
                                     <header>Reset Password</header>
-                                    <div class="form-group" id="error" style="color:red">
+                                    <div class="form-group" id="error" style="color:red;display:<?php
+                                        if(!is_null($password->password_error)){
+                                            echo "block";
+                                        }
+                                        else{
+                                            echo "none";
+                                        }
+                                    ?>">
+                                    <?php echo $password->password_error; ?>
                                     </div>
-                                    <input type="hidden" name="email" value="<?php echo $email; ?>">
-                                    <input type="hidden" name="type" value="<?php echo $type; ?>">
                                     <div class="form-group">
                                         <i class="fas fa-lock"> </i>
                                         <input class="myInput" placeholder="Password" type="password" id="password" name="password" required>
                                         <i class="fas fa-eye-slash" id="togglePassword"></i>
+                                    </div>
+                                    <div class="form-group" id="errorConfirm" style="color:red;display:<?php
+                                        if(!is_null($password->confirm_error)){
+                                            echo "block";
+                                        }
+                                        else{
+                                            echo "none";
+                                        }
+                                    ?>">
+                                    <?php echo $password->confirm_error; ?>
                                     </div>
                                     <div class="form-group">
                                         <i class="fas fa-lock"> </i>
@@ -75,10 +101,3 @@ else if ($_GET['key'] && $_GET['reset']) {
         </body>
 
         </html>
-    <?php
-    }
-}
-    else{
-        echo "error 404";
-    }
-    ?>
