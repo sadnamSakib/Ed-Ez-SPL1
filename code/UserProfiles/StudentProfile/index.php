@@ -1,30 +1,24 @@
 <?php
 $root_path = '../../';
-include $root_path . 'LibraryFiles/DatabaseConnection/config.php';
-include $root_path . 'LibraryFiles/URLFinder/URLPath.php';
-include $root_path . 'LibraryFiles/SessionStore/session.php';
+require $root_path . 'LibraryFiles/DatabaseConnection/config.php';
+require $root_path . 'LibraryFiles/URLFinder/URLPath.php';
+require $root_path . 'LibraryFiles/SessionStore/session.php';
 session::profile_not_set($root_path);
 $temp = hash('sha512', $_SESSION['email']);
-$verified = mysqli_fetch_assoc($database->performQuery("SELECT Verified FROM users WHERE email='$temp';"));
+$database->fetch_results($verified,"SELECT Verified FROM users WHERE email='$temp'");
 if ($verified['Verified'] !== '1') {
   header('Location: ' . $root_path . 'LoginAuth/SignUp/ConfirmEmail/index.php');
 }
 
-
-$tableName = $_SESSION['tableName'];
-$_SESSION['url'] = URLPath::getURL();
-
-$error = "Enter Password To make Updates to Profile Information";
+$error = null;
 $errorColor = "red";
 
 if (isset($_REQUEST['profileimg'])) {
-  $img = $_REQUEST['image'];
   $fileName = basename($_FILES["image"]["name"]);
   $fileType = pathinfo($fileName, PATHINFO_EXTENSION);
-  // Allow certain file formats 
   $allowTypes = array('jpg', 'png', 'jpeg');
   if (in_array($fileType, $allowTypes)) {
-    $image = $_FILES['image']['tmp_name'];
+    $image = $_FILES["image"]["tmp_name"];
     $imgContent = addslashes(file_get_contents($image));
   }
   $updateProfilePicture = "UPDATE users SET profile_picture='$imgContent' WHERE email = '$temp'";
@@ -32,24 +26,20 @@ if (isset($_REQUEST['profileimg'])) {
 }
 
 if (isset($_POST['UpdateProfile'])) {
-  $name = $_REQUEST['name'];
+  $name = filter_input(INPUT_POST,'name',FILTER_SANITIZE_FULL_SPECIAL_CHARS);
   $_SESSION['name'] = $name;
-
-  $department = $_REQUEST['department'];
-  $semester = $_REQUEST['semester'];
-  $country = $_REQUEST['country'];
-  $password = $_REQUEST['password'];
-  $studentID = $_REQUEST['studentID'];
-  $password = hash('sha512', $password);
-  $existanceCheck = "SELECT * FROM users WHERE email = '$temp'";
-  $result = $database->performQuery($existanceCheck);
-  $row = mysqli_fetch_assoc($result);
+  $department =filter_input(INPUT_POST,'department',FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+  $semester = filter_input(INPUT_POST,'semester',FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+  $country = filter_input(INPUT_POST,'country',FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+  $studentID = filter_input(INPUT_POST,'studentID',FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+  $password = hash('sha512', filter_input(INPUT_POST,'password',FILTER_SANITIZE_SPECIAL_CHARS));
+  $database->fetch_results($row, "SELECT * FROM users WHERE email = '$temp'");
   if ($_REQUEST['mobile'] != '') {
-    $mobileNumber = $_REQUEST['mobile'];
+    $mobileNumber = filter_input(INPUT_POST,'mobile',FILTER_SANITIZE_FULL_SPECIAL_CHARS);
   } else {
     $mobileNumber = $row['mobileNumber'];
   }
-
+  
   if (password_verify($password, $row['password'])) {
     if ($semester == '') {
       $semester = -1;
@@ -62,10 +52,7 @@ if (isset($_POST['UpdateProfile'])) {
   }
 }
 
-
-$existanceCheck = "SELECT * FROM users INNER JOIN student ON users.email=student.email WHERE users.email = '$temp'";
-$result = $database->performQuery($existanceCheck);
-$row = mysqli_fetch_assoc($result);
+$database->fetch_results($row,"SELECT * FROM users INNER JOIN student ON users.email=student.email WHERE users.email = '$temp'");
 
 $var = $row['profile_picture'];
 if ($var != "") {
@@ -79,6 +66,7 @@ $instituion = $row['institution'];
 $department = $row['department'];
 $semester = $row['semester'];
 $country = $row['country'];
+$studentID=$row['studentID'];
 if ($semester == -1) {
   $semester = '';
 }
@@ -103,7 +91,7 @@ if ($semester == -1) {
   <script src="<?php echo $root_path; ?>js/bootstrap.js"></script>
   <div class="main-container d-flex">
     <?php
-    include 'navbarProfile.php';
+    require 'navbarProfile.php';
     student_navbar($root_path);
     ?>
     <section class="content-section m-auto px-5">
@@ -116,9 +104,8 @@ if ($semester == -1) {
             <span class="font-weight-bold"><?php echo $_SESSION['name'] ?></span>
             <span class="text-black-50"><?php echo $_SESSION['email'] ?></span>
             <form method="POST" action="" enctype="multipart/form-data">
-              <input class="d-none" type="file" name="img" accept="image/*" />
               <div class="input-group w-75 mx-5">
-                <input type="file" class="form-control profile" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload" name="image">
+                <input type="file" class="form-control profile" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload" name="image" accept="image/*">
 
                 <!-- <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04">Upload Profile</button> -->
               </div>
@@ -133,7 +120,7 @@ if ($semester == -1) {
               <h4>Student Profile</h4>
             </div>
             <form id='form' action="" method="POST">
-              <!-- <div id="errorPass form-label" style="color:<?php echo $errorColor ?>"><?php echo $error ?></div> -->
+              <div id="errorPass form-label" style="color:<?php echo $errorColor ?>;<?php echo $error===null?'none':'block'; ?>"><?php echo $error ?></div>
               <div class="row mt-3">
                 <div class="col-md-12 mb-3">
                   <label class="form-label">Full Name</label>
@@ -146,18 +133,6 @@ if ($semester == -1) {
                   <input type="text" class="form-control" id="mobile" name="mobile" placeholder="<?php echo $mobileNumber ?>" value="<?php echo $mobileNumber ?>">
                   <div id="error" style="color:red"></div>
                 </div>
-
-                <!-- previous password section -->
-                <!-- <label class="form-label">Password</label>
-                <div class="col-md-12 mb-3 d-flex justify-content-around">
-
-                  <input type="password" class="form-control" placeholder="Enter Password" name="password" id="password">
-                  <i class="fas fa-eye-slash my-2 p-1" id="togglePassword"></i>
-
-                </div>
-                <div class="col-md-12 mb-3">
-                  <a href="<?php echo $root_path; ?>UserProfiles/UpdatePassword/index.php"><button type="button" class="btn btn-dark col-xs-5">Change Password</button></a>
-                </div> -->
 
 
               </div>
@@ -200,21 +175,16 @@ if ($semester == -1) {
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
-                    <form action='' id='password' method='POST'>
                       <div class="mb-3" id="error" style="display:none">
                       </div>
                       <div class="mb-3">
                         <input type="password" class="form-control" placeholder="Enter Password" name="password" id="password">
                       </div>
-                      <div class="mb-3">
-                        <input type="password" class="form-control" placeholder="Confirm Password" name="password" id="password">
-                      </div>
 
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <input type='submit' name='Create' value='Save changes' class="btn btn-primary btn-join">
-                    </form>
+                    <input type='submit' name='UpdateProfile' value='Confirm' class="btn btn-primary btn-join">
                   </div>
                 </div>
               </div>
