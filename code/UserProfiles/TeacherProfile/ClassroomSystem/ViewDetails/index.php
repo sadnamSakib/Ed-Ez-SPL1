@@ -1,9 +1,9 @@
 <?php
 $root_path = '../../../../';
 $profile_path = '../../';
-include $root_path . 'LibraryFiles/DatabaseConnection/config.php';
-include $root_path . 'LibraryFiles/URLFinder/URLPath.php';
-include $root_path . 'LibraryFiles/SessionStore/session.php';
+require $root_path . 'LibraryFiles/DatabaseConnection/config.php';
+require $root_path . 'LibraryFiles/URLFinder/URLPath.php';
+require $root_path . 'LibraryFiles/SessionStore/session.php';
 $classCode = $_SESSION['class_code'];
 session::create_or_resume_session();
 session::profile_not_set($root_path);
@@ -31,7 +31,7 @@ session::profile_not_set($root_path);
   <script src="<?php echo $root_path; ?>js/bootstrap.min.js"></script>
   <div class="main-container d-flex">
     <?php
-    include $profile_path . 'navbar.php';
+    require $profile_path . 'navbar.php';
     teacher_navbar($root_path);
     ?>
     <section class="content-section m-auto px-5">
@@ -59,7 +59,7 @@ session::profile_not_set($root_path);
         <div class="card-header">
           <h5 class="card-title"><?php
                                   $sql = $database->performQuery("SELECT * FROM users, student_classroom WHERE users.email=student_classroom.email AND class_code='$classCode'");
-                                  $record = mysqli_fetch_assoc($database->performQuery("SELECT count(*)count_student FROM users, student_classroom WHERE users.email=student_classroom.email AND class_code='$classCode'"));
+                                  $database->fetch_results($record,"SELECT count(*)count_student FROM users, student_classroom WHERE users.email=student_classroom.email AND class_code='$classCode'");
                                   echo $record['count_student'] . ' Student(s)';
                                   ?></h5>
         </div>

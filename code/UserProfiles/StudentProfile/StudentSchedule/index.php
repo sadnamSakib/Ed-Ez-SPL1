@@ -1,37 +1,11 @@
 <?php
 $root_path = '../../../';
 $profile_path='../';
-include $root_path . 'LibraryFiles/DatabaseConnection/config.php';
-include $root_path . 'LibraryFiles/URLFinder/URLPath.php';
-include $root_path . 'LibraryFiles/SessionStore/session.php';
-
-session::create_or_resume_session();
+require $root_path . 'LibraryFiles/DatabaseConnection/config.php';
+require $root_path . 'LibraryFiles/URLFinder/URLPath.php';
+require $root_path . 'LibraryFiles/SessionStore/session.php';
 session::profile_not_set($root_path);
 $temp = hash('sha512', $_SESSION['email']);
-$tableName = $_SESSION['tableName'];
-$row = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='$temp';"));
-$name = $row['name'];
-$className = 'Math 4341 Linear Algebra';
-if (isset($_POST['Create'])) {
-  $classCode = generateRandomString(10);
-  $existence = $database->performQuery("SELECT * FROM classroom where class_code='$classCode'");
-  while ($existence->num_rows > 0) {
-    $classCode = generateRandomString(10);
-  }
-  $className = $_POST['courseName'];
-  $courseCode = $_POST['courseCode'];
-  $semester = $_POST['semester'];
-  $database->performQuery("INSERT INTO classroom(class_code,classroom_name,course_code,semester) VALUES('$classCode','$className','$courseCode','$semester');");
-  $database->performQuery("INSERT INTO teacher_classroom(email,class_code) VALUES('$temp','$classCode');");
-}
-
-$classrooms = $database->performQuery("SELECT * FROM classroom,teacher_classroom where classroom.class_code=teacher_classroom.class_code and teacher_classroom.email='$temp';");
-foreach ($classrooms as $dummy_classroom) {
-  if (isset($_POST[$dummy_classroom['class_code']])) {
-    $_SESSION['class_code'] = $dummy_classroom['class_code'];
-    header('Location: TeacherClassroom/index.php');
-  }
-}
 
 
 ?>
@@ -60,7 +34,7 @@ foreach ($classrooms as $dummy_classroom) {
   <script src="main.min.js"></script>
   <div class="main-container d-flex">
   <?php 
-      include $profile_path.'navbar.php';
+      require $profile_path.'navbar.php';
       student_navbar($root_path);
     ?>
       <div class="container">

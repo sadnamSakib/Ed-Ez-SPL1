@@ -60,7 +60,7 @@ session::profile_not_set($root_path);
         <div class="card-header">
           <h5 class="card-title"><?php
                                   $sql = $database->performQuery("SELECT * FROM users, student_classroom WHERE users.email=student_classroom.email AND class_code='$classCode'");
-                                  $record = mysqli_fetch_assoc($database->performQuery("SELECT count(*)count_student FROM users, student_classroom WHERE users.email=student_classroom.email AND class_code='$classCode'"));
+                                  $database->fetch_results($record,"SELECT count(*)count_student FROM users, student_classroom WHERE users.email=student_classroom.email AND class_code='$classCode'");
                                   echo $record['count_student'] . ' Student(s)';
                                   ?></h5>
         </div>

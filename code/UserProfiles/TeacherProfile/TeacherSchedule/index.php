@@ -1,16 +1,11 @@
 <?php
 $root_path = '../../../';
 $profile_path='../';
-include $root_path . 'LibraryFiles/DatabaseConnection/config.php';
-include $root_path . 'LibraryFiles/URLFinder/URLPath.php';
-include $root_path . 'LibraryFiles/SessionStore/session.php';
-
-session::create_or_resume_session();
+require $root_path . 'LibraryFiles/DatabaseConnection/config.php';
+require $root_path . 'LibraryFiles/URLFinder/URLPath.php';
+require $root_path . 'LibraryFiles/SessionStore/session.php';
 session::profile_not_set($root_path);
 $temp = hash('sha512', $_SESSION['email']);
-$tableName = $_SESSION['tableName'];
-$row = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='$temp';"));
-$name = $row['name'];
 
 
 
@@ -40,7 +35,7 @@ $name = $row['name'];
   <script src="main.min.js"></script>
   <div class="main-container d-flex">
       <?php 
-        include $profile_path.'navbar.php';
+        require $profile_path.'navbar.php';
         teacher_navbar($root_path);
       ?>
       <div class="container">

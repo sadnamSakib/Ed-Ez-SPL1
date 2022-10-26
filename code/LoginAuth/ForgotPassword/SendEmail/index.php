@@ -5,7 +5,6 @@ require $root_path.'LibraryFiles/MailServer/smtp.php';
 require $root_path.'LibraryFiles/SessionStore/session.php';
 require $root_path.'LibraryFiles/ValidationPhp/InputValidation.php';
 require $root_path . 'LibraryFiles/URLFinder/URLPath.php';
-session::create_or_resume_session();
 session::stay_in_session();
 $errorMessage = $_SESSION['error'];
 unset($_SESSION['error']);

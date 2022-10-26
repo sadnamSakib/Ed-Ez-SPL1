@@ -1,16 +1,18 @@
 <?php
 $root_path = '../../../';
 $profile_path = '../';
-include $root_path . 'LibraryFiles/DatabaseConnection/config.php';
-include $root_path . 'LibraryFiles/URLFinder/URLPath.php';
-include $root_path . 'LibraryFiles/SessionStore/session.php';
-session::create_or_resume_session();
+require $root_path . 'LibraryFiles/DatabaseConnection/config.php';
+require $root_path . 'LibraryFiles/URLFinder/URLPath.php';
+require $root_path . 'LibraryFiles/SessionStore/session.php';
+require $root_path . 'LibraryFiles/ValidationPhp/InputValidation.php';
 session::profile_not_set($root_path);
-$temp = hash('sha512', $_SESSION['email']);
-$tableName = $_SESSION['tableName'];
-$row = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='$temp';"));
 
-$classrooms = $database->performQuery("SELECT * FROM classroom,student_classroom where classroom.class_code=student_classroom.class_code and student_classroom.email='$temp';");
+$tableName = $_SESSION['tableName'];
+$email = new EmailValidator($_SESSION['email']);
+$validate = new InputValidation();
+$database->fetch_results($row, "SELECT * FROM users WHERE email='" . $email->get_email() . "'");
+
+$classrooms = $database->performQuery("SELECT * FROM classroom,student_classroom where classroom.class_code=student_classroom.class_code and student_classroom.email='" . $email->get_email() . "';");
 foreach ($classrooms as $dummy_classroom) {
   if (isset($_REQUEST['leave' . $dummy_classroom['class_code']])) {
     $database->performQuery("DELETE FROM student_classroom WHERE class_code='" . $dummy_classroom['class_code'] . "';");
@@ -20,20 +22,19 @@ foreach ($classrooms as $dummy_classroom) {
 $error = "";
 $name = $row['name'];
 if (isset($_POST['Join'])) {
-  $classCode = $_REQUEST['classCode'];
-  $existenceCheck = $database->performQuery("SELECT * FROM student_classroom WHERE class_code='$classCode' and email='$temp';");
+  $classCode = $validate->post_sanitise_regular_input('classCode');
+  $existenceCheck = $database->performQuery("SELECT * FROM student_classroom WHERE class_code='$classCode' and email='" . $email->get_email() . "';");
   if ($database->performQuery("SELECT * FROM classroom WHERE class_code='$classCode'")->num_rows == 0) {
     $error = "classroom doesn't exist";
   } else if ($existenceCheck->num_rows == 0) {
-    $database->performQuery("INSERT INTO student_classroom(email,class_code) VALUES('$temp','$classCode');");
+    $database->performQuery("INSERT INTO student_classroom(email,class_code) VALUES('" . $email->get_email() . "','$classCode');");
   } else {
     $error = "You are already enrolled in this classroom";
   }
   unset($_REQUEST['classCode']);
 }
 
-
-$classrooms = $database->performQuery("SELECT * FROM classroom,student_classroom where classroom.class_code=student_classroom.class_code and student_classroom.email='$temp' and active='1';");
+$classrooms = $database->performQuery("SELECT * FROM classroom,student_classroom where classroom.class_code=student_classroom.class_code and student_classroom.email='" . $email->get_email() . "' and active='1';");
 foreach ($classrooms as $dummy_classroom) {
   if (isset($_POST[$dummy_classroom['class_code']])) {
     $_SESSION['class_code'] = $dummy_classroom['class_code'];
@@ -62,10 +63,10 @@ foreach ($classrooms as $dummy_classroom) {
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="<?php echo $root_path; ?>css/bootstrap.css" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <link href="<?php echo $root_path;?>boxicons-2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <link href="<?php echo $root_path; ?>boxicons-2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <script defer src="script.js"></script>
-  <?php include 'ClassroomSystemStyle.php'; ?>
-  <?php include 'ClassroomSystemScript.php'; ?>
+  <?php require 'ClassroomSystemStyle.php'; ?>
+  <?php require 'ClassroomSystemScript.php'; ?>
 </head>
 
 <body>
@@ -73,7 +74,7 @@ foreach ($classrooms as $dummy_classroom) {
   <script src="<?php echo $root_path; ?>js/bootstrap.js"></script>
   <div class="main-container d-flex">
     <?php
-    include $profile_path . 'navbar.php';
+    require $profile_path . 'navbar.php';
     student_navbar($root_path);
     ?>
     <section class="content-section m-auto px-1 w-75">
@@ -112,7 +113,7 @@ foreach ($classrooms as $dummy_classroom) {
         <?php
         foreach ($classrooms as $i) {
           $classCode = $i['class_code'];
-          $instructor_name = mysqli_fetch_assoc($database->performQuery("select name from users where email in (select teacher.email from teacher,teacher_classroom where teacher.email=teacher_classroom.email and class_code='$classCode');"));
+          $database->fetch_results($instructor_name, "select name from users where email in (select teacher.email from teacher,teacher_classroom where teacher.email=teacher_classroom.email and class_code='$classCode')");
         ?>
           <div class="card-element col-lg-4 col-md-6 p-4 px-2">
             <div class="card card-box-shadow">
@@ -134,15 +135,9 @@ foreach ($classrooms as $dummy_classroom) {
               <div class="card-body">
                 <p class="card-text"><?php
                                       $class_code = $i['class_code'];
-                                      $sql = $database->performQuery("SELECT * FROM teacher_classroom,users WHERE teacher_classroom.email=users.email AND class_code='$class_code'");
+                                      $database->fetch_results($row, "SELECT * FROM classroom_creator,users WHERE classroom_creator.email=users.email AND class_code='$class_code'");
                                       ?></p>
-                <?php
-                foreach ($sql as $j) {
-                ?>
-                  <p class="card-text"><?php echo "Course Instructor(s): " . $j['name']; ?></p>
-                <?php
-                }
-                ?>
+                <p class="card-text"><?php echo "Created By: " . $row['name']; ?></p>
               </div>
               <form action="" method="POST">
                 <div class="pb-5 px-5"><input type="submit" name="<?php echo $i['class_code'] ?>" value="Enter Class" class="btn btn-primary btn-go" /></div>

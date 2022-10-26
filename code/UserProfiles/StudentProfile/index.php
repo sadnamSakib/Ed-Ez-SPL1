@@ -5,8 +5,8 @@ require $root_path . 'LibraryFiles/URLFinder/URLPath.php';
 require $root_path . 'LibraryFiles/SessionStore/session.php';
 require $root_path . 'LibraryFiles/ValidationPhp/InputValidation.php';
 session::profile_not_set($root_path);
-$temp = hash('sha512', $_SESSION['email']);
-$database->fetch_results($verified,"SELECT Verified FROM users WHERE email='$temp'");
+$email=new EmailValidator($_SESSION['email']);
+$database->fetch_results($verified,"SELECT Verified FROM users WHERE email='".$email->get_email()."'");
 if ($verified['Verified'] !== '1') {
   header('Location: ' . $root_path . 'LoginAuth/SignUp/ConfirmEmail/index.php');
 }
@@ -22,7 +22,7 @@ if (isset($_REQUEST['profileimg'])) {
     $image = $_FILES["image"]["tmp_name"];
     $imgContent = addslashes(file_get_contents($image));
   }
-  $updateProfilePicture = "UPDATE users SET profile_picture='$imgContent' WHERE email = '$temp'";
+  $updateProfilePicture = "UPDATE users SET profile_picture='$imgContent' WHERE email = '".$email->get_email()."'";
   $database->performQuery($updateProfilePicture);
 }
 
@@ -33,7 +33,7 @@ if (isset($_POST['UpdateProfile'])) {
   $semester = $validate->post_sanitise_number('semester');
   $country = $validate->post_sanitise_regular_input('country');
   $studentID = $validate->post_sanitise_digits('studentID');
-  $database->fetch_results($row, "SELECT * FROM users WHERE email = '$temp'");
+  $database->fetch_results($row, "SELECT * FROM users WHERE email = '".$email->get_email()."'");
   if ($_REQUEST['mobile'] != '') {
     $mobileNumber = $validate->post_sanitise_digits('mobile');
   } else {
@@ -44,15 +44,15 @@ if (isset($_POST['UpdateProfile'])) {
     if ($semester == '') {
       $semester = -1;
     }
-    $database->performQuery("UPDATE users SET name='$name',mobileNumber='$mobileNumber',country='$country',department='$department' WHERE email='$temp'");
-    $database->performQuery("UPDATE student SET semester='$semester',studentID='$studentID' WHERE email = '$temp'");
+    $database->performQuery("UPDATE users SET name='$name',mobileNumber='$mobileNumber',country='$country',department='$department' WHERE email='".$email->get_email()."'");
+    $database->performQuery("UPDATE student SET semester='$semester',studentID='$studentID' WHERE email = '".$email->get_email()."'");
   } else {
     $error = "Incorrect Password, Cannot make changes to profile";
     $errorColor = "red";
   }
 }
 
-$database->fetch_results($row,"SELECT * FROM users INNER JOIN student ON users.email=student.email WHERE users.email = '$temp'");
+$database->fetch_results($row,"SELECT * FROM users INNER JOIN student ON users.email=student.email WHERE users.email = '".$email->get_email()."'");
 
 $var = $row['profile_picture'];
 if ($var != "") {

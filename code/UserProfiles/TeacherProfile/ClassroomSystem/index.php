@@ -1,17 +1,16 @@
 <?php
 $root_path = '../../../';
 $profile_path = '../';
-include $root_path . 'LibraryFiles/DatabaseConnection/config.php';
-include $root_path . 'LibraryFiles/URLFinder/URLPath.php';
-include $root_path . 'LibraryFiles/SessionStore/session.php';
-
-session::create_or_resume_session();
+require $root_path . 'LibraryFiles/DatabaseConnection/config.php';
+require $root_path . 'LibraryFiles/URLFinder/URLPath.php';
+require $root_path . 'LibraryFiles/SessionStore/session.php';
+require $root_path . 'LibraryFiles/Utility/Utility.php';
+require $root_path . 'LibraryFiles/ValidationPhp/InputValidation.php';
 session::profile_not_set($root_path);
-$temp = hash('sha512', $_SESSION['email']);
+$email=new EmailValidator($_SESSION['email']);
 $tableName = $_SESSION['tableName'];
-$row = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='$temp';"));
-$className = 'Math 4341 Linear Algebra';
-$classrooms = $database->performQuery("SELECT * FROM classroom,teacher_classroom where classroom.class_code=teacher_classroom.class_code and teacher_classroom.email='$temp';");
+$database->fetch_results($row,"SELECT * FROM users WHERE email='".$email->get_email()."'");
+$classrooms = $database->performQuery("SELECT * FROM classroom,teacher_classroom where classroom.class_code=teacher_classroom.class_code and teacher_classroom.email='".$email->get_email()."';");
 foreach ($classrooms as $dummy_classroom) {
   if (isset($_REQUEST['delete' . $dummy_classroom['class_code']])) {
     $database->performQuery("DELETE FROM teacher_classroom WHERE class_code='" . $dummy_classroom['class_code'] . "';");
@@ -21,11 +20,11 @@ foreach ($classrooms as $dummy_classroom) {
 
 if (isset($_POST['Join'])) {
   $classCode = $_REQUEST['classCode'];
-  $existenceCheck = $database->performQuery("SELECT * FROM teacher_classroom WHERE class_code='$classCode' and email='$temp';");
+  $existenceCheck = $database->performQuery("SELECT * FROM teacher_classroom WHERE class_code='$classCode' and email='".$email->get_email()."';");
   if ($database->performQuery("SELECT * FROM classroom WHERE class_code='$classCode'")->num_rows == 0) {
     $error = "classroom doesn't exist";
   } else if ($existenceCheck->num_rows === 0) {
-    $database->performQuery("INSERT INTO teacher_classroom(email,class_code) VALUES('$temp','$classCode');");
+    $database->performQuery("INSERT INTO teacher_classroom(email,class_code) VALUES('".$email->get_email()."','$classCode');");
   } else {
     $error = "You have already joined in this classroom";
   }
@@ -34,20 +33,22 @@ if (isset($_POST['Join'])) {
 
 
 if (isset($_POST['Create'])) {
-  $classCode = generateRandomString(10);
+  $classCode = $utility->generateRandomString(10);
   $existence = $database->performQuery("SELECT * FROM classroom where class_code='$classCode'");
   while ($existence->num_rows > 0) {
-    $classCode = generateRandomString(10);
+    $classCode = $utility->generateRandomString(10);
     $existence = $database->performQuery("SELECT * FROM classroom where class_code='$classCode'");
   }
   $className = $_POST['courseName'];
   $courseCode = $_POST['courseCode'];
   $semester = $_POST['semester'];
-  $database->performQuery("INSERT INTO classroom(class_code,classroom_name,course_code,semester) VALUES('$classCode','$className','$courseCode','$semester');");
-  $database->performQuery("INSERT INTO teacher_classroom(email,class_code) VALUES('$temp','$classCode');");
+  $date=date('Y-m-d H:i:s');
+  $database->performQuery("INSERT INTO classroom(class_code,classroom_name,course_code,semester) VALUES('$classCode','$className','$courseCode','$semester')");
+  $database->performQuery("INSERT INTO teacher_classroom(email,class_code) VALUES('".$email->get_email()."','$classCode')");
+  $database->performQuery("INSERT INTO classroom_creator(email,class_code,creation_date) VALUES('".$email->get_email()."','$classCode','$date')");
 }
 
-$classrooms = $database->performQuery("SELECT * FROM classroom,teacher_classroom where classroom.class_code=teacher_classroom.class_code and teacher_classroom.email='$temp' and classroom.active='1';");
+$classrooms = $database->performQuery("SELECT * FROM classroom,teacher_classroom where classroom.class_code=teacher_classroom.class_code and teacher_classroom.email='".$email->get_email()."' and classroom.active='1';");
 foreach ($classrooms as $dummy_classroom) {
   if (isset($_POST[$dummy_classroom['class_code']])) {
     $_SESSION['class_code'] = $dummy_classroom['class_code'];
@@ -78,15 +79,15 @@ foreach ($classrooms as $dummy_classroom) {
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <link href="<?php echo $root_path; ?>boxicons-2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <script defer src="script.js"></script>
-  <?php include 'ClassroomSystemScript.php'; ?>
-  <?php include 'ClassroomSystemStyle.php'; ?>
+  <?php require 'ClassroomSystemScript.php'; ?>
+  <?php require 'ClassroomSystemStyle.php'; ?>
 </head>
 
 <body>
   <script src="<?php echo $root_path; ?>js/bootstrap.js"></script>
   <div class="main-container d-flex">
     <?php
-    include $profile_path . 'navbar.php';
+    require $profile_path . 'navbar.php';
     teacher_navbar($root_path);
     ?>
     <section class="content-section m-auto px-1 w-75">
@@ -147,6 +148,18 @@ foreach ($classrooms as $dummy_classroom) {
                           <option value="6">6</option>
                           <option value="7">7</option>
                           <option value="8">8</option>
+                          <option value="9">9</option>
+                          <option value="10">10</option>
+                          <option value="11">11</option>
+                          <option value="12">12</option>
+                          <option value="13">13</option>
+                          <option value="14">14</option>
+                          <option value="15">15</option>
+                          <option value="16">16</option>
+                          <option value="17">17</option>
+                          <option value="18">18</option>
+                          <option value="19">19</option>
+                          <option value="20">20</option>
                         </select>
                       </div>
 
@@ -191,15 +204,9 @@ foreach ($classrooms as $dummy_classroom) {
               <div class="card-body">
                 <p class="card-text"><?php
                                       $class_code = $i['class_code'];
-                                      $sql = $database->performQuery("SELECT * FROM teacher_classroom,users WHERE teacher_classroom.email=users.email AND class_code='$class_code'");
+                                      $database->fetch_results($row,"SELECT * FROM classroom_creator,users WHERE classroom_creator.email=users.email AND class_code='$class_code'");
                                       ?></p>
-                <?php
-                foreach ($sql as $j) {
-                ?>
-                  <p class="card-text"><?php echo "Course Instructor(s): " . $j['name']; ?></p>
-                <?php
-                }
-                ?>
+                  <p class="card-text"><?php echo "Created By: " . $row['name']; ?></p>
                 <p class="card-text"><?php echo "Class Code: " . $i['class_code']; ?></p>
                 <div class="pb-3 px-5">
                   <form id="EnterClassroom" name="EnterClassroom" action="" method="POST">

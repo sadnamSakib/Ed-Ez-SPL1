@@ -1,15 +1,15 @@
 <?php
 $root_path = '../../../../';
 $profile_path = '../../';
-include $root_path . 'LibraryFiles/DatabaseConnection/config.php';
-include $root_path . 'LibraryFiles/URLFinder/URLPath.php';
-include $root_path . 'LibraryFiles/SessionStore/session.php';
-session::create_or_resume_session();
+require $root_path . 'LibraryFiles/DatabaseConnection/config.php';
+require $root_path . 'LibraryFiles/URLFinder/URLPath.php';
+require $root_path . 'LibraryFiles/SessionStore/session.php';
+require $root_path . 'LibraryFiles/Utility/Utility.php';
+require $root_path . 'LibraryFiles/ValidationPhp/InputValidation.php';
 session::profile_not_set($root_path);
 $classCode = $_SESSION['class_code'];
-$email = $_SESSION['email'];
-$dummy_email = hash('sha512', $email);
-$authentication = $database->performQuery("SELECT * FROM teacher_classroom WHERE email='$dummy_email' and class_code='$classCode'");
+$email = new EmailValidator($_SESSION['email']);
+$authentication = $database->performQuery("SELECT * FROM teacher_classroom WHERE email='".$email->get_email()."' and class_code='$classCode'");
 if ($authentication->num_rows == 0) {
   session::redirectProfile('teacher');
 }
@@ -29,18 +29,18 @@ foreach ($allComments as $j) {
   }
 }
 
-$classroom_records = mysqli_fetch_assoc($database->performQuery("SELECT * FROM classroom WHERE class_code = '$classCode' and active='1'"));
-$teacher_records = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email = '$dummy_email'"));
+$database->fetch_results($classroom_records,"SELECT * FROM classroom WHERE class_code = '$classCode' and active='1'");
+$database->fetch_results($teacher_records,"SELECT * FROM users WHERE email = '".$email->get_email()."'");
 if (isset($_REQUEST['post_msg'])) {
   $post_date = date('Y-m-d H:i:s');
-  $post_id = generateRandomString(50);
+  $post_id = $utility->generateRandomString(50);
   while (($database->performQuery("SELECT * FROM post WHERE post_id = '$post_id'"))->num_rows > 0) {
-    $post_id = generateRandomString(50);
+    $post_id = $utility->generateRandomString(50);
   }
 
   $post_value = $_REQUEST['post_value'];
   if (!is_null($post_value) && $post_value !== '') {
-    $database->performQuery("INSERT INTO post(post_id,email,post_datetime,post_message) VALUES('$post_id','$dummy_email','$post_date','$post_value');");
+    $database->performQuery("INSERT INTO post(post_id,email,post_datetime,post_message) VALUES('$post_id','".$email->get_email()."','$post_date','$post_value');");
     $database->performQuery("INSERT INTO post_classroom(post_id,class_code) VALUES('$post_id','$classCode');");
   }
 }
@@ -48,7 +48,7 @@ if (isset($_REQUEST['comment_msg'])) {
 
   $comment_text = $_REQUEST['comment_text'];
   if (!is_null($comment_text) && $comment_text !== '') {
-    $database->performQuery("INSERT INTO comment(comment_id,email,comment_datetime,comment_message) VALUES('$comment_id','$dummy_email','$comment_date','$comment_text');");
+    $database->performQuery("INSERT INTO comment(comment_id,email,comment_datetime,comment_message) VALUES('$comment_id','".$email->get_email()."','$comment_date','$comment_text');");
     $database->performQuery("INSERT INTO comment_classroom(comment_id,class_code) VALUES('$comment_id','$classCode');");
   }
 }
@@ -58,13 +58,13 @@ foreach ($posts as $i) {
   $post_id = $i['post_id'];
   if (isset($_REQUEST[$post_id . 'comment_msg'])) {
     $comment_date = date('Y-m-d H:i:s');
-    $comment_id = generateRandomString(50);
+    $comment_id = $utility->generateRandomString(50);
     while (($database->performQuery("SELECT * FROM comments WHERE comment_id = '$comment_id'"))->num_rows > 0) {
-      $comment_id = generateRandomString(50);
+      $comment_id = $utility->generateRandomString(50);
     }
     $comment_text = $_REQUEST[$post_id . 'comment_text'];
     if (!is_null($comment_text) && $comment_text !== '') {
-      $database->performQuery("INSERT INTO comments(comment_id,email,post_id,comment_datetime,comment_message) VALUES('$comment_id','$dummy_email','$post_id','$comment_date','$comment_text');");
+      $database->performQuery("INSERT INTO comments(comment_id,email,post_id,comment_datetime,comment_message) VALUES('$comment_id','".$email->get_email()."','$post_id','$comment_date','$comment_text');");
     }
     unset($_REQUEST[$post_id . 'comment_msg']);
   }
@@ -87,14 +87,14 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
   <link href="<?php echo $root_path;?>boxicons-2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <script defer src="script.js"></script>
   <script src="<?php echo $root_path; ?>js/bootstrap.min.js"></script>
-  <?php include 'dropdownstyle.php'; ?>
-  <?php include 'dropdownscript.php'; ?>
+  <?php require 'dropdownstyle.php'; ?>
+  <?php require 'dropdownscript.php'; ?>
 </head>
 
 <body>
   <div class="main-container d-flex">
     <?php
-    include $profile_path . 'navbar.php';
+    require $profile_path . 'navbar.php';
     teacher_navbar($root_path);
     ?>
     <section class="content-section px-2 py-2">
@@ -158,13 +158,13 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
 
                 <div class="row">
                   Posted by <?php
-                            $user_record = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='" . $i['email'] . "';"));
-                            echo $user_record['name'];
+                            $database->fetch_results($user_post,"SELECT * FROM users WHERE email='" . $i['email'] . "'");
+                            echo $user_post['name'];
                             ?>
                              at <?php echo date("d/m/Y h:m:s", strtotime($i['post_datetime'])); ?> 
                   <div class="dropdown col-lg-auto col-sm-6 col-md-3">
                     <?php
-                    if ($dummy_email === $user_record['email']) {
+                    if (".$email->get_email()." === $user_post['email']) {
                       echo "<i onclick=\"" . $post_ID . "dropdownbtn()\" class=\"dropbtn bx bx-dots-horizontal-rounded\"></i>";
                     }
                     ?>
@@ -182,7 +182,7 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
               <div>
                 <button class="btn btn-dark w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample<?php echo $i['post_id']; ?>" aria-expanded="false" aria-controls="collapseExample">
                   <?php
-                  $comments = mysqli_fetch_assoc($database->performQuery("SELECT count(*)count_comments FROM comments WHERE post_id='" . $i['post_id'] . "' and active='1'"));
+                  $database->fetch_results($comments,"SELECT count(*)count_comments FROM comments WHERE post_id='" . $i['post_id'] . "' and active='1'");
                   echo $comments['count_comments'] . " comments";
 
                   ?>
@@ -195,11 +195,11 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
                 foreach ($sql as $j) {
                   $comment_id = $j['comment_id'];
                   $users_email = $j['email'];
-                  $users_records = mysqli_fetch_assoc($database->performQuery("SELECT * FROM users WHERE email='$users_email'"));
+                  $database->fetch_results($user_comment,"SELECT * FROM users WHERE email='$users_email'");
                 ?>
                   <div class="card p-1">
                     <div class="card-header">
-                      Commented by <?php echo $users_records['name']; ?>
+                      Commented by <?php echo $user_comment['name']; ?>
                        at <?php echo date("d/m/Y h:m:s", strtotime($j['comment_datetime'])); ?> 
                   </div>
                     <div class="card card-body">
@@ -207,7 +207,7 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
                         <p class="col py-2"><?php echo $j['comment_message']; ?> </p>
                         <div class="dropdown col-lg-auto col-sm-6 col-md-3">
                           <?php
-                          if ($dummy_email === $users_email) {
+                          if (".$email->get_email()." === $users_email) {
                             echo "<i onclick=\"" . $comment_id . "dropdownbtn()\" class=\"dropbtn bx bx-dots-horizontal-rounded\"></i>";
                           }
                           ?>
