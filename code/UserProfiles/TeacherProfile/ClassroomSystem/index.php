@@ -7,8 +7,10 @@ require $root_path . 'LibraryFiles/SessionStore/session.php';
 require $root_path . 'LibraryFiles/Utility/Utility.php';
 require $root_path . 'LibraryFiles/ValidationPhp/InputValidation.php';
 session::profile_not_set($root_path);
+$validate=new InputValidation();
 $email=new EmailValidator($_SESSION['email']);
 $tableName = $_SESSION['tableName'];
+$error=null;
 $database->fetch_results($row,"SELECT * FROM users WHERE email='".$email->get_email()."'");
 $classrooms = $database->performQuery("SELECT * FROM classroom,teacher_classroom where classroom.class_code=teacher_classroom.class_code and teacher_classroom.email='".$email->get_email()."';");
 foreach ($classrooms as $dummy_classroom) {
@@ -19,17 +21,18 @@ foreach ($classrooms as $dummy_classroom) {
 }
 
 if (isset($_POST['Join'])) {
-  $classCode = $_REQUEST['classCode'];
-  $existenceCheck = $database->performQuery("SELECT * FROM teacher_classroom WHERE class_code='$classCode' and email='".$email->get_email()."';");
-  if ($database->performQuery("SELECT * FROM classroom WHERE class_code='$classCode'")->num_rows == 0) {
+  $classCode = $validate->post_sanitise_regular_input('classCode');
+  $existenceCheck = $database->performQuery("SELECT * FROM teacher_classroom WHERE class_code='$classCode' and email='".$email->get_email()."'");
+  if ($database->performQuery("SELECT * FROM classroom WHERE class_code='$classCode' and active='1'")->num_rows == 0) {
     $error = "classroom doesn't exist";
-  } else if ($existenceCheck->num_rows === 0) {
-    $database->performQuery("INSERT INTO teacher_classroom(email,class_code) VALUES('".$email->get_email()."','$classCode');");
+  } else if ($existenceCheck->num_rows == 0) {
+    $database->performQuery("INSERT INTO teacher_classroom(email,class_code) VALUES('".$email->get_email()."','$classCode')");
   } else {
-    $error = "You have already joined in this classroom";
+    $error = "You are already enrolled in this classroom";
   }
   unset($_REQUEST['classCode']);
 }
+
 
 
 if (isset($_POST['Create'])) {
@@ -39,13 +42,18 @@ if (isset($_POST['Create'])) {
     $classCode = $utility->generateRandomString(10);
     $existence = $database->performQuery("SELECT * FROM classroom where class_code='$classCode'");
   }
-  $className = $_POST['courseName'];
-  $courseCode = $_POST['courseCode'];
-  $semester = $_POST['semester'];
-  $date=date('Y-m-d H:i:s');
+  $className = $validate->post_sanitise_regular_input('courseName');
+  $courseCode = $validate->post_sanitise_regular_input('courseCode');
+  $semester = $validate->post_sanitise_number('semester');
+  if($className!==null && $courseCode!==null && $semester!==null){
+    $date=date('Y-m-d H:i:s');
   $database->performQuery("INSERT INTO classroom(class_code,classroom_name,course_code,semester) VALUES('$classCode','$className','$courseCode','$semester')");
   $database->performQuery("INSERT INTO teacher_classroom(email,class_code) VALUES('".$email->get_email()."','$classCode')");
   $database->performQuery("INSERT INTO classroom_creator(email,class_code,creation_date) VALUES('".$email->get_email()."','$classCode','$date')");
+  }
+  else{
+    $error="All the fields are required";
+  }
 }
 
 $classrooms = $database->performQuery("SELECT * FROM classroom,teacher_classroom where classroom.class_code=teacher_classroom.class_code and teacher_classroom.email='".$email->get_email()."' and classroom.active='1';");
@@ -129,7 +137,8 @@ foreach ($classrooms as $dummy_classroom) {
                   </div>
                   <div class="modal-body">
                     <form action='' id='addCourse' method='POST'>
-                      <div class="mb-3" id="error" style="display:none">
+                      <div class="mb-3" id="error" style="display:<?php echo $error===null?"none":"block" ?>">
+                      <?php echo $error; ?>
                       </div>
                       <div class="mb-3">
                         <input type="text" id="courseName" name="courseName" class="form-control" placeholder="Enter Course Name" aria-label="Leave a comment">
@@ -139,7 +148,7 @@ foreach ($classrooms as $dummy_classroom) {
                       </div>
                       <div class="mb-3">
                         <select class="form-select" aria-label="selectSemester" name="semester" id="semester">
-                          <option selected>Select Semester</option>
+                          <option selected value="0">Select Semester</option>
                           <option value="1">1</option>
                           <option value="2">2</option>
                           <option value="3">3</option>

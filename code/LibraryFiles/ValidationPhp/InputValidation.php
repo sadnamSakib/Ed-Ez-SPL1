@@ -46,6 +46,11 @@
             return $input;
         }
 
+        function post_sanitise_text($attribute){
+            $input=filter_input(INPUT_POST,$attribute,FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            return $input;
+        }
+
         function post_sanitise_digits($attribute){
             $input=filter_input(INPUT_POST,$attribute,FILTER_SANITIZE_SPECIAL_CHARS);
             $output = preg_replace('/[^0-9]/', '', $input);

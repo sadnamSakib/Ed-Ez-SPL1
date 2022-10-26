@@ -24,7 +24,7 @@ $name = $row['name'];
 if (isset($_POST['Join'])) {
   $classCode = $validate->post_sanitise_regular_input('classCode');
   $existenceCheck = $database->performQuery("SELECT * FROM student_classroom WHERE class_code='$classCode' and email='" . $email->get_email() . "';");
-  if ($database->performQuery("SELECT * FROM classroom WHERE class_code='$classCode'")->num_rows == 0) {
+  if ($database->performQuery("SELECT * FROM classroom WHERE class_code='$classCode' and active='1'")->num_rows == 0) {
     $error = "classroom doesn't exist";
   } else if ($existenceCheck->num_rows == 0) {
     $database->performQuery("INSERT INTO student_classroom(email,class_code) VALUES('" . $email->get_email() . "','$classCode');");

@@ -7,6 +7,7 @@ require $root_path . 'LibraryFiles/SessionStore/session.php';
 require $root_path . 'LibraryFiles/Utility/Utility.php';
 require $root_path . 'LibraryFiles/ValidationPhp/InputValidation.php';
 session::profile_not_set($root_path);
+$validate=new InputValidation();
 $classCode = $_SESSION['class_code'];
 $email=new EmailValidator($_SESSION['email']);
 $authentication = $database->performQuery("SELECT * FROM student_classroom WHERE email='".$email->get_email()."' and class_code='$classCode'");
@@ -38,7 +39,7 @@ if (isset($_REQUEST['post_msg']) && !is_null($_REQUEST['post_value'])) {
     $post_id = $utility->generateRandomString(50);
   }
 
-  $post_value = $_REQUEST['post_value'];
+  $post_value = $validate->post_sanitise_text('post_value');
   if (!is_null($post_value) && $post_value !== '') {
     $database->performQuery("INSERT INTO post(post_id,email,post_datetime,post_message) VALUES('$post_id','".$email->get_email()."','$post_date','$post_value');");
     $database->performQuery("INSERT INTO post_classroom(post_id,class_code) VALUES('$post_id','$classCode');");
@@ -54,16 +55,15 @@ foreach ($posts as $i) {
     while (($database->performQuery("SELECT * FROM comments WHERE comment_id = '$comment_id'"))->num_rows > 0) {
       $comment_id = $utility->generateRandomString(50);
     }
-    $comment_text = $_REQUEST[$post_id . 'comment_text'];
+    $comment_text = $validate->post_sanitise_text($post_id . 'comment_text');
     if (!is_null($comment_text) && $comment_text !== '') {
       $database->performQuery("INSERT INTO comments(comment_id,email,post_id,comment_datetime,comment_message) VALUES('$comment_id','".$email->get_email()."','$post_id','$comment_date','$comment_text');");
     }
-
     unset($_REQUEST[$post_id . 'comment_msg']);
   }
 }
-$allPost = $database->performQuery("SELECT * FROM post WHERE active='1';");
-$allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';");
+$allPost = $database->performQuery("SELECT * FROM post WHERE active='1'");
+$allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'");
 ?>
 
 <!DOCTYPE html>

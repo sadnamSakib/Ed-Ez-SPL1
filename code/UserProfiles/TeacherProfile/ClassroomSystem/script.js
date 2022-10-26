@@ -7,17 +7,8 @@ addCourse.addEventListener('submit',(e)=>{
   const courseName=document.getElementById('courseName').value;
   const courseCode=document.getElementById('courseCode').value;
   const semester=document.getElementById('semester').value;
-  if(semester.length>2){
-    messages.push('Semester must be less than 20');
-  }
-  if(semester.length==0){
-    messages.push('Semester must not be empty');
-  }
-  for(let i=0;i<semester.length;i++){
-    if(semester.charAt(i)<'0' || semester.charAt(i)>'9'){
-      messages.push('Semester must be numeric');
-      break;
-    }
+  if(semester==="0"){
+    messages.push('Semester cannot be empty');
   }
   if(courseName.length==0){
     messages.push('Course name must not be empty');
