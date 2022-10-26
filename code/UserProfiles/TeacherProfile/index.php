@@ -1,19 +1,15 @@
 <?php
 
 $root_path = '../../';
-include $root_path . 'LibraryFiles/DatabaseConnection/config.php';
-include $root_path . 'LibraryFiles/URLFinder/URLPath.php';
-include $root_path . 'LibraryFiles/SessionStore/session.php';
+require $root_path . 'LibraryFiles/DatabaseConnection/config.php';
+require $root_path . 'LibraryFiles/URLFinder/URLPath.php';
+require $root_path . 'LibraryFiles/SessionStore/session.php';
 session::profile_not_set($root_path);
 $temp = hash('sha512', $_SESSION['email']);
 $database->fetch_results($verified,"SELECT Verified FROM users WHERE email='$temp'");
 if($verified['Verified']!=='1'){
   header('Location: '.$root_path.'LoginAuth/SignUp/ConfirmEmail/index.php');
 }
-
-
-$tableName = $_SESSION['tableName'];
-$_SESSION['url'] = URLPath::getURL();
 
 $error = null;
 $errorColor = "red";
@@ -31,20 +27,20 @@ if (isset($_REQUEST['profileimg'])) {
 }
 
 if (isset($_POST['UpdateProfile'])) {
-  $name = filter_input(INPUT_POST,'name',FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-  $_SESSION['name'] = $name;
-  $department =filter_input(INPUT_POST,'department',FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-  $country = filter_input(INPUT_POST,'designation',FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-  $studentID = filter_input(INPUT_POST,'studentID',FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-  $password = hash('sha512', filter_input(INPUT_POST,'password',FILTER_SANITIZE_SPECIAL_CHARS));
-  $database->fetch_results($row, "SELECT * FROM users WHERE email = '$temp'");
-  if ($_REQUEST['mobile'] != '') {
-    $mobileNumber = filter_input(INPUT_POST,'mobile',FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-  } else {
-    $mobileNumber = $row['mobileNumber'];
-  }
+  if (isset($_POST['UpdateProfile'])) {
+    $validate=new InputValidation();
+    $_SESSION['name']=$name = $validate->post_sanitise_regular_input('name');
+    $department =$validate->post_sanitise_regular_input('department');
+    $designation =$validate->post_sanitise_regular_input('designation');
+    $country = $validate->post_sanitise_regular_input('country');
+    $database->fetch_results($row, "SELECT * FROM users WHERE email = '$temp'");
+    if ($_REQUEST['mobile'] != '') {
+      $mobileNumber = $validate->post_sanitise_digits('mobile');
+    } else {
+      $mobileNumber = $row['mobileNumber'];
+    }
 
-  if (password_verify($password, $row['password'])) {
+    if (password_verify(hash('sha512', $validate->post_sanitise_password('password')), $row['password'])) {
     $database->performQuery("UPDATE users SET name='$name',mobileNumber='$mobileNumber',country='$country',department='$department' WHERE email='$temp'");
     $database->performQuery("UPDATE teacher SET designation='$designation' WHERE email='$temp';");
   } else {
@@ -52,7 +48,7 @@ if (isset($_POST['UpdateProfile'])) {
     $errorColor = "red";
   }
 }
-
+}
 $database->fetch_results($row,"SELECT * FROM users INNER JOIN teacher ON users.email=teacher.email WHERE users.email = '$temp'");
 
 
@@ -91,7 +87,7 @@ $country = $row['country'];
   <script src="<?php echo $root_path; ?>js/bootstrap.js"></script>
   <div class="main-container d-flex">
        <?php 
-        include 'navbarProfile.php';
+        require 'navbarProfile.php';
         teacher_navbar($root_path);
       ?> 
       <section class="content-section m-auto px-5">

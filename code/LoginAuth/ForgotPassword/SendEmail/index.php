@@ -1,17 +1,18 @@
 <?php
 $root_path = '../../../';
-include $root_path.'LibraryFiles/DatabaseConnection/config.php';
-include $root_path.'LibraryFiles/MailServer/smtp.php';
-include $root_path.'LibraryFiles/SessionStore/session.php';
-include $root_path.'LibraryFiles/ValidationPhp/InputValidation.php';
-include $root_path . 'LibraryFiles/URLFinder/URLPath.php';
+require $root_path.'LibraryFiles/DatabaseConnection/config.php';
+require $root_path.'LibraryFiles/MailServer/smtp.php';
+require $root_path.'LibraryFiles/SessionStore/session.php';
+require $root_path.'LibraryFiles/ValidationPhp/InputValidation.php';
+require $root_path . 'LibraryFiles/URLFinder/URLPath.php';
 session::create_or_resume_session();
 session::stay_in_session();
 $errorMessage = $_SESSION['error'];
 unset($_SESSION['error']);
 if (isset($_POST['email'])) {
+    $validate=new InputValidation();
     $errorMessage = "An Email Has Been Sent, Check Your Registered Email Address. If you didn't receive the email within 5 minutes, Try Again";
-    $email=new EmailValidator(filter_input(INPUT_POST,'email',FILTER_SANITIZE_EMAIL));
+    $email=new EmailValidator($validate->post_sanitise_email('email'));
     $select = $database->performQuery("select email,password from users where email='".$email->get_email()."'");
     if(!$email->email_validate()){
         $errorMessage="Email is not a valid/registered email address";

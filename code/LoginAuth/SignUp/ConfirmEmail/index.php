@@ -1,11 +1,11 @@
 <?php 
 
 $root_path='../../../';
-include $root_path.'LibraryFiles/DatabaseConnection/config.php';
-include $root_path.'LibraryFiles/URLFinder/URLPath.php';
-include $root_path.'LibraryFiles/SessionStore/session.php';
-include $root_path.'LibraryFiles/MailServer/smtp.php';
-include $root_path.'LibraryFiles/Utility/Utility.php';
+require $root_path.'LibraryFiles/DatabaseConnection/config.php';
+require $root_path.'LibraryFiles/URLFinder/URLPath.php';
+require $root_path.'LibraryFiles/SessionStore/session.php';
+require $root_path.'LibraryFiles/MailServer/smtp.php';
+require $root_path.'LibraryFiles/Utility/Utility.php';
 session::stay_in_session();
 $email=$_SESSION['email'];
 $temp_email=hash('sha512',$email);

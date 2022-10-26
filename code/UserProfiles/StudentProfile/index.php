@@ -3,6 +3,7 @@ $root_path = '../../';
 require $root_path . 'LibraryFiles/DatabaseConnection/config.php';
 require $root_path . 'LibraryFiles/URLFinder/URLPath.php';
 require $root_path . 'LibraryFiles/SessionStore/session.php';
+require $root_path . 'LibraryFiles/ValidationPhp/InputValidation.php';
 session::profile_not_set($root_path);
 $temp = hash('sha512', $_SESSION['email']);
 $database->fetch_results($verified,"SELECT Verified FROM users WHERE email='$temp'");
@@ -26,21 +27,20 @@ if (isset($_REQUEST['profileimg'])) {
 }
 
 if (isset($_POST['UpdateProfile'])) {
-  $name = filter_input(INPUT_POST,'name',FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-  $_SESSION['name'] = $name;
-  $department =filter_input(INPUT_POST,'department',FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-  $semester = filter_input(INPUT_POST,'semester',FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-  $country = filter_input(INPUT_POST,'country',FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-  $studentID = filter_input(INPUT_POST,'studentID',FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-  $password = hash('sha512', filter_input(INPUT_POST,'password',FILTER_SANITIZE_SPECIAL_CHARS));
+  $validate=new InputValidation();
+  $_SESSION['name']=$name = $validate->post_sanitise_regular_input('name');
+  $department =$validate->post_sanitise_regular_input('department');
+  $semester = $validate->post_sanitise_number('semester');
+  $country = $validate->post_sanitise_regular_input('country');
+  $studentID = $validate->post_sanitise_digits('studentID');
   $database->fetch_results($row, "SELECT * FROM users WHERE email = '$temp'");
   if ($_REQUEST['mobile'] != '') {
-    $mobileNumber = filter_input(INPUT_POST,'mobile',FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $mobileNumber = $validate->post_sanitise_digits('mobile');
   } else {
     $mobileNumber = $row['mobileNumber'];
   }
   
-  if (password_verify($password, $row['password'])) {
+  if (password_verify(hash('sha512', $validate->post_sanitise_password('password')), $row['password'])) {
     if ($semester == '') {
       $semester = -1;
     }

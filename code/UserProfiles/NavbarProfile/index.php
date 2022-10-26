@@ -1,7 +1,7 @@
 <?php
     
-    include 'script.php';
-    include 'style.php';
+    require 'script.php';
+    require 'style.php';
     function navbar($updatePassword,$Dashboard,$Profile,$Schedule,$ClassroomSystem,$Grades,$root_path){
         ?>
     <?php echo navstyle(); ?>

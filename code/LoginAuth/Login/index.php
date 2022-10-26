@@ -1,9 +1,9 @@
 <?php 
 
 $root_path='../../';
-include $root_path.'LibraryFiles/DatabaseConnection/config.php';
-include $root_path.'LibraryFiles/SessionStore/session.php';
-include $root_path.'LibraryFiles/ValidationPhp/InputValidation.php';
+require $root_path.'LibraryFiles/DatabaseConnection/config.php';
+require $root_path.'LibraryFiles/SessionStore/session.php';
+require $root_path.'LibraryFiles/ValidationPhp/InputValidation.php';
 
 
 session::stay_in_session();
@@ -27,9 +27,10 @@ else{
 }
 
 if (isset($_POST['submit'])) {
-    $email=new EmailValidator(filter_input(INPUT_POST,'email',FILTER_SANITIZE_EMAIL));
-    $password=new PasswordValidator(filter_input(INPUT_POST,'password',FILTER_SANITIZE_SPECIAL_CHARS));
-    $button_radio=$_REQUEST['btnradio'];
+    $validate=new InputValidation();
+    $email=new EmailValidator($validate->post_sanitise_email('email'));
+    $password=new PasswordValidator($validate->post_sanitise_password('password'));
+    $button_radio=$validate->post_sanitise_regular_input('btnradio');
     $existence_name = "SELECT * FROM users INNER JOIN $button_radio ON  users.email=$button_radio.email WHERE users.email = '".$email->get_email()."'";
     $result = $database->performQuery($existence_name);
     if(!$email->email_validate($email->get_original_email()) || !$password->constraint_check()){

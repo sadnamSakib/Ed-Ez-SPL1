@@ -1,15 +1,15 @@
 <?php
 $root_path='../../../../';
 $parent_path='../../';
-include $root_path.'LibraryFiles/DatabaseConnection/config.php';
-include $root_path.'LibraryFiles/SessionStore/session.php';
-include $root_path.'LibraryFiles/ValidationPhp/InputValidation.php';
+require $root_path.'LibraryFiles/DatabaseConnection/config.php';
+require $root_path.'LibraryFiles/SessionStore/session.php';
+require $root_path.'LibraryFiles/ValidationPhp/InputValidation.php';
 session::stay_in_session();
 
 if (isset($_POST['submit_password'])) {
-    $confirm = filter_input(INPUT_POST,'cfpassword',FILTER_SANITIZE_SPECIAL_CHARS);
-    $password=new PasswordValidator(filter_input(INPUT_POST,'password',FILTER_SANITIZE_SPECIAL_CHARS));
-    $confirm = filter_input(INPUT_POST,'cfpassword',FILTER_SANITIZE_SPECIAL_CHARS);
+    $validate=new InputValidation();
+    $password=new PasswordValidator($validate->post_sanitise_password('password'));
+    $confirm = $validate->post_sanitise_password('cfpassword');
     if($password->password_match($confirm) && $password->constraint_check()){
         $select = $database->performQuery("update users set password='".$password->get_password()."' where email='".$_SESSION['email']."'");
         $_SESSION['Password_Reset']=true;

@@ -1,25 +1,26 @@
 <?php
 
 $root_path = '../../';
-include $root_path . 'LibraryFiles/DatabaseConnection/config.php';
-include $root_path . 'LibraryFiles/URLFinder/URLPath.php';
-include $root_path . 'LibraryFiles/SessionStore/session.php';
-include $root_path.'LibraryFiles/ValidationPhp/InputValidation.php';
+require $root_path . 'LibraryFiles/DatabaseConnection/config.php';
+require $root_path . 'LibraryFiles/URLFinder/URLPath.php';
+require $root_path . 'LibraryFiles/SessionStore/session.php';
+require $root_path.'LibraryFiles/ValidationPhp/InputValidation.php';
 session::profile_not_set($root_path);
 
 $temp=hash('sha512',$_SESSION['email']);
 $tableName=$_SESSION['tableName'];
 $error=null;
 if(isset($_REQUEST['updatePassword'])){
-    $oldPassword=$_REQUEST['opassword'];
-    $oldPassword=hash('sha512',$oldPassword);
+    $validate=new InputValidation();
+    $oldPassword=new PasswordValidator($validate->post_sanitise_password('opassword'));
     $database->fetch_results($row,"SELECT * FROM users WHERE email = '$temp'");
-    $password=new PasswordValidator(filter_input(INPUT_POST,'password',FILTER_SANITIZE_SPECIAL_CHARS));
-    if(!$password->constraint_check() || !$password->password_match($_POST['cfpassword'])){
+    $password=new PasswordValidator($validate->post_sanitise_password('password'));
+    $confirm_password=$validate->post_sanitise_password('cfpassword');
+    if(!$password->constraint_check() || !$password->password_match($confirm_password)){
         $password->constraint_check();
-        $password->password_match($_POST['cfpassword']);
+        $password->password_match($confirm_password);
     }
-    else if(password_verify($oldPassword,$row['password'])){
+    else if(password_verify($oldPassword->get_store_password(),$row['password'])){
         $sql="UPDATE users SET password='".$password->get_password()."' WHERE email='$temp'";
         $res=$database->performQuery($sql);
         session::redirectProfile($tableName);

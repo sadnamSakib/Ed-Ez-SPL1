@@ -24,6 +24,38 @@
             }
         }
 
+        function post_sanitise_regular_input($attribute){
+            $input=filter_input(INPUT_POST,$attribute,FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $input = preg_replace("/[^a-zA-Z0-9]+/", "", $input);
+            return $input;
+        }
+
+        function post_sanitise_number($attribute){
+            $input=filter_input(INPUT_POST,$attribute,FILTER_VALIDATE_INT,
+            array('options' => array('min_range' => 1)));
+            return $input;
+        }
+
+        function post_sanitise_email($attribute){
+            $input=filter_input(INPUT_POST,$attribute,FILTER_SANITIZE_EMAIL);
+            return $input;
+        }
+
+        function post_sanitise_password($attribute){
+            $input=filter_input(INPUT_POST,$attribute,FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            return $input;
+        }
+
+        function post_sanitise_digits($attribute){
+            $input=filter_input(INPUT_POST,$attribute,FILTER_SANITIZE_SPECIAL_CHARS);
+            $output = preg_replace('/[^0-9]/', '', $input);
+            return $output;
+        }
+
+        function post_sanitise_datetime($attribute){
+            preg_replace("([^0-9/] | [^0-9-] | [^0-9:])","",htmlentities($attribute));
+            return $attribute;
+        }
 
     }
     
@@ -39,7 +71,6 @@
         }
 
         public function SQLInjectionCheck(){
-            $len=strlen($this->email);
             foreach($this->email as $i){
                 if(ord($i)===ord('(')||ord($i)===ord(')')||ord($i)===ord('_')||ord($i)===ord('\'')||ord($i)===ord('\"')||ord($i)===ord('=')||ord($i)===ord('-')||ord($i)===ord('\\')||ord($i)===ord(';')){
                     return false;
@@ -62,7 +93,7 @@
 
         public function email_validate(){
             if(!$this->SQLInjectionCheck()){
-                $this->error="Please Do not use \\, \', \", ;, = in the email";
+                $this->error="Please Do not use \\, ', \", ;, = in the email";
                 return false;
             }
             else if(!$this->PatternCheck()){
@@ -154,11 +185,11 @@
 
         function constraint_check(){
             if(!$this->attribute_constraint_check($this->password) && $this->length_check()<8){
-                $this->password_error="Password must be at least 8 characters, with alphabets, numbers, symbols and no dangerous characters";
+                $this->password_error="Password must be at least 8 characters, with alphabets, numbers, symbols except \\, ', \", ;, =";
                 return false;
             }
             else if(is_null($this->password)){
-                $this->password_error="Password must be at least 8 characters, with alphabets, numbers, symbols and no dangerous characters";
+                $this->password_error="Password must be at least 8 characters, with alphabets, numbers, symbols except \\, ', \", ;, =";
                 return false;
             }
             return true;

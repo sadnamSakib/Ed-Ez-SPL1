@@ -1,8 +1,8 @@
 <?php 
 $root_path='../../';
-include $root_path.'LibraryFiles/DatabaseConnection/config.php';
-include $root_path.'LibraryFiles/SessionStore/session.php';
-include $root_path.'LibraryFiles/ValidationPhp/InputValidation.php';
+require $root_path.'LibraryFiles/DatabaseConnection/config.php';
+require $root_path.'LibraryFiles/SessionStore/session.php';
+require $root_path.'LibraryFiles/ValidationPhp/InputValidation.php';
 
 session::stay_in_session();
 
@@ -10,15 +10,14 @@ $error=$_SESSION['error'];
 
 
 if (isset($_POST['submit'])) {
-	$name = filter_input(INPUT_POST,'name',FILTER_SANITIZE_SPECIAL_CHARS);
-    $email=new EmailValidator(filter_input(INPUT_POST,'email',FILTER_SANITIZE_EMAIL));
-    $password=new PasswordValidator(filter_input(INPUT_POST,'password',FILTER_SANITIZE_SPECIAL_CHARS));
-    $dob=$_POST['dob'];
     $validate=new InputValidation();
-    $institutions = filter_input(INPUT_POST,'institutions',FILTER_SANITIZE_SPECIAL_CHARS);
-    $button_radio=filter_input(INPUT_POST,'btnradio',FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    $confirm= $_POST['cfpassword'];
-    $check=$_POST['check_1'];
+	$name = $validate->post_sanitise_regular_input('name');
+    $email=new EmailValidator($validate->post_sanitise_email('email'));
+    $password=new PasswordValidator($validate->post_sanitise_password('password'));
+    $dob=$validate->post_sanitise_datetime('dob');
+    $institutions = $validate->post_sanitise_regular_input('institutions');
+    $button_radio=$validate->post_sanitise_regular_input('btnradio');
+    $confirm= $validate->post_sanitise_password('cfpassword');
     $error=$_REQUEST['error'];
     $exists = "SELECT * FROM users WHERE email = '".$email->get_email()."'";
     $result=$database->performQuery($exists);
@@ -44,7 +43,6 @@ if (isset($_POST['submit'])) {
         unset($institutions);
         unset($button_radio);
         unset($confirm);
-        unset($check);
         unset($name);
         unset($dob);
         unset($error);
