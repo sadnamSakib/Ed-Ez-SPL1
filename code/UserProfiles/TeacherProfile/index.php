@@ -126,21 +126,21 @@ $country = $row['country'];
                 <div class="row mt-3">
                   <div class="col-md-12 mb-3">
                     <label class="form-label">Mobile Number</label>
-                    <input type="text" class="form-control" id="mobile" name="mobile" placeholder="<?php echo $mobileNumber ?>" value="<?php echo $mobileNumber ?>">
+                    <input type="text" class="form-control" id="mobile" name="mobile" placeholder="Enter your Mobile Number" value="<?php echo $mobileNumber ?>">
                     <div id="error" style="color:red"></div>
                   </div>
                 </div>
                 <div class="col-md-12 mb-3">
                   <label class="form-label">Email</label>
-                  <input type="email" class="form-control" id="email" placeholder="Enter Email ID" value="<?php echo $_SESSION['email'] ?>" readonly>
+                  <input type="email" class="form-control" id="email" name="email" value="<?php echo $_SESSION['email'] ?>" readonly>
                 </div>
                 <div class="col-md-12 mb-3">
                   <label class="form-label">Institution</label>
-                  <input type="text" class="form-control" id="institution" placeholder="Enter Instituition" name="institution" value="<?php echo $instituion ?>">
+                  <input type="text" class="form-control" id="institution" name="institution" value="<?php echo $instituion ?>" readonly>
                 </div>
                 <div class="col-md-12 mb-3">
                   <label class="form-label">Department</label>
-                  <input type="text" class="form-control" id="department" name="department" value="<?php echo $department ?>">
+                  <input type="text" class="form-control" id="department" name="department" placeholder="Enter your Department" value="<?php echo $department ?>">
                 </div>
                 <div class="col-md-12 mb-3">
                   <label class="form-label">Designation</label>
