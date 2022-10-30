@@ -93,6 +93,12 @@ body{
         min-height: 100vh;
         z-index: 1;   
   }
+  @media (max-width:  768px) {
+    .btn.btn-dark{
+      margin-bottom: 50px;
+      width: 50%;
+    }
+  }
   
   #side_nav.active{
     margin-left: 0;

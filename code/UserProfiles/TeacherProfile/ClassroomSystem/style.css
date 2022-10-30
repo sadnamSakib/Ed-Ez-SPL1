@@ -87,6 +87,16 @@ body{
 
   .card{
     --bs-card-height: auto !important;
+
+  }
+  .card-title{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 2rem;
+    max-height: 6rem;
+    -webkit-line-clamp: 2;
+
   }
   .card.card-box-shadow{
     box-shadow: 0px 2px 10px rgba(0,0,0,0.3);
@@ -96,3 +106,5 @@ body{
     margin-left: -30px;
     cursor: pointer;
   }
+
+
