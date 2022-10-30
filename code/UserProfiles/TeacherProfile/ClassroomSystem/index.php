@@ -7,12 +7,12 @@ require $root_path . 'LibraryFiles/SessionStore/session.php';
 require $root_path . 'LibraryFiles/Utility/Utility.php';
 require $root_path . 'LibraryFiles/ValidationPhp/InputValidation.php';
 session::profile_not_set($root_path);
-$validate=new InputValidation();
-$email=new EmailValidator($_SESSION['email']);
+$validate = new InputValidation();
+$email = new EmailValidator($_SESSION['email']);
 $tableName = $_SESSION['tableName'];
-$error=null;
-$database->fetch_results($row,"SELECT * FROM users WHERE email='".$email->get_email()."'");
-$classrooms = $database->performQuery("SELECT * FROM classroom,teacher_classroom where classroom.class_code=teacher_classroom.class_code and teacher_classroom.email='".$email->get_email()."';");
+$error = null;
+$database->fetch_results($row, "SELECT * FROM users WHERE email='" . $email->get_email() . "'");
+$classrooms = $database->performQuery("SELECT * FROM classroom,teacher_classroom where classroom.class_code=teacher_classroom.class_code and teacher_classroom.email='" . $email->get_email() . "';");
 foreach ($classrooms as $dummy_classroom) {
   if (isset($_REQUEST['delete' . $dummy_classroom['class_code']])) {
     $database->performQuery("DELETE FROM teacher_classroom WHERE class_code='" . $dummy_classroom['class_code'] . "';");
@@ -22,11 +22,11 @@ foreach ($classrooms as $dummy_classroom) {
 
 if (isset($_POST['Join'])) {
   $classCode = $validate->post_sanitise_regular_input('classCode');
-  $existenceCheck = $database->performQuery("SELECT * FROM teacher_classroom WHERE class_code='$classCode' and email='".$email->get_email()."'");
+  $existenceCheck = $database->performQuery("SELECT * FROM teacher_classroom WHERE class_code='$classCode' and email='" . $email->get_email() . "'");
   if ($database->performQuery("SELECT * FROM classroom WHERE class_code='$classCode' and active='1'")->num_rows == 0) {
     $error = "classroom doesn't exist";
   } else if ($existenceCheck->num_rows == 0) {
-    $database->performQuery("INSERT INTO teacher_classroom(email,class_code) VALUES('".$email->get_email()."','$classCode')");
+    $database->performQuery("INSERT INTO teacher_classroom(email,class_code) VALUES('" . $email->get_email() . "','$classCode')");
   } else {
     $error = "You are already enrolled in this classroom";
   }
@@ -45,18 +45,17 @@ if (isset($_POST['Create'])) {
   $className = $validate->post_sanitise_regular_input('courseName');
   $courseCode = $validate->post_sanitise_regular_input('courseCode');
   $semester = $validate->post_sanitise_number('semester');
-  if($className!==null && $courseCode!==null && $semester!==null){
-    $date=date('Y-m-d H:i:s');
-  $database->performQuery("INSERT INTO classroom(class_code,classroom_name,course_code,semester) VALUES('$classCode','$className','$courseCode','$semester')");
-  $database->performQuery("INSERT INTO teacher_classroom(email,class_code) VALUES('".$email->get_email()."','$classCode')");
-  $database->performQuery("INSERT INTO classroom_creator(email,class_code,creation_date) VALUES('".$email->get_email()."','$classCode','$date')");
-  }
-  else{
-    $error="All the fields are required";
+  if ($className !== null && $courseCode !== null && $semester !== null) {
+    $date = date('Y-m-d H:i:s');
+    $database->performQuery("INSERT INTO classroom(class_code,classroom_name,course_code,semester) VALUES('$classCode','$className','$courseCode','$semester')");
+    $database->performQuery("INSERT INTO teacher_classroom(email,class_code) VALUES('" . $email->get_email() . "','$classCode')");
+    $database->performQuery("INSERT INTO classroom_creator(email,class_code,creation_date) VALUES('" . $email->get_email() . "','$classCode','$date')");
+  } else {
+    $error = "All the fields are required";
   }
 }
 
-$classrooms = $database->performQuery("SELECT * FROM classroom,teacher_classroom where classroom.class_code=teacher_classroom.class_code and teacher_classroom.email='".$email->get_email()."' and classroom.active='1';");
+$classrooms = $database->performQuery("SELECT * FROM classroom,teacher_classroom where classroom.class_code=teacher_classroom.class_code and teacher_classroom.email='" . $email->get_email() . "' and classroom.active='1';");
 foreach ($classrooms as $dummy_classroom) {
   if (isset($_POST[$dummy_classroom['class_code']])) {
     $_SESSION['class_code'] = $dummy_classroom['class_code'];
@@ -108,7 +107,7 @@ foreach ($classrooms as $dummy_classroom) {
               <div class="modal-content">
                 <div class="modal-header">
                   <h1 class="modal-title fs-5" id="exampleModalLabel">Join classroom</h1>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"  aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                   <form action="" method="POST">
@@ -127,18 +126,18 @@ foreach ($classrooms as $dummy_classroom) {
           </div>
 
           <div class="px-3 me-3 d-flex flex-row-reverse">
-            <button type="button" class="btn btn-outline-primary btn-join d-flex p-4 py-3" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@fat"><b>Create new classroom</b></button>
+            <button type="button" class="btn btn-outline-primary btn-join d-flex p-4 py-3" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@fat" ><b>Create new classroom</b></button>
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Create classroom</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"  aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
                     <form action='' id='addCourse' method='POST'>
-                      <div class="mb-3" id="error" style="display:<?php echo $error===null?"none":"block" ?>">
-                      <?php echo $error; ?>
+                      <div class="mb-3" id="error" style="display:<?php echo $error === null ? "none" : "block" ?>">
+                        <?php echo $error; ?>
                       </div>
                       <div class="mb-3">
                         <input type="text" id="courseName" name="courseName" class="form-control" placeholder="Enter Course Name" aria-label="Leave a comment">
@@ -197,13 +196,13 @@ foreach ($classrooms as $dummy_classroom) {
             <div class="card card-box-shadow">
               <div class="card-header  task-card justify-content-around" style="height:100px">
                 <div class="row">
-                  <h4 class="card-title col py-2"><?php echo $i['course_code'] . ": " . $i['classroom_name']; ?></h4>
+                  <h4 class="card-title col py-1" > <?php echo $i['course_code'] . ": " . $i['classroom_name']; ?></h4>
                   <?php $card = $i['class_code']; ?>
-                  <div class="dropdown col-lg-auto col-sm-6 col-md-3 py-3">
+                  <div class="dropdown col-lg-auto col-sm-1 py-3">
                     <i onclick="<?php echo $card; ?>dropdownbtn()" class="<?php echo $card; ?>dropbtn bx bx-dots-horizontal-rounded"></i>
                     <div id="<?php echo $card; ?>myDropdown" class="<?php echo $card; ?>dropdown-content dropdown-menu">
                       <form name='view_delete<?php echo $card; ?>' action='' method='POST'>
-                        <input type="submit" value="View Details" name='view<?php echo $card; ?>' class="dropdown-item">
+                        <input type="submit" value="View Details"  name='view<?php echo $card; ?>' class="dropdown-item">
                         <input type="submit" value="Delete Classroom" name='delete<?php echo $card; ?>' class="dropdown-item">
                       </form>
                     </div>
@@ -213,9 +212,9 @@ foreach ($classrooms as $dummy_classroom) {
               <div class="card-body">
                 <p class="card-text"><?php
                                       $class_code = $i['class_code'];
-                                      $database->fetch_results($row,"SELECT * FROM classroom_creator,users WHERE classroom_creator.email=users.email AND class_code='$class_code'");
+                                      $database->fetch_results($row, "SELECT * FROM classroom_creator,users WHERE classroom_creator.email=users.email AND class_code='$class_code'");
                                       ?></p>
-                  <p class="card-text"><?php echo "Created By: " . $row['name']; ?></p>
+                <p class="card-text"><?php echo "Created By: " . $row['name']; ?></p>
                 <p class="card-text"><?php echo "Class Code: " . $i['class_code']; ?></p>
                 <div class="pb-3 px-5">
                   <form id="EnterClassroom" name="EnterClassroom" action="" method="POST">
