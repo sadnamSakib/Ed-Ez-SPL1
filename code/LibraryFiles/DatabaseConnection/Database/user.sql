@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 27, 2022 at 12:30 AM
+-- Generation Time: Oct 30, 2022 at 04:51 PM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -177,16 +177,6 @@ CREATE TABLE `resources` (
 CREATE TABLE `resources_classroom` (
   `resource_id` varchar(50) NOT NULL,
   `class_code` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `sqlinject`
---
-
-CREATE TABLE `sqlinject` (
-  `hello` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -408,8 +398,8 @@ ALTER TABLE `assignment_classroom`
 -- Constraints for table `classroom_creator`
 --
 ALTER TABLE `classroom_creator`
-  ADD CONSTRAINT `fk_classroom_creator_classroom` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`),
-  ADD CONSTRAINT `fk_classroom_creator_users` FOREIGN KEY (`email`) REFERENCES `teacher` (`email`);
+  ADD CONSTRAINT `fk_classroom_creator_classroom` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_classroom_creator_users` FOREIGN KEY (`email`) REFERENCES `teacher` (`email`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `comments`
