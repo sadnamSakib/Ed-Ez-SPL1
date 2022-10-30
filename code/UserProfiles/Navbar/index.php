@@ -2,7 +2,7 @@
     
     require 'script.php';
     require 'style.php';
-    function navbar($Dashboard,$Profile,$Schedule,$ClassroomSystem,$Grades,$root_path){
+    function navbar($Dashboard,$Profile,$Schedule,$ClassroomSystem,$Grades,$root_path,$updatePassword=NULL){
         ?>
     <?php echo navstyle(); ?>
     <div class="sidebar" id="side_nav">
@@ -13,6 +13,15 @@
       <ul class="list-unstyled px-2">
         <li class=""><a href="<?php echo $Dashboard?>" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-dashboard pe-2'></i>Dashboard</a></li>
         <li class=""><a href="<?php echo $Profile?>" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-user-circle pe-2'></i>Profile</a></li>
+        <?php 
+          if(!is_null($updatePassword)){
+        ?>
+          <ul class="list-unstyled ps-4 pe-2">
+        <li class=""><a href="<?php echo $updatePassword?>" class="text-decoration-none px-3 py-2 d-block" style="font-size:14px;"><i class='bx bxs-key pe-2'></i>Change password</a></li>
+        </ul>
+        <?php
+          }
+        ?>
         <li class=""><a href="<?php echo $Schedule?>" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-calendar-plus pe-2'></i>Schedule</a></li>
         <li class=""><a href="<?php echo $ClassroomSystem?>" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-chalkboard pe-2'></i>Classrooms</a></li>
         <li class=""><a href="<?php echo $Grades?>" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-bar-chart-alt-2 pe-2'></i>Grades</a></li>

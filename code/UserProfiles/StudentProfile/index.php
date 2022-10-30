@@ -91,8 +91,8 @@ if ($semester == -1) {
   <script src="<?php echo $root_path; ?>js/bootstrap.js"></script>
   <div class="main-container d-flex">
     <?php
-    require 'navbarProfile.php';
-    student_navbar($root_path);
+    require 'navbar.php';
+    student_navbar($root_path,true);
     ?>
     <section class="content-section m-auto px-5">
       <div class="container-fluid bg-white rounded mt-5 mb-5"></div>
@@ -142,7 +142,7 @@ if ($semester == -1) {
               </div>
               <div class="col-md-12 mb-3">
                 <label class="form-label">Institution</label>
-                <input type="text" class="form-control" id="institution" placeholder="Enter Instituition" value="<?php echo $instituion ?>">
+                <input type="text" class="form-control" id="institution" placeholder="Enter Instituition" name="institution" value="<?php echo $instituion ?>">
               </div>
               <div class="col-md-12 mb-3">
                 <label class="form-label">Department</label>

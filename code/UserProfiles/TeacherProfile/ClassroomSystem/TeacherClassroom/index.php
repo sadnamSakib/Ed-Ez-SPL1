@@ -157,7 +157,7 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
                              at <?php echo date("d/m/Y h:m:s", strtotime($i['post_datetime'])); ?> 
                   <div class="dropdown col-lg-auto col-sm-6 col-md-3">
                     <?php
-                    if (".$email->get_email()." === $user_post['email']) {
+                    if ($email->get_email() === $user_post['email']) {
                       echo "<i onclick=\"" . $post_ID . "dropdownbtn()\" class=\"dropbtn bx bx-dots-horizontal-rounded\"></i>";
                     }
                     ?>
@@ -200,7 +200,7 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
                         <p class="col py-2"><?php echo $j['comment_message']; ?> </p>
                         <div class="dropdown col-lg-auto col-sm-6 col-md-3">
                           <?php
-                          if (".$email->get_email()." === $users_email) {
+                          if ($email->get_email() === $users_email) {
                             echo "<i onclick=\"" . $comment_id . "dropdownbtn()\" class=\"dropbtn bx bx-dots-horizontal-rounded\"></i>";
                           }
                           ?>

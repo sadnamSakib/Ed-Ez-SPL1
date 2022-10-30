@@ -24,11 +24,7 @@
             }
         }
 
-        function post_sanitise_regular_input($attribute){
-            $input=filter_input(INPUT_POST,$attribute,FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-            $input = preg_replace("/[^a-zA-Z0-9]+/", "", $input);
-            return $input;
-        }
+        
 
         function post_sanitise_number($attribute){
             $input=filter_input(INPUT_POST,$attribute,FILTER_VALIDATE_INT,
@@ -51,15 +47,14 @@
             return $input;
         }
 
-        function post_sanitise_digits($attribute){
-            $input=filter_input(INPUT_POST,$attribute,FILTER_SANITIZE_SPECIAL_CHARS);
-            $output = preg_replace('/[^0-9]/', '', $input);
-            return $output;
+        function post_sanitise_regular_input($attribute){
+            return $this->post_sanitise_text($attribute);
         }
 
-        function post_sanitise_datetime($attribute){
-            preg_replace("([^0-9/] | [^0-9-] | [^0-9:])","",htmlentities($attribute));
-            return $attribute;
+        function post_sanitise_digits($attribute){
+            $input=filter_input(INPUT_POST,$attribute,FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            $output = preg_replace('/[^0-9]/', '', $input);
+            return $output;
         }
 
     }

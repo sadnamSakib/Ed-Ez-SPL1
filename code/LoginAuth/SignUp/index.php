@@ -14,8 +14,8 @@ if (isset($_POST['submit'])) {
 	$name = $validate->post_sanitise_regular_input('name');
     $email=new EmailValidator($validate->post_sanitise_email('email'));
     $password=new PasswordValidator($validate->post_sanitise_password('password'));
-    $dob=$validate->post_sanitise_datetime('dob');
-    $institutions = $validate->post_sanitise_regular_input('institutions');
+    $dob=$_REQUEST['dob'];
+    $institutions = $validate->post_sanitise_regular_input('institution');
     $button_radio=$validate->post_sanitise_regular_input('btnradio');
     $confirm= $validate->post_sanitise_password('cfpassword');
     $error=$_REQUEST['error'];
