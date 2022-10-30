@@ -7,10 +7,10 @@ require $root_path . 'LibraryFiles/SessionStore/session.php';
 require $root_path . 'LibraryFiles/Utility/Utility.php';
 require $root_path . 'LibraryFiles/ValidationPhp/InputValidation.php';
 session::profile_not_set($root_path);
-$validate=new InputValidation();
+$validate = new InputValidation();
 $classCode = $_SESSION['class_code'];
 $email = new EmailValidator($_SESSION['email']);
-$authentication = $database->performQuery("SELECT * FROM teacher_classroom WHERE email='".$email->get_email()."' and class_code='$classCode'");
+$authentication = $database->performQuery("SELECT * FROM teacher_classroom WHERE email='" . $email->get_email() . "' and class_code='$classCode'");
 if ($authentication->num_rows == 0) {
   session::redirectProfile('teacher');
 }
@@ -30,8 +30,8 @@ foreach ($allComments as $j) {
   }
 }
 
-$database->fetch_results($classroom_records,"SELECT * FROM classroom WHERE class_code = '$classCode' and active='1'");
-$database->fetch_results($teacher_records,"SELECT * FROM users WHERE email = '".$email->get_email()."'");
+$database->fetch_results($classroom_records, "SELECT * FROM classroom WHERE class_code = '$classCode' and active='1'");
+$database->fetch_results($teacher_records, "SELECT * FROM users WHERE email = '" . $email->get_email() . "'");
 if (isset($_REQUEST['post_msg'])) {
   $post_date = date('Y-m-d H:i:s');
   $post_id = $utility->generateRandomString(50);
@@ -41,7 +41,7 @@ if (isset($_REQUEST['post_msg'])) {
 
   $post_value = $validate->post_sanitise_text('post_value');
   if (!is_null($post_value) && $post_value !== '') {
-    $database->performQuery("INSERT INTO post(post_id,email,post_datetime,post_message) VALUES('$post_id','".$email->get_email()."','$post_date','$post_value');");
+    $database->performQuery("INSERT INTO post(post_id,email,post_datetime,post_message) VALUES('$post_id','" . $email->get_email() . "','$post_date','$post_value');");
     $database->performQuery("INSERT INTO post_classroom(post_id,class_code) VALUES('$post_id','$classCode');");
   }
 }
@@ -57,7 +57,7 @@ foreach ($posts as $i) {
     }
     $comment_text = $validate->post_sanitise_text($post_id . 'comment_text');
     if (!is_null($comment_text) && $comment_text !== '') {
-      $database->performQuery("INSERT INTO comments(comment_id,email,post_id,comment_datetime,comment_message) VALUES('$comment_id','".$email->get_email()."','$post_id','$comment_date','$comment_text');");
+      $database->performQuery("INSERT INTO comments(comment_id,email,post_id,comment_datetime,comment_message) VALUES('$comment_id','" . $email->get_email() . "','$post_id','$comment_date','$comment_text');");
     }
     unset($_REQUEST[$post_id . 'comment_msg']);
   }
@@ -74,10 +74,10 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
   <title>Classroom</title>
   <link rel="icon" href="<?php echo $root_path; ?>title_icon.jpg" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="<?php echo $root_path; ?>css/bootstrap.css" />
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <link href="<?php echo $root_path;?>boxicons-2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <link href="<?php echo $root_path; ?>boxicons-2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <script defer src="script.js"></script>
   <script src="<?php echo $root_path; ?>js/bootstrap.min.js"></script>
   <?php require 'dropdownstyle.php'; ?>
@@ -114,13 +114,96 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
             </div>
           </div>
           <div class="card-footer row justify-content-center">
-            <div class="dropdown col-lg-5 col-sm-6 col-md-3">
-              <button onclick="dropdownbtnNew()" class="dropbtn btn btn-lg btn-outline-primary btn-join dropdown-toggle">Create Task</button>
-              <div id="myDropdown2" class="dropdown-content dropdown-menu">
-                <a href="#home" class="dropdown-item">Create Quiz</a>
-                <a href="#about" class="dropdown-item">Create Assignment</a>
+            <div class="d-flex flex-row justify-content-between">
+              <button type="button" class="btn btn-lg btn-outline-primary btn-join m-3" data-bs-toggle="modal" data-bs-target="#examplemodal1" data-bs-whatever="@fat">Create Quiz</button>
+              <div class="modal fade" id="examplemodal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">Create quiz</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <form action="" method="POST">
+
+                        <div class="mb-3">
+                          <label for="quizDate">Date :</label>
+                          <input type="date" name="quizDate" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                          <label for="quizTime">Start Time :</label>
+                          <input type="time" name="quizTime" class="form-control">
+                        </div>
+                        <div class="mb-3">
+                          <label for="quizdate">Duration :</label>
+                          <input type="number" name="quizDuration" class="form-control">
+                        </div>
+
+                        <label class="mb-2" for="inputGroupFile02">Upload question paper :</label>
+                        <div class="input-group mb-3">
+                          <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="inputGroupFile02">
+                          </div>
+                        </div>
+
+                        <div class="mb-3">
+                          <label for="message-text" class="col-form-label">Instruction :</label>
+                          <textarea class="form-control" id="message-text"></textarea>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <input type="submit" name="Join" value="Create" class="btn btn-primary btn-join">
+                    </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+              <div class="d-flex flex-row justify-content-between">
+                <button type="button" class="btn btn-lg btn-outline-primary btn-join m-3" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@fat">Create Assignment</button>
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Create assignment</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <form action='' id='addCourse' method='POST'>
+
+                          <div class="mb-3">
+                            <label for="assignmentDate">Submission Deadline :</label>
+                            <input type="date" name="assignmentDate" class="form-control">
+                          </div>
+
+                          <label class="mb-2" for="inputGroupFile02">Upload document :</label>
+                          <div class="input-group mb-3">
+                            <div class="custom-file">
+                              <input type="file" class="custom-file-input" id="inputGroupFile02">
+                            </div>
+                          </div>
+
+                          <div class="mb-3">
+                            <label for="message-text" class="col-form-label">Instruction :</label>
+                            <textarea class="form-control" id="message-text"></textarea>
+                          </div>
+
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <input type='submit' name='Create' value='Create' class="btn btn-primary btn-join">
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
+
+
+
           </div>
         </div>
       </div>
@@ -151,10 +234,10 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
 
                 <div class="row">
                   Posted by <?php
-                            $database->fetch_results($user_post,"SELECT * FROM users WHERE email='" . $i['email'] . "'");
+                            $database->fetch_results($user_post, "SELECT * FROM users WHERE email='" . $i['email'] . "'");
                             echo $user_post['name'];
                             ?>
-                             at <?php echo date("d/m/Y h:m:s", strtotime($i['post_datetime'])); ?> 
+                  at <?php echo date("d/m/Y h:m:s", strtotime($i['post_datetime'])); ?>
                   <div class="dropdown col-lg-auto col-sm-6 col-md-3">
                     <?php
                     if ($email->get_email() === $user_post['email']) {
@@ -175,7 +258,7 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
               <div>
                 <button class="btn btn-dark w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample<?php echo $i['post_id']; ?>" aria-expanded="false" aria-controls="collapseExample">
                   <?php
-                  $database->fetch_results($comments,"SELECT count(*)count_comments FROM comments WHERE post_id='" . $i['post_id'] . "' and active='1'");
+                  $database->fetch_results($comments, "SELECT count(*)count_comments FROM comments WHERE post_id='" . $i['post_id'] . "' and active='1'");
                   echo $comments['count_comments'] . " comments";
 
                   ?>
@@ -188,13 +271,13 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
                 foreach ($sql as $j) {
                   $comment_id = $j['comment_id'];
                   $users_email = $j['email'];
-                  $database->fetch_results($user_comment,"SELECT * FROM users WHERE email='$users_email'");
+                  $database->fetch_results($user_comment, "SELECT * FROM users WHERE email='$users_email'");
                 ?>
                   <div class="card p-1">
                     <div class="card-header">
                       Commented by <?php echo $user_comment['name']; ?>
-                       at <?php echo date("d/m/Y h:m:s", strtotime($j['comment_datetime'])); ?> 
-                  </div>
+                      at <?php echo date("d/m/Y h:m:s", strtotime($j['comment_datetime'])); ?>
+                    </div>
                     <div class="card card-body">
                       <div class="row">
                         <p class="col py-2"><?php echo $j['comment_message']; ?> </p>
