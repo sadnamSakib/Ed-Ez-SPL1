@@ -72,7 +72,7 @@ if (isset($_POST['submit'])) {
 <link rel="stylesheet" href="style.css" />
 <link rel="stylesheet" href="<?php echo $root_path; ?>css/bootstrap.css" />
 <script defer src="script.js"></script>
-<script src="https://kit.fontawesome.com/d0f239b9af.js" crossorigin="anonymous"></script>
+<link href="<?php echo $root_path; ?>boxicons-2.1.4/css/boxicons.min.css" rel="stylesheet" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 <body>
@@ -98,15 +98,15 @@ if (isset($_POST['submit'])) {
                           </div>
                     </div>
                     <div class="form-group">
-                        <i class="fas fa-envelope"> </i>
+                        <i class="bx bxs-envelope bx-sm"> </i>
                         <input class="myInput" placeholder="Email" type="text" id="email" name="email" value="<?php echo $_POST['email']; ?>" required>
                         <div class="invalid-feedback">Please fill out this field.</div>
                     </div>
                     <div class="form-group">
-                    <i class="fas fa-lock"> </i>
+                    <i class="bx bxs-lock-alt bx-sm"> </i>
                         <input class="myInput" placeholder="Password" type="password" name="password" id="password" value="<?php echo $_POST['password']; ?>" required>
                         <div class="invalid-feedback">Please fill out this field.</div>
-                        <i class="fas fa-eye-slash" id="togglePassword"></i>
+                        <i class="bx bxs-hide bx-xs pe-2" id="togglePassword"></i>
                     </div>
                     <div class="form-group">
                         <p>Don't have an account? <a href="../SignUp/index.php">REGISTER NOW!</a></p>  
