@@ -21,7 +21,7 @@ if (isset($_POST['email'])) {
         $link = "<a href='" . URLPath::getDirectoryURL() . "/ResetPassword/index.php?key=" . md5($email->get_email()) . "&reset=" . md5($row['password']) . "'>Click To Reset password</a>";
         $emailContent = new Email($email->get_original_email(), 'Please Click On The Link to reset your password ' . $link . ' ', 'Reset Password');
         try{
-            $smtp = new SMTP($emailContent);
+            $smtp = new SMTPLaunch($emailContent);
             if(!$smtp->send($_SESSION['error'])){
                 header('Location: index.php');
             }

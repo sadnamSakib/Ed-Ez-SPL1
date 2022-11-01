@@ -1,6 +1,7 @@
 <?php
 
 use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
 require 'vendor/autoload.php';
@@ -29,7 +30,7 @@ class Email{
     }
 }
 
-class SMTP{
+class SMTPLaunch{
     private $error_message;
     private $mail;
 
@@ -48,12 +49,13 @@ class SMTP{
         $this->mail->SMTPAuth = true;
         $this->mail->Username = $credentials['username'];
         $this->mail->Password = $credentials['password'];
-        $this->mail->SMTPSecure = 'tls';
+        $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $this->mail->Port = $credentials['port'];
         unset($MailServer);
     }
 
     private function prepareMail($email){
+        
         $this->mail->setFrom($this->mail->Username, 'EdEz');
         $this->mail->addAddress('' . $email->get_email_address() . '');
         $this->mail->isHTML(true);

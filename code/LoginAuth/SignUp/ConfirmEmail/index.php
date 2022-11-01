@@ -18,7 +18,7 @@ $link= URLPath::getRoot() .'LoginAuth/Login/index.php?email='.$temp_email.'&code
 $mail=new email($email,'<a href="'.$link.'">Click on this link</a> to verify your profile and then login with your credentials ','email Verification for EdEz');
 
 try{
-    $smtp=new smtp($mail);
+    $smtp=new SMTPLaunch($mail);
     if(!$smtp->send($_SESSION['error'])){
         $database->performQuery("DELETE FROM users WHERE email='$temp_email';");
         $database->performQuery("DELETE FROM token_table WHERE email='$temp_email';");
@@ -85,7 +85,7 @@ catch(Exception $e){
                 <table border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px;">
                     <tr>
                         <td bgcolor="#ffffff" align="left" style="padding: 20px 30px 40px 30px; color: #666666; font-family: 'Lato', Helvetica, Arial, sans-serif; font-size: 18px; font-weight: 400; line-height: 25px;">
-                            <p style="margin: 0;">We're excited to have you get started. First, you need to confirm your account. <b>An email has been sent to your account</b>, if you did not receive it click the button below.</p>
+                            <p style="margin: 0;">We're excited to have you get started. First, you need to confirm your account <?php echo $email; ?>. <b>An email has been sent to your account</b>, if you did not receive it click the button below.</p>
                         </td>
                     </tr>
                     <tr>

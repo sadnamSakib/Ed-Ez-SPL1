@@ -25,7 +25,7 @@
                 $url = "https://";   
             else  
                 $url = "http://";   
-            return $url.$_SERVER['HTTP_HOST'] . '/Ed-Ez-SPL1/code/';
+            return $url.$_SERVER['HTTP_HOST'] . '/SWE4304_Ed-Ez-SPL1/code/';
         }
     }
 ?>

@@ -45,15 +45,14 @@ if (isset($_POST['submit'])) {
         unset($confirm);
         unset($name);
         unset($dob);
-        unset($error);
         unset($email);
         unset($password);
         unset($validate);
-        unset($_SESSION['error']);
         $database->performQuery($insertusers);
         $database->performQuery($insertTable);
         $database->fetch_results($row,$exists);
         $_SESSION['name'] = $row['name'];
+        unset($_SESSION['error']);
         header('Location: ConfirmEmail/index.php');
 		
     }   
