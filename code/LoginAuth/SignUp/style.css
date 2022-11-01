@@ -17,6 +17,7 @@ body{
 }
 .form-group{
     padding: 7px;
+    margin: 5;
 }
 .btn-group{
     padding:0% 0% 5% 0%;
@@ -94,10 +95,12 @@ body{
 .myLeftCtn .butt:focus{
     outline: none;
 }
-.myLeftCtn .fas{
+.myLeftCtn .bx{
     position: relative;
-    color: #bb36fd;
+    color: #4596be;
+     
 }
+
 .butt_out{
     background: transparent;
     color: #fff;
@@ -119,9 +122,6 @@ body{
 .hovertext {
     position: relative;
     border-bottom: 1px dotted black;
-  }
-  .myLeftCtn .fas {
-    color: #4596be;
   }
 
 .hovertext:before {
