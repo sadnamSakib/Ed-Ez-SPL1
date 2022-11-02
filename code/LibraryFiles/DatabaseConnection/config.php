@@ -56,7 +56,12 @@
     }
     
     // Create connection and check Connection
-    $database=new MySQLDatabaseConnector("UserManager","localhost","12345678","user");
+    try{
+        $database=new MySQLDatabaseConnector("UserManager","localhost","12345678","user");
+    }
+    catch(Exception $e){
+        die("Connection occurs: ".$e->getMessage());
+    }
 
     
     ?>
