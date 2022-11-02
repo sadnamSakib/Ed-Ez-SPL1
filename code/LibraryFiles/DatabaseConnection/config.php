@@ -27,7 +27,6 @@
             if ($this->connection->connect_error) {
                 die("Connection failed: " . $this->connection->connect_error);
             }
-
         }
 
         public function get_connection(){
@@ -54,18 +53,6 @@
             $record=mysqli_fetch_assoc($result);
         }
         
-    }
-    
-    function generateRandomString($length = 10)
-    {
-    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    $charactersLength = strlen($characters);
-    $randomString = '';
-    $randomString .= $characters[rand(10, $charactersLength - 1)];
-    for ($i = 1; $i < $length; $i++) {
-        $randomString .= $characters[rand(0, $charactersLength - 1)];
-    }
-    return $randomString;
     }
     
     // Create connection and check Connection
