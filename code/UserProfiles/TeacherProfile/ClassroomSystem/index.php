@@ -85,12 +85,12 @@ foreach ($classrooms as $dummy_classroom) {
   <link rel="stylesheet" href="<?php echo $root_path; ?>css/bootstrap.css" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <link href="<?php echo $root_path; ?>boxicons-2.1.4/css/boxicons.min.css" rel="stylesheet" />
-  <script defer src="script.js"></script>
   <?php require 'ClassroomSystemScript.php'; ?>
   <?php require 'ClassroomSystemStyle.php'; ?>
 </head>
 
 <body>
+  <script defer src="script.js"></script>
   <script src="<?php echo $root_path; ?>js/bootstrap.js"></script>
   <div class="main-container d-flex">
     <?php
@@ -107,7 +107,7 @@ foreach ($classrooms as $dummy_classroom) {
               <div class="modal-content">
                 <div class="modal-header">
                   <h1 class="modal-title fs-5" id="exampleModalLabel">Join classroom</h1>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal"  aria-label="Close"></button>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                   <form action="" method="POST">
@@ -126,13 +126,13 @@ foreach ($classrooms as $dummy_classroom) {
           </div>
 
           <div class="px-3 me-3 d-flex flex-row-reverse">
-            <button type="button" class="btn btn-outline-primary btn-join d-flex p-4 py-3" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@fat" ><b>Create new classroom</b></button>
+            <button type="button" class="btn btn-outline-primary btn-join d-flex p-4 py-3" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@fat"><b>Create new classroom</b></button>
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
                     <h1 class="modal-title fs-5" id="exampleModalLabel">Create classroom</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"  aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
                   <div class="modal-body">
                     <form action='' id='addCourse' method='POST'>
@@ -196,14 +196,28 @@ foreach ($classrooms as $dummy_classroom) {
             <div class="card card-box-shadow">
               <div class="card-header  task-card justify-content-around" style="height:100px">
                 <div class="row">
-                  <h4 class="card-title col py-1" > <?php echo $i['course_code'] . ": " . $i['classroom_name']; ?></h4>
+                  <h4 class="card-title col py-1"> <?php echo $i['course_code'] . ": " . $i['classroom_name']; ?></h4>
                   <?php $card = $i['class_code']; ?>
                   <div class="dropdown col-lg-auto col-sm-1 py-3">
                     <i onclick="<?php echo $card; ?>dropdownbtn()" class="<?php echo $card; ?>dropbtn bx bx-dots-horizontal-rounded"></i>
                     <div id="<?php echo $card; ?>myDropdown" class="<?php echo $card; ?>dropdown-content dropdown-menu">
                       <form name='view_delete<?php echo $card; ?>' action='' method='POST'>
-                        <input type="submit" value="View Details"  name='view<?php echo $card; ?>' class="dropdown-item">
-                        <input type="submit" value="Delete Classroom" name='delete<?php echo $card; ?>' class="dropdown-item">
+                        <input type="submit" value="View Details" name='view<?php echo $card; ?>' class="btn btn-light dropdown-item">
+                        <button type="button" class="btn btn-light dropdown-item d-flex" id="myBtn">Delete classroom</button>
+                        <div id="myModal" class="modal">
+                          
+                          <!-- Modal content -->
+                          <div class="modal-content w-50">
+                            <div class="modal-header">
+                              <h3>Are you sure you want to delete this classroom?</h3>
+                            </div>
+                            <div class="modal-body d-flex flex-row-reverse">
+
+                              <button type="button" class="btn btn-secondary Close d-flex m-2" id="close">Close</button>
+                              <input type="submit" value="Delete" name='delete<?php echo $card; ?>' class="btn btn-outline-primary btn-join d-flex m-2">
+                            </div>
+                          </div>
+                        </div>
                       </form>
                     </div>
                   </div>
@@ -231,7 +245,32 @@ foreach ($classrooms as $dummy_classroom) {
     </section>
   </div>
   </div>
+  <script>
+    var modal = document.getElementById("myModal");
 
+    // Get the button that opens the modal
+    var btn = document.getElementById("myBtn");
+
+    // Get the <span> element that closes the modal
+    var span = document.getElementById("close");
+
+    // When the user clicks on the button, open the modal
+    btn.onclick = function() {
+      modal.style.display = "block";
+    }
+
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+  </script>
 </body>
 
 </html>
