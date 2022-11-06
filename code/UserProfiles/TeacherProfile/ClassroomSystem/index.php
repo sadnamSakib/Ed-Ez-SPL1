@@ -85,8 +85,10 @@ foreach ($classrooms as $dummy_classroom) {
   <link rel="stylesheet" href="<?php echo $root_path; ?>css/bootstrap.css" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <link href="<?php echo $root_path; ?>boxicons-2.1.4/css/boxicons.min.css" rel="stylesheet" />
-  <?php require 'ClassroomSystemScript.php'; ?>
-  <?php require 'ClassroomSystemStyle.php'; ?>
+  <?php
+      require 'ClassroomSystemScript.php';
+      require 'ClassroomSystemStyle.php'; 
+  ?>
 </head>
 
 <body>
@@ -164,10 +166,6 @@ foreach ($classrooms as $dummy_classroom) {
                           <option value="14">14</option>
                           <option value="15">15</option>
                           <option value="16">16</option>
-                          <option value="17">17</option>
-                          <option value="18">18</option>
-                          <option value="19">19</option>
-                          <option value="20">20</option>
                         </select>
                       </div>
 
@@ -188,7 +186,6 @@ foreach ($classrooms as $dummy_classroom) {
         <div id="error" style="color:red">
           <?php echo $error; ?>
         </div>
-        <!-- <h2 class="fs-5">Profile</h2> -->
         <?php
         foreach ($classrooms as $i) {
         ?>
@@ -203,17 +200,15 @@ foreach ($classrooms as $dummy_classroom) {
                     <div id="<?php echo $card; ?>myDropdown" class="<?php echo $card; ?>dropdown-content dropdown-menu">
                       <form name='view_delete<?php echo $card; ?>' action='' method='POST'>
                         <input type="submit" value="View Details" name='view<?php echo $card; ?>' class="btn btn-light dropdown-item">
-                        <button type="button" class="btn btn-light dropdown-item d-flex" id="myBtn">Delete classroom</button>
-                        <div id="myModal" class="modal">
-                          
+                        <button type="button" class="btn btn-light dropdown-item d-flex" onclick='<?php echo $card; ?>displayModal()' id='<?php echo $card; ?>deletebtn'>Delete classroom</button>
+                        <div id="<?php echo $card; ?>myModal" class="modal">
                           <!-- Modal content -->
                           <div class="modal-content w-50">
                             <div class="modal-header">
-                              <h3>Are you sure you want to delete this classroom?</h3>
+                              <h3>Are you sure you want to delete the classroom, <?php echo $i['course_code'].': '.$i['classroom_name']; ?>?</h3>
                             </div>
                             <div class="modal-body d-flex flex-row-reverse">
-
-                              <button type="button" class="btn btn-secondary Close d-flex m-2" id="close">Close</button>
+                              <button type="button" class="btn btn-secondary Close d-flex m-2" onclick='<?php echo $card;?>closeModal()' id='<?php echo $card; ?>closebtn'>Close</button>
                               <input type="submit" value="Delete" name='delete<?php echo $card; ?>' class="btn btn-outline-primary btn-join d-flex m-2">
                             </div>
                           </div>
@@ -245,32 +240,5 @@ foreach ($classrooms as $dummy_classroom) {
     </section>
   </div>
   </div>
-  <script>
-    var modal = document.getElementById("myModal");
-
-    // Get the button that opens the modal
-    var btn = document.getElementById("myBtn");
-
-    // Get the <span> element that closes the modal
-    var span = document.getElementById("close");
-
-    // When the user clicks on the button, open the modal
-    btn.onclick = function() {
-      modal.style.display = "block";
-    }
-
-    // When the user clicks on <span> (x), close the modal
-    span.onclick = function() {
-      modal.style.display = "none";
-    }
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-      if (event.target == modal) {
-        modal.style.display = "none";
-      }
-    }
-  </script>
 </body>
-
 </html>
