@@ -248,7 +248,19 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
                     ?>
                     <div id="<?php echo $post_ID; ?>myDropdown" class="dropdown-content dropdown-menu">
                       <form id="<?php echo $post_ID; ?>deletePost" action="" method="POST">
-                        <input type="submit" value="Delete" class="dropdown-item" name="<?php echo $post_ID . 'POST'; ?>">
+                      <button type="button" class="btn btn-light dropdown-item d-flex" onclick='<?php echo $card; ?>displayModal()' id='deletebtn'>Delete</button>
+                        <div id="myModal" class="modal">
+                          <!-- Modal content -->
+                          <div class="modal-content w-50">
+                            <div class="modal-header">
+                              <h3>Are you sure you want to delete the post?</h3>
+                            </div>
+                            <div class="modal-body d-flex flex-row-reverse">
+                              <button type="button" class="btn btn-secondary Close d-flex m-2" onclick='<?php echo $card;?>closeModal()' id='<?php echo $card; ?>closebtn'>Close</button>
+                              <input type="submit" value="Delete" name="<?php echo $post_ID . 'POST'; ?>" class="btn btn-outline-primary btn-join d-flex m-2">
+                            </div>
+                          </div>
+                        </div>
                       </form>
                     </div>
                   </div>
