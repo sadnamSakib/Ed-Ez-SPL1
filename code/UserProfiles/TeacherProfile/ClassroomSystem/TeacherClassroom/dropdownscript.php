@@ -6,6 +6,15 @@ foreach ($allPost as $i) {
         function <?php echo $post_selector; ?>dropdownbtn() {
             document.getElementById("<?php echo $post_selector; ?>myDropdown").classList.toggle("show");
         }
+        function <?php echo $post_selector; ?>closeModal() {
+                document.getElementById('<?php echo $post_selector; ?>myModal').style.display = 'none';
+                document.getElementById("<?php echo $post_selector; ?>myDropdown").classList.toggle("show");
+              }
+          
+              function <?php echo $post_selector; ?>displayModal() {
+                document.getElementById('<?php echo $post_selector; ?>myModal').style.display = 'block';
+                
+              }
     </script>
 <?php
 }
@@ -23,16 +32,3 @@ foreach ($allComments as $i) {
 <?php
 }
 ?>
-<script>
-    function <?php echo $card; ?>closeModal() {
-      document.getElementById('<?php echo $card; ?>myModal').style.display = 'none';
-    }
-
-    function <?php echo $card; ?>displayModal() {
-      document.getElementById('<?php echo $card; ?>myModal').style.display = 'block';
-    }
-
-    function <?php echo $card; ?>dropdownbtn() {
-      document.getElementById("<?php echo $card; ?>myDropdown").classList.toggle("show");
-    }
-  </script>

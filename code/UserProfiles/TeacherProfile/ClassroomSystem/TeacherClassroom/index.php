@@ -80,7 +80,7 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="<?php echo $root_path; ?>css/bootstrap.css" />
   <link href="<?php echo $root_path; ?>boxicons-2.1.4/css/boxicons.min.css" rel="stylesheet" />
-  <script defer src="script.js"></script>
+  <script src="script.js"></script>
   <script src="<?php echo $root_path; ?>js/bootstrap.min.js"></script>
   <?php require 'dropdownstyle.php'; ?>
   <?php require 'dropdownscript.php'; ?>
@@ -249,15 +249,15 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
                     ?>
                     <div id="<?php echo $post_ID; ?>myDropdown" class="dropdown-content dropdown-menu">
                       <form id="<?php echo $post_ID; ?>deletePost" action="" method="POST">
-                      <button type="button" class="btn btn-light dropdown-item d-flex" onclick='<?php echo $card; ?>displayModal()' id='deletebtn'>Delete</button>
-                        <div id="myModal" class="modal">
+                      <button type="button" class="btn btn-light dropdown-item d-flex" onclick='<?php echo $post_ID; ?>displayModal()' id='<?php echo $post_ID; ?>deletebtn'>Delete</button>
+                        <div id="<?php echo $post_ID; ?>myModal" class="modal">
                           <!-- Modal content -->
                           <div class="modal-content w-50">
                             <div class="modal-header">
                               <h3>Are you sure you want to delete the post?</h3>
                             </div>
                             <div class="modal-body d-flex flex-row-reverse">
-                              <button type="button" class="btn btn-secondary Close d-flex m-2" onclick='<?php echo $card;?>closeModal()' id='<?php echo $card; ?>closebtn'>Close</button>
+                              <button type="button" class="btn btn-secondary Close d-flex m-2" onclick='<?php echo $post_ID;?>closeModal()' id='<?php echo $post_ID; ?>closebtn'>Close</button>
                               <input type="submit" value="Delete" name="<?php echo $post_ID . 'POST'; ?>" class="btn btn-outline-primary btn-join d-flex m-2">
                             </div>
                           </div>
@@ -317,7 +317,7 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
               </div>
             </div>
             <?php $post_id = $i['post_id']; ?>
-            <form id="comment" name="<?php echo $post_id . 'Comment'; ?>" method="POST" action="#<?php echo $post_id; ?>post">
+            <form id="comment" name="<?php echo $post_id . 'Comment'; ?>" method="POST" action="#<?php echo $post_id;?>post">
               <div class="input-group mb-3 pb-3">
                 <input type="text" class="form-control" placeholder="Leave a comment" aria-label="Leave a comment" aria-describedby="button-addon2" name="<?php echo $post_id . 'comment_text'; ?>">
                 <input type="submit" class="btn btn-primary" id="button-addon2" value="comment" name="<?php echo $post_id . 'comment_msg'; ?>">

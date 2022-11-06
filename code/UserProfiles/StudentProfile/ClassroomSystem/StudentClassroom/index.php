@@ -209,11 +209,10 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
                   <?php
                   }
                   ?>
-                  <!--END-->
                 </div>
               </div>
               <?php $post_id = $i['post_id']; ?>
-              <form id="comment" name="<?php echo $post_id . 'Comment'; ?>" method="POST" action="#<?php echo $post_id; ?>post">
+            <form id="comment" name="<?php echo $post_id . 'Comment'; ?>" method="POST" action="#<?php echo $post_id; ?>post">
                 <div class="input-group mb-3 pb-3">
                   <input type="text" class="form-control" placeholder="Leave a comment" aria-label="Leave a comment" aria-describedby="button-addon2" name="<?php echo $post_id . 'comment_text'; ?>">
                   <input type="submit" class="btn btn-primary" id="button-addon2" value="comment" name="<?php echo $post_id . 'comment_msg'; ?>">
