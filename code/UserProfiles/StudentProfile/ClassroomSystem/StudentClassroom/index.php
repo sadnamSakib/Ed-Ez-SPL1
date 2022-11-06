@@ -6,6 +6,7 @@ require $root_path . 'LibraryFiles/URLFinder/URLPath.php';
 require $root_path . 'LibraryFiles/SessionStore/session.php';
 require $root_path . 'LibraryFiles/Utility/Utility.php';
 require $root_path . 'LibraryFiles/ValidationPhp/InputValidation.php';
+$database->fetch_results($sysdate,"SELECT SYSDATE() AS DATE");
 session::profile_not_set($root_path);
 $validate=new InputValidation();
 $classCode = $_SESSION['class_code'];
@@ -33,7 +34,7 @@ foreach($allComments as $j){
 $database->fetch_results($classroom_records,"SELECT * FROM classroom WHERE class_code = '$classCode' and active='1'");
 $database->fetch_results($teacher_records,"SELECT * FROM users,teacher_classroom,classroom WHERE users.email=teacher_classroom.email and classroom.class_code='$classCode'");
 if (isset($_REQUEST['post_msg']) && !is_null($_REQUEST['post_value'])) {
-  $post_date = date('Y-m-d H:i:s');
+  $post_date = $sysdate['DATE'];
   $post_id = $utility->generateRandomString(50);
   while (($database->performQuery("SELECT * FROM post WHERE post_id = '$post_id'"))->num_rows > 0) {
     $post_id = $utility->generateRandomString(50);
@@ -50,7 +51,7 @@ $posts = $database->performQuery("SELECT * FROM post,post_classroom WHERE post.p
 foreach ($posts as $i) {
   $post_id = $i['post_id'];
   if (isset($_REQUEST[$post_id . 'comment_msg'])) {
-    $comment_date = date('Y-m-d H:i:s');
+    $comment_date = $sysdate['DATE'];
     $comment_id = $utility->generateRandomString(50);
     while (($database->performQuery("SELECT * FROM comments WHERE comment_id = '$comment_id'"))->num_rows > 0) {
       $comment_id = $utility->generateRandomString(50);
@@ -140,11 +141,12 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
               <div class="card-header">
                   
               <div class="row">
+              <a name="<?php echo $post_id; ?>post"></a>
                   Posted by <?php
                               $database->fetch_results($user_post,"SELECT * FROM users WHERE email='" . $i['email'] . "'");
                               echo $user_post['name'];
                               ?>
-                               at <?php echo date("d/m/Y h:m:s", strtotime($i['post_datetime'])); ?> 
+                               at <?php echo date("d/m/Y h:i:s a", strtotime($i['post_datetime'])); ?> 
                             <div class="dropdown col-lg-auto col-sm-6 col-md-3">
                               <?php
                                   if($email->get_email()===$user_post['email']){
@@ -183,7 +185,7 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
                     <div class="card p-1">
                       <div class="card-header">
                         Commented by <?php echo $user_comment['name']; ?>
-                        at <?php echo date("d/m/Y h:m:s", strtotime($j['comment_datetime'])); ?> 
+                        at <?php echo date("d/m/Y h:i:s a", strtotime($j['comment_datetime'])); ?> 
                     
                     </div>
                       <div class="card card-body">
@@ -211,9 +213,8 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
                 </div>
               </div>
               <?php $post_id = $i['post_id']; ?>
-              <form id="comment" name="<?php echo $post_id . 'Comment'; ?>" method="POST" action="#<?php echo $post_id; ?>comment_section">
+              <form id="comment" name="<?php echo $post_id . 'Comment'; ?>" method="POST" action="#<?php echo $post_id; ?>post">
                 <div class="input-group mb-3 pb-3">
-                  <a name="<?php echo $post_id; ?>comment_section"></a>
                   <input type="text" class="form-control" placeholder="Leave a comment" aria-label="Leave a comment" aria-describedby="button-addon2" name="<?php echo $post_id . 'comment_text'; ?>">
                   <input type="submit" class="btn btn-primary" id="button-addon2" value="comment" name="<?php echo $post_id . 'comment_msg'; ?>">
                 </div>
