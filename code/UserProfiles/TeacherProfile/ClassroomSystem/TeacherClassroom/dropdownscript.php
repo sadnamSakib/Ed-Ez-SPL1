@@ -13,7 +13,6 @@ foreach ($allPost as $i) {
           
               function <?php echo $post_selector; ?>displayModal() {
                 document.getElementById('<?php echo $post_selector; ?>myModal').style.display = 'block';
-                
               }
     </script>
 <?php
