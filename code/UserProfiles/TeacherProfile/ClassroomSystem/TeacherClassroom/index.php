@@ -33,7 +33,8 @@ foreach ($allComments as $j) {
 $database->fetch_results($classroom_records, "SELECT * FROM classroom WHERE class_code = '$classCode' and active='1'");
 $database->fetch_results($teacher_records, "SELECT * FROM users WHERE email = '" . $email->get_email() . "'");
 if (isset($_REQUEST['post_msg'])) {
-  $post_date = date('Y-m-d H:i:s');
+  $database->fetch_results($sysdate,"SELECT SYSDATE() AS DATE");
+  $post_date=$sysdate['DATE'];
   $post_id = $utility->generateRandomString(50);
   while (($database->performQuery("SELECT * FROM post WHERE post_id = '$post_id'"))->num_rows > 0) {
     $post_id = $utility->generateRandomString(50);
@@ -50,7 +51,8 @@ $posts = $database->performQuery("SELECT * FROM post,post_classroom WHERE post.p
 foreach ($posts as $i) {
   $post_id = $i['post_id'];
   if (isset($_REQUEST[$post_id . 'comment_msg'])) {
-    $comment_date = date('Y-m-d H:i:s');
+    $database->fetch_results($sysdate,"SELECT SYSDATE() AS DATE");
+    $comment_date=$sysdate['DATE'];
     $comment_id = $utility->generateRandomString(50);
     while (($database->performQuery("SELECT * FROM comments WHERE comment_id = '$comment_id'"))->num_rows > 0) {
       $comment_id = $utility->generateRandomString(50);
@@ -237,7 +239,7 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
                             $database->fetch_results($user_post, "SELECT * FROM users WHERE email='" . $i['email'] . "'");
                             echo $user_post['name'];
                             ?>
-                  at <?php echo date("d/m/Y h:m:s", strtotime($i['post_datetime'])); ?>
+                  at <?php echo date("d/m/Y h:m:s a", strtotime($i['post_datetime'])); ?>
                   <div class="dropdown col-lg-auto col-sm-6 col-md-3">
                     <?php
                     if ($email->get_email() === $user_post['email']) {
@@ -276,7 +278,7 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
                   <div class="card p-1">
                     <div class="card-header">
                       Commented by <?php echo $user_comment['name']; ?>
-                      at <?php echo date("d/m/Y h:m:s", strtotime($j['comment_datetime'])); ?>
+                      at <?php echo date("d/m/Y h:m:s a", strtotime($j['comment_datetime'])); ?>
                     </div>
                     <div class="card card-body">
                       <div class="row">
