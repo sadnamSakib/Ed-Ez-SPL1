@@ -132,10 +132,10 @@ foreach ($classrooms as $dummy_classroom) {
                           <!-- Modal content -->
                           <div class="modal-content w-50">
                             <div class="modal-header">
-                              <h3>Are you sure you want to leave this classroom?</h3>
+                              <h3>Are you sure you want to leave this classroom, <?php echo $i['course_code'].': '.$i['classroom_name'] ?>?</h3>
                             </div>
                             <div class="modal-body d-flex flex-row-reverse">
-                              <button type="button" class="btn btn-secondary Close d-flex m-2" onclick='<?php echo $card;?>closeModal()' id='<?php echo $card; ?>closebtn'>Close</button>
+                            <button type="button" class="btn btn-secondary Close d-flex m-2" onclick='<?php echo $card;?>closeModal()' id='<?php echo $card; ?>closebtn'>Close</button>
                               <input type="submit" value="Leave" name='leave<?php echo $card; ?>' class="btn btn-outline-primary btn-join d-flex m-2">
                             </div>
                           </div>
