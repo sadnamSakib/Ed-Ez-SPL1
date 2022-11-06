@@ -303,8 +303,20 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
                           }
                           ?>
                           <div id="<?php echo $comment_id; ?>myDropdown" class="dropdown-content dropdown-menu">
-                            <form id="<?php echo $comment_ID; ?>deleteComment" action="" method="POST">
-                              <input type="submit" value="Delete" class="dropdown-item" name="<?php echo $comment_id . 'COMMENT'; ?>">
+                            <form id="<?php echo $comment_id; ?>deleteComment" action="" method="POST">
+                              <button type="button" class="btn btn-light dropdown-item d-flex" onclick='<?php echo $comment_id; ?>displayModal()' id='<?php echo $comment_id; ?>deletebtn'>Delete</button>
+                              <div id="<?php echo $comment_id; ?>myModal" class="modal">
+                          <!-- Modal content -->
+                              <div class="modal-content w-50">
+                                <div class="modal-header">
+                                  <h3>Are you sure you want to delete this comment?</h3>
+                                </div>
+                                <div class="modal-body d-flex flex-row-reverse">
+                                  <button type="button" class="btn btn-secondary Close d-flex m-2" onclick='<?php echo $comment_id;?>closeModal()' id='<?php echo $comment_id; ?>closebtn'>Close</button>
+                                  <input type="submit" value="Delete" name="<?php echo $comment_id . 'COMMENT'; ?>" class="btn btn-outline-primary btn-join d-flex m-2">
+                                </div>
+                              </div>
+                            </div>
                             </form>
                           </div>
                         </div>
