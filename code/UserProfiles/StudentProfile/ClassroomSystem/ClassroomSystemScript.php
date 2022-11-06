@@ -32,3 +32,16 @@
       ?>
       }
     </script>
+    <script>
+    function <?php echo $card; ?>closeModal() {
+      document.getElementById('<?php echo $card; ?>myModal').style.display = 'none';
+    }
+
+    function <?php echo $card; ?>displayModal() {
+      document.getElementById('<?php echo $card; ?>myModal').style.display = 'block';
+    }
+
+    function <?php echo $card; ?>dropdownbtn() {
+      document.getElementById("<?php echo $card; ?>myDropdown").classList.toggle("show");
+    }
+  </script>

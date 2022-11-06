@@ -126,7 +126,20 @@ foreach ($classrooms as $dummy_classroom) {
                     <form name='view_leave<?php echo $card; ?>' action='' method='POST'>
                       <div id="<?php echo $card; ?>myDropdown" class="<?php echo $card; ?>dropdown-content dropdown-menu">
                         <input type="submit" value="View Details" name='view<?php echo $card; ?>' class="dropdown-item">
-                        <input type="submit" value="Leave Classroom" name='leave<?php echo $card; ?>' class="dropdown-item">
+                        <!-- <input type="submit" value="Leave Classroom" name='leave<?php echo $card; ?>' class="dropdown-item"> -->
+                        <button type="button" class="btn btn-light dropdown-item d-flex" onclick='<?php echo $card; ?>displayModal()' id='<?php echo $card; ?>leavebtn'>Leave Classroom</button>
+                        <div id="<?php echo $card; ?>myModal" class="modal">
+                          <!-- Modal content -->
+                          <div class="modal-content w-50">
+                            <div class="modal-header">
+                              <h3>Are you sure you want to leave this classroom?</h3>
+                            </div>
+                            <div class="modal-body d-flex flex-row-reverse">
+                              <button type="button" class="btn btn-secondary Close d-flex m-2" onclick='<?php echo $card;?>closeModal()' id='<?php echo $card; ?>closebtn'>Close</button>
+                              <input type="submit" value="Leave" name='leave<?php echo $card; ?>' class="btn btn-outline-primary btn-join d-flex m-2">
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </form>
                   </div>
