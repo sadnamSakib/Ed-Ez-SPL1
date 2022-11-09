@@ -4,11 +4,8 @@ if (window.history.replaceState) {
   window.history.replaceState(null, null, window.location.href);
 }
 
-function dropdownbtnNew() {
-  document.getElementById("myDropdown2").classList.toggle("show");
-}
 // Close the dropdown if the user clicks outside of it
-window.onclick = function(event) {
+window.addEventListener('dblclick', function(){
   if (!event.target.matches('.dropbtn')) {
     var dropdowns = document.getElementsByClassName("dropdown-content");
     var i;
@@ -19,4 +16,4 @@ window.onclick = function(event) {
       }
     }
   }
-}
+})

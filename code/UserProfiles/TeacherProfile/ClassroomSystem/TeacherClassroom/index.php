@@ -80,7 +80,7 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="<?php echo $root_path; ?>css/bootstrap.css" />
   <link href="<?php echo $root_path; ?>boxicons-2.1.4/css/boxicons.min.css" rel="stylesheet" />
-  <script defer src="script.js"></script>
+  <script src="script.js"></script>
   <script src="<?php echo $root_path; ?>js/bootstrap.min.js"></script>
   <?php require 'dropdownstyle.php'; ?>
   <?php require 'dropdownscript.php'; ?>
@@ -235,11 +235,12 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
               <div class="card-header">
 
                 <div class="row">
+                <a name="<?php echo $post_id; ?>post"></a>
                   Posted by <?php
                             $database->fetch_results($user_post, "SELECT * FROM users WHERE email='" . $i['email'] . "'");
                             echo $user_post['name'];
                             ?>
-                  at <?php echo date("d/m/Y h:m:s a", strtotime($i['post_datetime'])); ?>
+                  at <?php echo date("d/m/Y h:i:s a", strtotime($i['post_datetime'])); ?>
                   <div class="dropdown col-lg-auto col-sm-6 col-md-3">
                     <?php
                     if ($email->get_email() === $user_post['email']) {
@@ -248,15 +249,15 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
                     ?>
                     <div id="<?php echo $post_ID; ?>myDropdown" class="dropdown-content dropdown-menu">
                       <form id="<?php echo $post_ID; ?>deletePost" action="" method="POST">
-                      <button type="button" class="btn btn-light dropdown-item d-flex" onclick='<?php echo $card; ?>displayModal()' id='deletebtn'>Delete</button>
-                        <div id="myModal" class="modal">
+                      <button type="button" class="btn btn-light dropdown-item d-flex" onclick='<?php echo $post_ID; ?>displayModal()' id='<?php echo $post_ID; ?>deletebtn'>Delete</button>
+                        <div id="<?php echo $post_ID; ?>myModal" class="modal">
                           <!-- Modal content -->
                           <div class="modal-content w-50">
                             <div class="modal-header">
                               <h3>Are you sure you want to delete the post?</h3>
                             </div>
                             <div class="modal-body d-flex flex-row-reverse">
-                              <button type="button" class="btn btn-secondary Close d-flex m-2" onclick='<?php echo $card;?>closeModal()' id='<?php echo $card; ?>closebtn'>Close</button>
+                              <button type="button" class="btn btn-secondary Close d-flex m-2" onclick='<?php echo $post_ID;?>closeModal()' id='<?php echo $post_ID; ?>closebtn'>Close</button>
                               <input type="submit" value="Delete" name="<?php echo $post_ID . 'POST'; ?>" class="btn btn-outline-primary btn-join d-flex m-2">
                             </div>
                           </div>
@@ -290,7 +291,7 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
                   <div class="card p-1">
                     <div class="card-header">
                       Commented by <?php echo $user_comment['name']; ?>
-                      at <?php echo date("d/m/Y h:m:s a", strtotime($j['comment_datetime'])); ?>
+                      at <?php echo date("d/m/Y h:i:s a", strtotime($j['comment_datetime'])); ?>
                     </div>
                     <div class="card card-body">
                       <div class="row">
@@ -302,8 +303,20 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
                           }
                           ?>
                           <div id="<?php echo $comment_id; ?>myDropdown" class="dropdown-content dropdown-menu">
-                            <form id="<?php echo $comment_ID; ?>deleteComment" action="" method="POST">
-                              <input type="submit" value="Delete" class="dropdown-item" name="<?php echo $comment_id . 'COMMENT'; ?>">
+                            <form id="<?php echo $comment_id; ?>deleteComment" action="" method="POST">
+                              <button type="button" class="btn btn-light dropdown-item d-flex" onclick='<?php echo $comment_id; ?>displayModal()' id='<?php echo $comment_id; ?>deletebtn'>Delete</button>
+                              <div id="<?php echo $comment_id; ?>myModal" class="modal">
+                          <!-- Modal content -->
+                              <div class="modal-content w-50">
+                                <div class="modal-header">
+                                  <h3>Are you sure you want to delete this comment?</h3>
+                                </div>
+                                <div class="modal-body d-flex flex-row-reverse">
+                                  <button type="button" class="btn btn-secondary Close d-flex m-2" onclick='<?php echo $comment_id;?>closeModal()' id='<?php echo $comment_id; ?>closebtn'>Close</button>
+                                  <input type="submit" value="Delete" name="<?php echo $comment_id . 'COMMENT'; ?>" class="btn btn-outline-primary btn-join d-flex m-2">
+                                </div>
+                              </div>
+                            </div>
                             </form>
                           </div>
                         </div>
@@ -316,9 +329,8 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
               </div>
             </div>
             <?php $post_id = $i['post_id']; ?>
-            <form id="comment" name="<?php echo $post_id . 'Comment'; ?>" method="POST" action="#<?php echo $post_id; ?>comment_section">
+            <form id="comment" name="<?php echo $post_id . 'Comment'; ?>" method="POST" action="#<?php echo $post_id;?>post">
               <div class="input-group mb-3 pb-3">
-                <a name="<?php echo $post_id; ?>comment_section"></a>
                 <input type="text" class="form-control" placeholder="Leave a comment" aria-label="Leave a comment" aria-describedby="button-addon2" name="<?php echo $post_id . 'comment_text'; ?>">
                 <input type="submit" class="btn btn-primary" id="button-addon2" value="comment" name="<?php echo $post_id . 'comment_msg'; ?>">
               </div>
