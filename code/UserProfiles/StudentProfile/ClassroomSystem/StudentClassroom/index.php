@@ -102,17 +102,52 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
           <div class="card-body ">
             <p class="card-text" style="text-align:center">No pending tasks.</p>
           </div>
-          <div class="card-footer btn bx bxs-chevron-down w-100" type="button" data-bs-toggle="collapse" data-bs-target="#taskcollapse" aria-expanded="false" aria-controls="taskcollapse" >
-          
+          <div class="card-footer btn bx bxs-chevron-down w-100" type="button" data-bs-toggle="collapse" data-bs-target="#taskcollapse" aria-expanded="false" aria-controls="taskcollapse">
+
             <!-- <button class="btn bx bxs-chevron-down w-100" type="button" data-bs-toggle="collapse" data-bs-target="#taskcollapse" aria-expanded="false" aria-controls="taskcollapse"> -->
-              <div class="collapse multi-collapse" id="taskcollapse">
-                <div class="card card-body my-2">
-                  Quiz 1
-                </div>
-                <div class="card card-body my-2">
-                  Quiz 2
+
+          </div>
+          <div class="collapse multi-collapse" id="taskcollapse">
+            <div class="card card-body my-2 btn" data-bs-toggle="modal" data-bs-target="#examplemodal1" data-bs-whatever="@fat">
+              <div class="modal fade" id="examplemodal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">Task1</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <form action="" method="POST">
+
+                        <div class="mb-3">
+                          <label for="quizDate">Instructions :</label>
+                          <p>.......................................................................................................</p>
+                        </div>
+                        <div class="mb-3">
+                          <label for="quizDate">Question paper :</label>
+                          <a href="#">question</a>
+                        </div>
+
+                        <label class="mb-4" for="inputGroupFile02">Upload answer script :</label>
+                        <div class="input-group mb-3 justify-content-center mx-5">
+                          <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="inputGroupFile02">
+                          </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <input type="submit" name="Join" value="Submit" class="btn btn-primary btn-join">
+                    </div>
+                    </form>
+                  </div>
                 </div>
               </div>
+              Task 1
+            </div>
+            
+            
           </div>
         </div>
       </div>
