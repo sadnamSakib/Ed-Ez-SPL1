@@ -12,6 +12,7 @@ body{
   width : 200%;
 }
 
+
 .content{
   min-height: 100vh;
   width: 100%;
@@ -19,6 +20,10 @@ body{
 hr.h-color{
   background: #eee;
 
+}
+
+.progress-bar.bg-success{
+  background-color: #4596be!important;
 }
 .sidebar li.active{
   background: #eee;
