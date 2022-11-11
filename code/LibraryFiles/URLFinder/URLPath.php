@@ -33,7 +33,11 @@
         }
 
         public static function getFTPServer(){   
-            return 'file:///C:\\xampp\\htdocs\\Files\\pdf\\';
+            if(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on')   
+            $url = "https://";   
+            else  
+                $url = "http://";   
+            return $url.$_SERVER['HTTP_HOST'] . '/Files/pdf/';
         }
     }
 ?>

@@ -28,7 +28,7 @@
           }
 
           public function get_file_url($ftp_server){
-            return $ftp_server.$this->file_id.'\\'.$this->filename;
+            return $ftp_server.$this->file_id.'/'.$this->filename;
           }
 
           function get_file_id(){

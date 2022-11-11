@@ -70,19 +70,52 @@ $temp = hash('sha512', $_SESSION['email']);
         }
         calendar.unselect()
       },
-      eventClick: function(arg) {
-        if (confirm('Are you sure you want to delete this event?')) {
-          arg.event.remove()
-        }
-      },
       editable: true,
-      dayMaxEvents: true, // allow "more" link when too many events
+      dayMaxEvents: true,
       events: [
+        <?php 
+            $recordsQuiz=$database->performQuery("select * from event,quiz where event.event_id=quiz.event_id");
+            $first=false;
+            foreach($recordsQuiz as $i){
+              if(!$first){
+                $first=true;
+              }
+              else{
+                echo ',';
+              }
+          ?>
         {
-          title: 'SPL progress Presentation',
-          start: '2022-10-19'
+          
+          title: '<?php echo $i['quiz_title']; ?>',
+          start: '<?php echo $i['event_start_datetime'];?>'
+          
         }
-        
+        <?php
+            }
+          ?>
+           <?php 
+            $recordsAssignment=$database->performQuery("select * from event,assignment where event.event_id=assignment.event_id");
+            if($recordsQuiz->num_rows>0){
+              echo ',';
+            }
+            $first=false;
+            foreach($recordsAssignment as $i){
+              if(!$first){
+                $first=true;
+              }
+              else{
+                echo ',';
+              }
+          ?>
+        {
+          
+          title: '<?php echo $i['assignment_title']; ?>',
+          start: '<?php echo $i['event_start_datetime'];?>'
+          
+        }
+        <?php
+            }
+          ?>
       ]
     });
 
