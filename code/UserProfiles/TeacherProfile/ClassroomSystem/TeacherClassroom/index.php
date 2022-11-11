@@ -182,7 +182,6 @@ $allTasks=$database->performQuery("SELECT * FROM task,task_classroom,event WHERE
                             <label class="mb-2" for="taskName">Upload Question Paper :</label>
                               <input type="file" id="taskName" name="taskName" class="custom-file-input" accept=".pdf" required/>
                             </div>
-                            <!-- -->
                         </div>
 
                     </div>
