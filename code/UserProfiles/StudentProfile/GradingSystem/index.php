@@ -98,26 +98,25 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
       <div class="progressbars col-md-4">
         <label>Attendance</label>
         <div class="progress my-2">
-          <div class="progress-bar progress-bar-animated bg-success" role="progressbar" style="width: 90%" aria-valuenow="66.6" aria-valuemin="0" aria-valuemax="100"></div>
+          <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-label="Animated striped example" style="width: 90%" aria-valuenow="66.6" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
         <label>Quiz</label>
         <div class="progress my-2">
-          <div class="progress-bar progress-bar-animated bg-success" role="progressbar" style="width: 83%" aria-valuenow="66.6" aria-valuemin="0" aria-valuemax="100"></div>
+          <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-label="Animated striped example" style="width: 83%" aria-valuenow="66.6" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
         <label>Assignment</label>
         <div class="progress my-2">
-          <div class="progress-bar progress-bar-animated bg-success" role="progressbar" style="width: 88%" aria-valuenow="66.6" aria-valuemin="0" aria-valuemax="100"></div>
+          <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-label="Animated striped example" style="width: 88%" aria-valuenow="66.6" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
         <label>Mid-Semester</label>
         <div class="progress my-2">
-          <div class="progress-bar progress-bar-animated bg-success" role="progressbar" style="width: 74%" aria-valuenow="66.6" aria-valuemin="0" aria-valuemax="100"></div>
+          <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-label="Animated striped example" style="width: 74%" aria-valuenow="66.6" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
         <label>Semester Final</label>
         <div class=" progress my-2">
-          <div class="progress-bar progress-bar-animated bg-success" role="progressbar"  style="width: 65%" aria-valuenow="66.6" aria-valuemin="0" aria-valuemax="100"></div>
+          <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-label="Animated striped example"  style="width: 65%" aria-valuenow="66.6" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
       </div>
-      
 
     </section>
   </div>
