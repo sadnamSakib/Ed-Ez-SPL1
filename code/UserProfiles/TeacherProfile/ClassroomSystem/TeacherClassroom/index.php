@@ -210,16 +210,23 @@ $allTasks=$database->performQuery("SELECT * FROM task,task_classroom,event WHERE
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
-                        <form action='' id='assignmentForm' name='assignmentForm' method='POST' enctype="multipart/form-data">
-
+                        <form action='' id='sessionForm' name='sessionForm' method='POST' enctype="multipart/form-data">
                           <div class="mb-3">
+                          <label for="online">Online Session</label>
+                          <input type="radio" name="online" value="online" id="online" onclick="document.getElementById('sessionURL').style.display='block';document.getElementById('offline').checked=false;">
+                          </div>
+                          <div class="mb-3">
+                          <label for="offline">Offline Session</label>
+                          <input type="radio" name="offline" value="offline" id="offline" onclick="document.getElementById('sessionURL').style.display='none';document.getElementById('online').checked=false;">
+                          </div>
+                          <div class="mb-3" style="display:none" id="sessionURL">
                           <label for="SessionLink">Session Link :</label>
                           <input type="text" class="form-control" id="SessionLink" name="SessionLink" placeholder="Enter Session Link" required>
                             </div>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <input type='submit' name='assignmentSubmit' value='Create' class="btn btn-primary btn-join">
+                        <input type='submit' name='sessionSubmit' value='Create' class="btn btn-primary btn-join">
                         </form>
                       </div>
                     </div>
