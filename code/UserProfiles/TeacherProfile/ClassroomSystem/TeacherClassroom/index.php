@@ -6,6 +6,10 @@ require $root_path . 'LibraryFiles/URLFinder/URLPath.php';
 require $root_path . 'LibraryFiles/SessionStore/session.php';
 require $root_path . 'LibraryFiles/Utility/Utility.php';
 require $root_path . 'LibraryFiles/ValidationPhp/InputValidation.php';
+foreach (glob($root_path .'LibraryFiles/ClassroomManager/*.php') as $filename)
+{
+    require $filename;
+}
 session::profile_not_set($root_path);
 $validate = new InputValidation();
 $classCode = $_SESSION['class_code'];
@@ -13,6 +17,64 @@ $email = new EmailValidator($_SESSION['email']);
 $authentication = $database->performQuery("SELECT * FROM teacher_classroom WHERE email='" . $email->get_email() . "' and class_code='$classCode'");
 if ($authentication->num_rows == 0) {
   session::redirectProfile('teacher');
+}
+
+if(isset($_POST['quizSubmit'])){
+  $quiz_id = $utility->generateRandomString(10);
+  $existence = $database->performQuery("SELECT * FROM quiz where quiz_id='$quiz_id'");
+  while ($existence->num_rows > 0) {
+    $quiz_id = $utility->generateRandomString(10);
+    $existence = $database->performQuery("SELECT * FROM quiz where quiz_id='$quiz_id'");
+  }
+  $quiz_title=$_REQUEST['QuizTitle'];
+  $quizStart=$_REQUEST['quizStart'];
+  $quizEnd=$_REQUEST['quizEnd'];
+  $marks=$_REQUEST['Marks'];
+  $database->fetch_results($row,"select * from classroom where class_code='$classCode'");
+  $semester=$row['semester'];
+  $instructions=$validate->post_sanitise_regular_input('instruction');
+  $database->fetch_results($row,"select * from users where email='".$email->get_email()."'");
+  $institution=$row['institution'];
+  if (isset($_FILES['quizName']['name']))
+  {
+    $eventManagement = new EventManagement($quizStart,$quizEnd,$database,$utility);
+    $fileManagement=new FileManagement($_FILES['quizName']['name'],$_FILES['quizName']['tmp_name'],'pdf',$database,$utility);
+    $insertquery ="INSERT INTO quiz(quiz_id,quiz_title,event_id,institution,semester,marks,file_id,instructions) VALUES('$quiz_id','$quiz_title','".$eventManagement->get_event_id()."','$institution','$semester','$marks','".$fileManagement->get_file_id()."','$instructions')";
+    $database->performQuery($insertquery);  
+    $quizStart=date("d/m/Y h:i:s a", strtotime($quizStart));
+    $quizEnd=date("d/m/Y h:i:s a", strtotime($quizEnd));
+    $link=$fileManagement->get_file_url(URLPath::getFTPServer());
+  $post_text="A Quiz has been added: <br> Title: $quiz_title <br> Start Date and Time: $quizStart <br> End Date and Time: $quizEnd <br> Marks: $marks <br>";
+    echo $post_text;
+    $quizPost=new PostManagement($post_text,$email->get_email(),$classCode,$utility,$database);
+  }
+  
+}
+
+if(isset($_POST['assignmentSubmit'])){
+  $assignment_id = $utility->generateRandomString(10);
+  $existence = $database->performQuery("SELECT * FROM assignment where assignment_id='$assignment_id'");
+  while ($existence->num_rows > 0) {
+    $assignment_id = $utility->generateRandomString(10);
+    $existence = $database->performQuery("SELECT * FROM assignment where assignment_id='$assignment_id'");
+  }
+  $database->fetch_results($sysdate,"SELECT SYSDATE() AS DATE");
+  $assignmentStart=$sysdate['DATE'];
+  $assignment_title=$_REQUEST['AssignmentTitle'];
+  $assignmentEnd=$_REQUEST['assignmentDeadline'];
+  $marks=$_REQUEST['AssignmentMarks'];
+  $database->fetch_results($row,"select * from classroom where class_code='$classCode'");
+  $semester=$row['semester'];
+  $instructions=$validate->post_sanitise_regular_input('instruction');
+  $database->fetch_results($row,"select * from users where email='".$email->get_email()."'");
+  $institution=$row['assignmentInstruction'];
+  if (isset($_FILES['assignmentName']['name']))
+  {
+    $eventManagement = new EventManagement($assignmentStart,$assignmentEnd,$database,$utility);
+   $fileManagement=new FileManagement($_FILES['assignmentName']['name'],$_FILES['assignmentName']['tmp_name'],'pdf',$database,$utility);
+    $insertquery ="INSERT INTO assignment(assignment_id,assignment_title,event_id,institution,semester,marks,file_id,instructions) VALUES('$assignment_id','$assignment_title','".$eventManagement->get_event_id()."','$institution','$semester','$marks','".$fileManagement->get_file_id()."','$instructions')";
+    $database->performQuery($insertquery);
+  }
 }
 
 $allPost = $database->performQuery("SELECT * FROM post WHERE active='1';");
@@ -33,39 +95,19 @@ foreach ($allComments as $j) {
 $database->fetch_results($classroom_records, "SELECT * FROM classroom WHERE class_code = '$classCode' and active='1'");
 $database->fetch_results($teacher_records, "SELECT * FROM users WHERE email = '" . $email->get_email() . "'");
 if (isset($_REQUEST['post_msg'])) {
-  $database->fetch_results($sysdate,"SELECT SYSDATE() AS DATE");
-  $post_date=$sysdate['DATE'];
-  $post_id = $utility->generateRandomString(50);
-  while (($database->performQuery("SELECT * FROM post WHERE post_id = '$post_id'"))->num_rows > 0) {
-    $post_id = $utility->generateRandomString(50);
-  }
-
-  $post_value = $validate->post_sanitise_text('post_value');
-  if (!is_null($post_value) && $post_value !== '') {
-    $database->performQuery("INSERT INTO post(post_id,email,post_datetime,post_message) VALUES('$post_id','" . $email->get_email() . "','$post_date','$post_value');");
-    $database->performQuery("INSERT INTO post_classroom(post_id,class_code) VALUES('$post_id','$classCode');");
-  }
+  $postManagement=new PostManagement($validate->post_sanitise_text('post_value'),$email->get_email(),$classCode,$utility,$database);
 }
 
 $posts = $database->performQuery("SELECT * FROM post,post_classroom WHERE post.post_id=post_classroom.post_id and post_classroom.class_code='$classCode' and active='1' order by post_datetime desc;");
 foreach ($posts as $i) {
   $post_id = $i['post_id'];
   if (isset($_REQUEST[$post_id . 'comment_msg'])) {
-    $database->fetch_results($sysdate,"SELECT SYSDATE() AS DATE");
-    $comment_date=$sysdate['DATE'];
-    $comment_id = $utility->generateRandomString(50);
-    while (($database->performQuery("SELECT * FROM comments WHERE comment_id = '$comment_id'"))->num_rows > 0) {
-      $comment_id = $utility->generateRandomString(50);
-    }
-    $comment_text = $validate->post_sanitise_text($post_id . 'comment_text');
-    if (!is_null($comment_text) && $comment_text !== '') {
-      $database->performQuery("INSERT INTO comments(comment_id,email,post_id,comment_datetime,comment_message) VALUES('$comment_id','" . $email->get_email() . "','$post_id','$comment_date','$comment_text');");
-    }
+    $commentManager=new CommentManagement($validate->post_sanitise_text($post_id . 'comment_text'),$post_id,$email->get_email(),$utility,$database);
     unset($_REQUEST[$post_id . 'comment_msg']);
   }
 }
 $allPost = $database->performQuery("SELECT * FROM post WHERE active='1';");
-$allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';");
+$allComments = $database->performQuery("SELECT * FROM comments,comment_post WHERE comments.comment_id=comment_post.comment_id AND comments.active='1'");
 ?>
 
 <!DOCTYPE html>
@@ -126,37 +168,49 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                      <form action="" method="POST">
+                      <div id="error" style="display:none">
 
-                        <div class="mb-3">
-                          <label for="quizDate">Date :</label>
-                          <input type="date" name="quizDate" class="form-control">
-                        </div>
-                        <div class="mb-3">
-                          <label for="quizTime">Start Time :</label>
-                          <input type="time" name="quizTime" class="form-control">
+                      </div>
+                      <form action="" method="POST" name="quizForm" id="quizForm" enctype="multipart/form-data">
+                      <div class="mb-3">
+                          <label for="QuizTitle">Quiz Title :</label>
+                          <input type="text" class="form-control" id="QuizTitle" name="QuizTitle" placeholder="Enter Quiz Title" required>
                         </div>
                         <div class="mb-3">
-                          <label for="quizdate">Duration :</label>
-                          <input type="number" name="quizDuration" class="form-control">
+                          <label for="quizDateTime">Start Date and Time :</label>
+                          <input type="datetime-local" id="quizStart" name="quizStart" class="form-control" onclick="
+                            var dateString=new Date();
+                            this.setAttribute('min',dateString);" required>
                         </div>
-
-                        <label class="mb-2" for="inputGroupFile02">Upload question paper :</label>
-                        <div class="input-group mb-3">
-                          <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="inputGroupFile02">
-                          </div>
+                        <div class="mb-3">
+                          <label for="endTime">End Date and Time :</label>
+                          <input type="datetime-local" id="quizEnd" name="quizEnd" class="form-control" onclick="
+                            var startDateTime=document.getElementById('quizStart').value;
+                            this.setAttribute('min',startDateTime);" required>
                         </div>
-
+                        <div class="mb-3">
+                          <label for="Marks">Marks :</label>
+                          <input type="number" class="form-control" id="quizMarks" name="Marks" placeholder="Enter Marks" onclick="
+                        var value=document.getElementById('semester');
+                        this.setAttribute('min',1);
+                        this.setAttribute('max',4000);
+                        " required>
+                        </div>
                         <div class="mb-3">
                           <label for="message-text" class="col-form-label">Instruction :</label>
-                          <textarea class="form-control" id="message-text"></textarea>
+                          <textarea class="form-control" id="message-text" name="instruction"></textarea>
+                        </div>
+                        <div class="input-group mb-2">
+                          <div class="custom-file">
+                            <label class="mb-2" for="quizName">Upload Question Paper :</label>
+                              <input type="file" id="quizName" name="quizName" class="custom-file-input" accept=".pdf" required/>
+                            </div>
                         </div>
 
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <input type="submit" name="Join" value="Create" class="btn btn-primary btn-join">
+                      <input type="submit" name="quizSubmit" value="Create" class="btn btn-primary btn-join">
                     </div>
                     </form>
                   </div>
@@ -173,29 +227,41 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
-                        <form action='' id='addCourse' method='POST'>
-
+                        <form action='' id='assignmentForm' name='assignmentForm' method='POST' enctype="multipart/form-data">
+                          
                           <div class="mb-3">
-                            <label for="assignmentDate">Submission Deadline :</label>
-                            <input type="date" name="assignmentDate" class="form-control">
-                          </div>
-
-                          <label class="mb-2" for="inputGroupFile02">Upload document :</label>
-                          <div class="input-group mb-3">
-                            <div class="custom-file">
-                              <input type="file" class="custom-file-input" id="inputGroupFile02">
+                          <label for="AssignmentTitle">Assignment Title :</label>
+                          <input type="text" class="form-control" id="AssignmentTitle" name="AssignmentTitle" placeholder="Enter Assignment Title" required>
                             </div>
+                          <div class="mb-3">
+                            <label for="assignmentDeadline">Submission Date and Time :</label>
+                            <input type="datetime-local" name="assignmentDeadline" class="form-control" onclick="
+                            var dateString2=new Date();
+                            this.setAttribute('min',dateString2);" required>
                           </div>
-
+                          <div class="mb-3">
+                          <label for="Marks">Marks :</label>
+                          <input type="number" class="form-control" id="AssignmentMarks" name="AssignmentMarks" placeholder="Enter Marks" onclick="
+                            var value=document.getElementById('semester');
+                            this.setAttribute('min',1);
+                            this.setAttribute('max',4000);
+                            " required>
+                            </div>
                           <div class="mb-3">
                             <label for="message-text" class="col-form-label">Instruction :</label>
-                            <textarea class="form-control" id="message-text"></textarea>
+                            <textarea class="form-control" id="message-text" name="assignmentInstruction"></textarea>
+                          </div>
+                          <div class="input-group mb-2">
+                            <div class="custom-file">
+                              <label class="mb-2" for="inputGroupFile02">Upload Assignment Question :</label>
+                              <input type="file" class="custom-file-input" id="inputGroupFile02" name="assignmentName" required>
+                            </div>
                           </div>
 
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <input type='submit' name='Create' value='Create' class="btn btn-primary btn-join">
+                        <input type='submit' name='assignmentSubmit' value='Create' class="btn btn-primary btn-join">
                         </form>
                       </div>
                     </div>
@@ -203,15 +269,9 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
                 </div>
               </div>
             </div>
-
-
-
           </div>
         </div>
       </div>
-
-
-
       <div class="row justify-content-center my-3 post">
         <div class="col-md-6 col-sm-6 border-end">
           <form id="Post" name="Post" action="#post_section" method="POST">
@@ -273,16 +333,15 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1';
               <div>
                 <button class="btn btn-dark w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample<?php echo $i['post_id']; ?>" aria-expanded="false" aria-controls="collapseExample">
                   <?php
-                  $database->fetch_results($comments, "SELECT count(*)count_comments FROM comments WHERE post_id='" . $i['post_id'] . "' and active='1'");
+                  $database->fetch_results($comments, "SELECT count(*)count_comments FROM comments,comment_post WHERE comment_post.post_id='" . $i['post_id'] . "' AND comments.comment_id=comment_post.comment_id AND active='1'");
                   echo $comments['count_comments'] . " comments";
-
                   ?>
                 </button>
               </div>
               <div class="collapse multi-collapse" id="collapseExample<?php echo $i['post_id']; ?>">
                 <?php
                 $post_id = $i['post_id'];
-                $sql = $database->performQuery("SELECT * FROM comments WHERE post_id='" . $post_id . "' and active='1' order by comment_datetime desc");
+                $sql = $database->performQuery("SELECT * FROM comments,comment_post WHERE comments.comment_id=comment_post.comment_id AND comment_post.post_id='" . $post_id . "' and comments.active='1' order by comments.comment_datetime desc");
                 foreach ($sql as $j) {
                   $comment_id = $j['comment_id'];
                   $users_email = $j['email'];

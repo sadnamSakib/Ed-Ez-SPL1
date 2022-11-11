@@ -19,3 +19,32 @@ function close_dropdown(){
       }
     }
 }
+
+const quizForm=document.getElementById('quizForm');
+const assignmentForm=document.getElementById('assignmentForm');
+
+quizForm.addEventListener('submit',(e) =>{
+  let messages=[];
+  const startTime=document.getElementById('quizStart');
+  const endTime=document.getElementById('quizEnd');
+  const marks=document.getElementById('quizMarks');
+  const quizName=document.getElementById('quizName');
+  if(startTime.value===null){
+    messages.push('Start Time must be entered for quiz');
+  }
+  if(endTime.value===null){
+    messages.push('end Time must be entered for quiz');
+  }
+  if(marks.value===null){
+    messages.push('Marks must be entered for quiz');
+  }
+  if(quizName.value===null){
+    messages.push('quiz must have a question');
+  }
+  if(messages.length>0){
+    e.preventDefault();
+    error.document.display='block';
+    const error=document.getElementById('error');
+    error.innerText=messages.join(', ');
+  }
+});

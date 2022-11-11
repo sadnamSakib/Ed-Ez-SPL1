@@ -27,5 +27,13 @@
                 $url = "http://";   
             return $url.$_SERVER['HTTP_HOST'] . '/SWE4304_Ed-Ez-SPL1/code/';
         }
+
+        public static function getFTPServerRoot(){   
+            return 'C:/xampp/htdocs/Files/pdf/';
+        }
+
+        public static function getFTPServer(){   
+            return 'file:///C:\\xampp\\htdocs\\Files\\pdf\\';
+        }
     }
 ?>
