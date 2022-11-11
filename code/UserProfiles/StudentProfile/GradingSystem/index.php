@@ -44,25 +44,29 @@ $email = new EmailValidator($_SESSION['email']);
     </section>
     <section class="content-section row justify-content-center">
       <div class="progressbars col-md-4 w-50">
-        <label>Attendance</label>
+        <label>Course-1</label>
         <div class="progress my-2">
           <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-label="Animated striped example" style="width: 90%" aria-valuenow="66.6" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
-        <label>Quiz</label>
+        <label>Course-2</label>
         <div class="progress my-2">
           <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-label="Animated striped example" style="width: 83%" aria-valuenow="66.6" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
-        <label>Assignment</label>
+        <label>Course-3</label>
         <div class="progress my-2">
           <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-label="Animated striped example" style="width: 88%" aria-valuenow="66.6" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
-        <label>Mid-Semester</label>
+        <label>Course-4</label>
         <div class="progress my-2">
           <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-label="Animated striped example" style="width: 74%" aria-valuenow="66.6" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
-        <label>Semester Final</label>
+        <label>Course-5</label>
         <div class=" progress my-2">
           <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-label="Animated striped example"  style="width: 65%" aria-valuenow="66.6" aria-valuemin="0" aria-valuemax="100"></div>
+        </div>
+        <label>Course-6</label>
+        <div class=" progress my-2">
+          <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-label="Animated striped example"  style="width: 53%" aria-valuenow="66.6" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
       </div>
 
