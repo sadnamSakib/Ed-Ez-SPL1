@@ -45,7 +45,6 @@ if(isset($_POST['quizSubmit'])){
     $quizEnd=date("d/m/Y h:i:s a", strtotime($quizEnd));
     $link=$fileManagement->get_file_url(URLPath::getFTPServer());
   $post_text="A Quiz has been added: <br> Title: $quiz_title <br> Start Date and Time: $quizStart <br> End Date and Time: $quizEnd <br> Marks: $marks <br>";
-    echo $post_text;
     $quizPost=new PostManagement($post_text,$email->get_email(),$classCode,$utility,$database);
   }
   
