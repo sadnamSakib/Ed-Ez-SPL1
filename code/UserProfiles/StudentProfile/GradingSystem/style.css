@@ -12,6 +12,10 @@ body{
   width : 200%;
 }
 
+.content-section.row{
+  margin-top: 10%;
+  margin-left: 5%;
+}
 
 .content{
   min-height: 100vh;
@@ -24,6 +28,10 @@ hr.h-color{
 
 .progress-bar.bg-success{
   background-color: #4596be!important;
+}
+.progress-bar{
+  animation: 3s;
+  animation-duration: 1s linear infinite;
 }
 .sidebar li.active{
   background: #eee;
