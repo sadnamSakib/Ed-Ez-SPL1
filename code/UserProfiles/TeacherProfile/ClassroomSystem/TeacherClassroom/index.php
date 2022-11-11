@@ -169,7 +169,7 @@ $allComments = $database->performQuery("SELECT * FROM comments,comment_post WHER
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h1 class="modal-title fs-5" id="exampleModalLabel">Create quiz</h1>
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">Create Test</h1>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -178,7 +178,7 @@ $allComments = $database->performQuery("SELECT * FROM comments,comment_post WHER
                       </div>
                       <form action="" method="POST" name="quizForm" id="quizForm" enctype="multipart/form-data">
                       <div class="mb-3">
-                          <label for="QuizTitle">Quiz Title :</label>
+                          <label for="QuizTitle">Test Title :</label>
                           <input type="text" class="form-control" id="QuizTitle" name="QuizTitle" placeholder="Enter Quiz Title" required>
                         </div>
                         <div class="mb-3">
@@ -228,7 +228,7 @@ $allComments = $database->performQuery("SELECT * FROM comments,comment_post WHER
                   <div class="modal-dialog">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Create assignment</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Create Assignment</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">

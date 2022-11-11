@@ -6,7 +6,10 @@ require $root_path . 'LibraryFiles/URLFinder/URLPath.php';
 require $root_path . 'LibraryFiles/SessionStore/session.php';
 require $root_path . 'LibraryFiles/Utility/Utility.php';
 require $root_path . 'LibraryFiles/ValidationPhp/InputValidation.php';
-$database->fetch_results($sysdate, "SELECT SYSDATE() AS DATE");
+foreach (glob($root_path .'LibraryFiles/ClassroomManager/*.php') as $filename)
+{
+    require $filename;
+}
 session::profile_not_set($root_path);
 $validate = new InputValidation();
 $classCode = $_SESSION['class_code'];
@@ -33,33 +36,15 @@ foreach ($allComments as $j) {
 
 $database->fetch_results($classroom_records, "SELECT * FROM classroom WHERE class_code = '$classCode' and active='1'");
 $database->fetch_results($teacher_records, "SELECT * FROM users,teacher_classroom,classroom WHERE users.email=teacher_classroom.email and classroom.class_code='$classCode'");
-if (isset($_REQUEST['post_msg']) && !is_null($_REQUEST['post_value'])) {
-  $post_date = $sysdate['DATE'];
-  $post_id = $utility->generateRandomString(50);
-  while (($database->performQuery("SELECT * FROM post WHERE post_id = '$post_id'"))->num_rows > 0) {
-    $post_id = $utility->generateRandomString(50);
-  }
-
-  $post_value = $validate->post_sanitise_text('post_value');
-  if (!is_null($post_value) && $post_value !== '') {
-    $database->performQuery("INSERT INTO post(post_id,email,post_datetime,post_message) VALUES('$post_id','" . $email->get_email() . "','$post_date','$post_value');");
-    $database->performQuery("INSERT INTO post_classroom(post_id,class_code) VALUES('$post_id','$classCode');");
-  }
+if (isset($_REQUEST['post_msg'])) {
+  $postManagement=new PostManagement($validate->post_sanitise_text('post_value'),$email->get_email(),$classCode,$utility,$database);
 }
 
 $posts = $database->performQuery("SELECT * FROM post,post_classroom WHERE post.post_id=post_classroom.post_id and post_classroom.class_code='$classCode' and active='1' order by post_datetime desc;");
 foreach ($posts as $i) {
   $post_id = $i['post_id'];
   if (isset($_REQUEST[$post_id . 'comment_msg'])) {
-    $comment_date = $sysdate['DATE'];
-    $comment_id = $utility->generateRandomString(50);
-    while (($database->performQuery("SELECT * FROM comments WHERE comment_id = '$comment_id'"))->num_rows > 0) {
-      $comment_id = $utility->generateRandomString(50);
-    }
-    $comment_text = $validate->post_sanitise_text($post_id . 'comment_text');
-    if (!is_null($comment_text) && $comment_text !== '') {
-      $database->performQuery("INSERT INTO comments(comment_id,email,post_id,comment_datetime,comment_message) VALUES('$comment_id','" . $email->get_email() . "','$post_id','$comment_date','$comment_text');");
-    }
+    $commentManager=new CommentManagement($validate->post_sanitise_text($post_id . 'comment_text'),$post_id,$email->get_email(),$utility,$database);
     unset($_REQUEST[$post_id . 'comment_msg']);
   }
 }
