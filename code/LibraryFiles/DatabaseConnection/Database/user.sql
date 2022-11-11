@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 30, 2022 at 04:51 PM
+-- Generation Time: Nov 11, 2022 at 01:33 PM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -29,11 +29,13 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `assignment` (
   `assignment_id` varchar(50) NOT NULL,
-  `event_id` varchar(50) DEFAULT NULL,
-  `institution` text DEFAULT NULL,
-  `semester` int(11) DEFAULT NULL,
-  `marks` int(11) DEFAULT NULL,
-  `question_url` text DEFAULT NULL
+  `assignment_title` text NOT NULL,
+  `event_id` varchar(50) NOT NULL,
+  `institution` text NOT NULL,
+  `semester` int(11) NOT NULL,
+  `marks` int(11) NOT NULL,
+  `instructions` text NOT NULL,
+  `file_id` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -84,8 +86,18 @@ CREATE TABLE `comments` (
   `comment_message` text NOT NULL,
   `comment_datetime` datetime NOT NULL,
   `email` varchar(200) NOT NULL,
-  `post_id` varchar(50) NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `comment_post`
+--
+
+CREATE TABLE `comment_post` (
+  `comment_id` varchar(50) NOT NULL,
+  `post_id` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -96,9 +108,20 @@ CREATE TABLE `comments` (
 
 CREATE TABLE `event` (
   `event_id` varchar(50) NOT NULL,
-  `event_datetime` datetime DEFAULT NULL,
-  `event_type` set('holiday','deadline') DEFAULT NULL,
-  `event_title` text DEFAULT NULL
+  `event_start_datetime` datetime NOT NULL,
+  `event_end_datetime` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `files`
+--
+
+CREATE TABLE `files` (
+  `file_id` varchar(50) NOT NULL,
+  `filename` text NOT NULL,
+  `file_ext` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -134,11 +157,13 @@ CREATE TABLE `post_classroom` (
 
 CREATE TABLE `quiz` (
   `quiz_id` varchar(50) NOT NULL,
-  `event_id` varchar(50) DEFAULT NULL,
-  `institution` text DEFAULT NULL,
-  `semester` int(11) DEFAULT NULL,
-  `marks` int(11) DEFAULT NULL,
-  `question_url` text DEFAULT NULL
+  `quiz_title` text NOT NULL,
+  `event_id` varchar(50) NOT NULL,
+  `institution` text NOT NULL,
+  `semester` int(11) NOT NULL,
+  `marks` int(11) NOT NULL,
+  `instructions` text DEFAULT NULL,
+  `file_id` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -262,7 +287,9 @@ CREATE TABLE `users` (
 -- Indexes for table `assignment`
 --
 ALTER TABLE `assignment`
-  ADD PRIMARY KEY (`assignment_id`);
+  ADD PRIMARY KEY (`assignment_id`),
+  ADD KEY `file_id` (`file_id`),
+  ADD KEY `fk_assignment_event` (`event_id`);
 
 --
 -- Indexes for table `assignment_classroom`
@@ -291,14 +318,26 @@ ALTER TABLE `classroom_creator`
 --
 ALTER TABLE `comments`
   ADD PRIMARY KEY (`comment_id`),
-  ADD KEY `fk_comments_users` (`email`),
-  ADD KEY `fk_comments_posts` (`post_id`);
+  ADD KEY `fk_comments_users` (`email`);
+
+--
+-- Indexes for table `comment_post`
+--
+ALTER TABLE `comment_post`
+  ADD PRIMARY KEY (`comment_id`),
+  ADD KEY `fk_comment_post_post` (`post_id`);
 
 --
 -- Indexes for table `event`
 --
 ALTER TABLE `event`
   ADD PRIMARY KEY (`event_id`);
+
+--
+-- Indexes for table `files`
+--
+ALTER TABLE `files`
+  ADD PRIMARY KEY (`file_id`);
 
 --
 -- Indexes for table `post`
@@ -318,7 +357,9 @@ ALTER TABLE `post_classroom`
 -- Indexes for table `quiz`
 --
 ALTER TABLE `quiz`
-  ADD PRIMARY KEY (`quiz_id`);
+  ADD PRIMARY KEY (`quiz_id`),
+  ADD KEY `file_id` (`file_id`),
+  ADD KEY `fk_quiz_event` (`event_id`);
 
 --
 -- Indexes for table `quiz_classroom`
@@ -352,7 +393,6 @@ ALTER TABLE `student`
 ALTER TABLE `student_classroom`
   ADD PRIMARY KEY (`email`,`class_code`),
   ADD UNIQUE KEY `email` (`email`,`class_code`),
-  ADD KEY `email_2` (`email`,`class_code`),
   ADD KEY `fk_student_classroom2` (`class_code`);
 
 --
@@ -367,8 +407,6 @@ ALTER TABLE `teacher`
 ALTER TABLE `teacher_classroom`
   ADD PRIMARY KEY (`email`,`class_code`),
   ADD UNIQUE KEY `email` (`email`,`class_code`),
-  ADD UNIQUE KEY `email_2` (`email`,`class_code`),
-  ADD KEY `email_3` (`email`,`class_code`),
   ADD KEY `fk_teacher_classroom2` (`class_code`);
 
 --
@@ -388,6 +426,13 @@ ALTER TABLE `users`
 --
 
 --
+-- Constraints for table `assignment`
+--
+ALTER TABLE `assignment`
+  ADD CONSTRAINT `assignment_ibfk_1` FOREIGN KEY (`file_id`) REFERENCES `files` (`file_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_assignment_event` FOREIGN KEY (`event_id`) REFERENCES `event` (`event_id`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `assignment_classroom`
 --
 ALTER TABLE `assignment_classroom`
@@ -405,8 +450,14 @@ ALTER TABLE `classroom_creator`
 -- Constraints for table `comments`
 --
 ALTER TABLE `comments`
-  ADD CONSTRAINT `fk_comments_posts` FOREIGN KEY (`post_id`) REFERENCES `post` (`post_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_comments_comment_post` FOREIGN KEY (`comment_id`) REFERENCES `comment_post` (`comment_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_comments_users` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `comment_post`
+--
+ALTER TABLE `comment_post`
+  ADD CONSTRAINT `fk_comment_post_post` FOREIGN KEY (`post_id`) REFERENCES `post` (`post_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `post`
@@ -420,6 +471,13 @@ ALTER TABLE `post`
 ALTER TABLE `post_classroom`
   ADD CONSTRAINT `fk_post_classroom` FOREIGN KEY (`post_id`) REFERENCES `post` (`post_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_post_classroom2` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `quiz`
+--
+ALTER TABLE `quiz`
+  ADD CONSTRAINT `fk_quiz_event` FOREIGN KEY (`event_id`) REFERENCES `event` (`event_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `quiz_ibfk_1` FOREIGN KEY (`file_id`) REFERENCES `files` (`file_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `quiz_classroom`

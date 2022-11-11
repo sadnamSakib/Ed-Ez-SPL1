@@ -41,6 +41,7 @@ if(isset($_POST['quizSubmit'])){
     $fileManagement=new FileManagement($_FILES['quizName']['name'],$_FILES['quizName']['tmp_name'],'pdf',$database,$utility);
     $insertquery ="INSERT INTO quiz(quiz_id,quiz_title,event_id,institution,semester,marks,file_id,instructions) VALUES('$quiz_id','$quiz_title','".$eventManagement->get_event_id()."','$institution','$semester','$marks','".$fileManagement->get_file_id()."','$instructions')";
     $database->performQuery($insertquery);  
+    $database->performQuery("INSERT INTO quiz_classroom(quiz_id,class_code) VALUES('$quiz_id','$classCode')");
     $quizStart=date("d/m/Y h:i:s a", strtotime($quizStart));
     $quizEnd=date("d/m/Y h:i:s a", strtotime($quizEnd));
     $link=$fileManagement->get_file_url(URLPath::getFTPServer());
@@ -72,6 +73,7 @@ if(isset($_POST['assignmentSubmit'])){
     $eventManagement = new EventManagement($assignmentStart,$assignmentEnd,$database,$utility);
    $fileManagement=new FileManagement($_FILES['assignmentName']['name'],$_FILES['assignmentName']['tmp_name'],'pdf',$database,$utility);
     $insertquery ="INSERT INTO assignment(assignment_id,assignment_title,event_id,institution,semester,marks,file_id,instructions) VALUES('$assignment_id','$assignment_title','".$eventManagement->get_event_id()."','$institution','$semester','$marks','".$fileManagement->get_file_id()."','$instructions')";
+    $database->performQuery("INSERT INTO assignment_classroom(assignment_id,class_code) VALUES('$assignment_id','$classCode')");
     $database->performQuery($insertquery);
     $assignmentEnd=date("d/m/Y h:i:s a", strtotime($assignmentEnd));
     $link=$fileManagement->get_file_url(URLPath::getFTPServer());

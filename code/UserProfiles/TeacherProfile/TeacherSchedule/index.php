@@ -74,7 +74,7 @@ $temp = hash('sha512', $_SESSION['email']);
       dayMaxEvents: true,
       events: [
         <?php 
-            $recordsQuiz=$database->performQuery("select * from event,quiz where event.event_id=quiz.event_id");
+            $recordsQuiz=$database->performQuery("select * from event,quiz,teacher_classroom,quiz_classroom where event.event_id=quiz.event_id and quiz_classroom.quiz_id=quiz.quiz_id and teacher_classroom.email='$temp' and teacher_classroom.class_code=quiz_classroom.class_code;");
             $first=false;
             foreach($recordsQuiz as $i){
               if(!$first){
@@ -94,7 +94,7 @@ $temp = hash('sha512', $_SESSION['email']);
             }
           ?>
            <?php 
-            $recordsAssignment=$database->performQuery("select * from event,assignment where event.event_id=assignment.event_id");
+            $recordsAssignment=$database->performQuery("select * from event,assignment,teacher_classroom,assignment_classroom where event.event_id=assignment.event_id and assignment_classroom.assignment_id=assignment.assignment_id and teacher_classroom.email='$temp' and teacher_classroom.class_code=assignment_classroom.class_code;");
             if($recordsQuiz->num_rows>0){
               echo ',';
             }
