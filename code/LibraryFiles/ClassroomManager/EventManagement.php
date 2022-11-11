@@ -2,13 +2,11 @@
 
  class EventManagement{
     private $event_id;
-    private $startDateTime;
-    private $endDateTime;
+    private $deadline;
     private $database;
-    function __construct($startDateTime,$endDateTime,$database,$utility)
+    function __construct($deadline,$database,$utility)
     {
-        $this->startDateTime = $startDateTime;
-        $this->endDateTime = $endDateTime;
+        $this->deadline = $deadline;
         $this->database = $database;
         $this->utility = $utility;
         $event_id = $utility->generateRandomString(10);
@@ -24,11 +22,16 @@
 
     private function addEvent()
     {
-        $this->database->performQuery("insert into event(event_id,event_start_datetime,event_end_datetime) values('$this->event_id','$this->startDateTime','$this->endDateTime')");
+        $this->database->performQuery("insert into event(event_id,event_start_datetime,event_end_datetime) values('$this->event_id','".$this->get_system_date()."','$this->deadline')");
     }
 
     public function get_event_id(){
         return $this->event_id;
       }
+
+      private function get_system_date(){
+        $this->database->fetch_results($this->system_date,"SELECT SYSDATE() AS DATE");
+        return $this->system_date['DATE'];
+    }
  }
 ?>

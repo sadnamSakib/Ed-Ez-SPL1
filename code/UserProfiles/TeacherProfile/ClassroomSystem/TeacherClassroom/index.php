@@ -19,66 +19,32 @@ if ($authentication->num_rows == 0) {
   session::redirectProfile('teacher');
 }
 
-if(isset($_POST['quizSubmit'])){
-  $quiz_id = $utility->generateRandomString(10);
-  $existence = $database->performQuery("SELECT * FROM quiz where quiz_id='$quiz_id'");
+if(isset($_POST['taskSubmit'])){
+  $task_id = $utility->generateRandomString(10);
+  $existence = $database->performQuery("SELECT * FROM task where task_id='$task_id'");
   while ($existence->num_rows > 0) {
-    $quiz_id = $utility->generateRandomString(10);
-    $existence = $database->performQuery("SELECT * FROM quiz where quiz_id='$quiz_id'");
+    $task_id = $utility->generateRandomString(10);
+    $existence = $database->performQuery("SELECT * FROM task where task_id='$task_id'");
   }
-  $quiz_title=$_REQUEST['QuizTitle'];
-  $quizStart=$_REQUEST['quizStart'];
-  $quizEnd=$_REQUEST['quizEnd'];
+  $task_title=$_REQUEST['TaskTitle'];
+  $Deadline=$_REQUEST['Deadline'];
   $marks=$_REQUEST['Marks'];
   $database->fetch_results($row,"select * from classroom where class_code='$classCode'");
   $semester=$row['semester'];
   $instructions=$validate->post_sanitise_regular_input('instruction');
   $database->fetch_results($row,"select * from users where email='".$email->get_email()."'");
   $institution=$row['institution'];
-  if (isset($_FILES['quizName']['name']))
+  if (isset($_FILES['taskName']['name']))
   {
-    $eventManagement = new EventManagement($quizStart,$quizEnd,$database,$utility);
-    $fileManagement=new FileManagement($_FILES['quizName']['name'],$_FILES['quizName']['tmp_name'],'pdf',$database,$utility);
-    $insertquery ="INSERT INTO quiz(quiz_id,quiz_title,event_id,institution,semester,marks,file_id,instructions) VALUES('$quiz_id','$quiz_title','".$eventManagement->get_event_id()."','$institution','$semester','$marks','".$fileManagement->get_file_id()."','$instructions')";
+    $eventManagement = new EventManagement($Deadline,$database,$utility);
+    $fileManagement=new FileManagement($_FILES['taskName']['name'],$_FILES['taskName']['tmp_name'],'pdf',$database,$utility);
+    $insertquery ="INSERT INTO task(task_id,task_title,event_id,institution,semester,marks,file_id,instructions) VALUES('$task_id','$task_title','".$eventManagement->get_event_id()."','$institution','$semester','$marks','".$fileManagement->get_file_id()."','$instructions')";
     $database->performQuery($insertquery);  
-    $database->performQuery("INSERT INTO quiz_classroom(quiz_id,class_code) VALUES('$quiz_id','$classCode')");
-    $quizStart=date("d/m/Y h:i:s a", strtotime($quizStart));
-    $quizEnd=date("d/m/Y h:i:s a", strtotime($quizEnd));
+    $database->performQuery("INSERT INTO task_classroom(task_id,class_code) VALUES('$task_id','$classCode')");
+    $Deadline=date("d/m/Y h:i:s a", strtotime($Deadline));
     $link=$fileManagement->get_file_url(URLPath::getFTPServer());
-    $post_text="A Quiz has been added: <br> Title: $quiz_title <br> Start Date and Time: $quizStart <br> End Date and Time: $quizEnd <br> Marks: $marks <br> Question Link: <a href=\"$link\" target=\"__blank\">Link</a>";
-    $quizPost=new PostManagement($post_text,$email->get_email(),$classCode,$utility,$database);
-  }
-  
-}
-
-if(isset($_POST['assignmentSubmit'])){
-  $assignment_id = $utility->generateRandomString(10);
-  $existence = $database->performQuery("SELECT * FROM assignment where assignment_id='$assignment_id'");
-  while ($existence->num_rows > 0) {
-    $assignment_id = $utility->generateRandomString(10);
-    $existence = $database->performQuery("SELECT * FROM assignment where assignment_id='$assignment_id'");
-  }
-  $database->fetch_results($sysdate,"SELECT SYSDATE() AS DATE");
-  $assignmentStart=$sysdate['DATE'];
-  $assignment_title=$_REQUEST['AssignmentTitle'];
-  $assignmentEnd=$_REQUEST['assignmentDeadline'];
-  $marks=$_REQUEST['AssignmentMarks'];
-  $database->fetch_results($row,"select * from classroom where class_code='$classCode'");
-  $semester=$row['semester'];
-  $instructions=$validate->post_sanitise_regular_input('instruction');
-  $database->fetch_results($row,"select * from users where email='".$email->get_email()."'");
-  $institution=$row['assignmentInstruction'];
-  if (isset($_FILES['assignmentName']['name']))
-  {
-    $eventManagement = new EventManagement($assignmentStart,$assignmentEnd,$database,$utility);
-   $fileManagement=new FileManagement($_FILES['assignmentName']['name'],$_FILES['assignmentName']['tmp_name'],'pdf',$database,$utility);
-    $insertquery ="INSERT INTO assignment(assignment_id,assignment_title,event_id,institution,semester,marks,file_id,instructions) VALUES('$assignment_id','$assignment_title','".$eventManagement->get_event_id()."','$institution','$semester','$marks','".$fileManagement->get_file_id()."','$instructions')";
-    $database->performQuery("INSERT INTO assignment_classroom(assignment_id,class_code) VALUES('$assignment_id','$classCode')");
-    $database->performQuery($insertquery);
-    $assignmentEnd=date("d/m/Y h:i:s a", strtotime($assignmentEnd));
-    $link=$fileManagement->get_file_url(URLPath::getFTPServer());
-    $post_text="An Assignment has been added: <br> Title: $assignment_title <br> Deadline: $assignmentEnd <br> Marks: $marks <br> Question Link: <a href=\"$link\" target=\"__blank\">Link</a>";
-    $assignmentPost=new PostManagement($post_text,$email->get_email(),$classCode,$utility,$database);
+    $post_text="A Task has been assigned: <br> Title: $task_title <br>  Deadline: $Deadline <br> Marks: $marks <br> Question Link: <a href=\"$link\" target=\"__blank\">Link</a>";
+    $taskPost=new PostManagement($post_text,$email->get_email(),$classCode,$utility,$database);
   }
 }
 
@@ -113,6 +79,7 @@ foreach ($posts as $i) {
 }
 $allPost = $database->performQuery("SELECT * FROM post WHERE active='1';");
 $allComments = $database->performQuery("SELECT * FROM comments,comment_post WHERE comments.comment_id=comment_post.comment_id AND comments.active='1'");
+$allTasks=$database->performQuery("SELECT * FROM task,task_classroom,event WHERE task.event_id=event.event_id AND task.task_id=task_classroom.task_id AND task_classroom.class_code='$classCode' order by event.event_end_datetime ASC");
 ?>
 
 <!DOCTYPE html>
@@ -159,43 +126,48 @@ $allComments = $database->performQuery("SELECT * FROM comments,comment_post WHER
               <h4 style="text-align:center">Assigned Tasks</h4>
             </div>
             <div class="card-body ">
-              <p class="card-text" style="text-align:center">No assigned tasks.</p>
+              <?php
+                if($allTasks->num_rows==0){
+                  echo "<p class=\"card-text\" style=\"text-align:center\">No assigned tasks.</p>";
+                }
+                else{
+                  foreach($allTasks as $i){
+                    echo "<p class=\"card-text\" style=\"text-align:center\">".$i['task_title']."</p>";
+                    ?>
+                    <?php
+                  }
+                }
+              ?>
             </div>
           </div>
           <div class="card-footer row justify-content-center">
             <div class="d-flex flex-row justify-content-between">
-              <button type="button" class="btn btn-lg btn-outline-primary btn-join m-3" data-bs-toggle="modal" data-bs-target="#examplemodal1" data-bs-whatever="@fat">Create Quiz</button>
+              <button type="button" class="btn btn-lg btn-outline-primary btn-join m-3" data-bs-toggle="modal" data-bs-target="#examplemodal1" data-bs-whatever="@fat">Create Task</button>
               <div class="modal fade" id="examplemodal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h1 class="modal-title fs-5" id="exampleModalLabel">Create Test</h1>
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">Create Task</h1>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                       <div id="error" style="display:none">
 
                       </div>
-                      <form action="" method="POST" name="quizForm" id="quizForm" enctype="multipart/form-data">
+                      <form action="" method="POST" name="taskForm" id="taskForm" enctype="multipart/form-data">
                       <div class="mb-3">
-                          <label for="QuizTitle">Test Title :</label>
-                          <input type="text" class="form-control" id="QuizTitle" name="QuizTitle" placeholder="Enter Quiz Title" required>
+                          <label for="TaskTitle">Task Title :</label>
+                          <input type="text" class="form-control" id="TaskTitle" name="TaskTitle" placeholder="Enter Task Title" required>
                         </div>
                         <div class="mb-3">
-                          <label for="quizDateTime">Start Date and Time :</label>
-                          <input type="datetime-local" id="quizStart" name="quizStart" class="form-control" onclick="
+                          <label for="taskDateTime">Deadline :</label>
+                          <input type="datetime-local" id="Deadline" name="Deadline" class="form-control" onclick="
                             var dateString=new Date();
                             this.setAttribute('min',dateString);" required>
                         </div>
                         <div class="mb-3">
-                          <label for="endTime">End Date and Time :</label>
-                          <input type="datetime-local" id="quizEnd" name="quizEnd" class="form-control" onclick="
-                            var startDateTime=document.getElementById('quizStart').value;
-                            this.setAttribute('min',startDateTime);" required>
-                        </div>
-                        <div class="mb-3">
                           <label for="Marks">Marks :</label>
-                          <input type="number" class="form-control" id="quizMarks" name="Marks" placeholder="Enter Marks" onclick="
+                          <input type="number" class="form-control" id="taskMarks" name="Marks" placeholder="Enter Marks" onclick="
                         var value=document.getElementById('semester');
                         this.setAttribute('min',1);
                         this.setAttribute('max',4000);
@@ -203,73 +175,21 @@ $allComments = $database->performQuery("SELECT * FROM comments,comment_post WHER
                         </div>
                         <div class="mb-3">
                           <label for="message-text" class="col-form-label">Instruction :</label>
-                          <textarea class="form-control" id="message-text" name="instruction"></textarea>
+                          <textarea class="form-control" id="message-text" name="instruction" required></textarea>
                         </div>
                         <div class="input-group mb-2">
                           <div class="custom-file">
-                            <label class="mb-2" for="quizName">Upload Question Paper :</label>
-                              <input type="file" id="quizName" name="quizName" class="custom-file-input" accept=".pdf" required/>
+                            <label class="mb-2" for="taskName">Upload Question Paper :</label>
+                              <input type="file" id="taskName" name="taskName" class="custom-file-input" accept=".pdf" required/>
                             </div>
                         </div>
 
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <input type="submit" name="quizSubmit" value="Create" class="btn btn-primary btn-join">
+                      <input type="submit" name="taskSubmit" value="Create" class="btn btn-primary btn-join">
                     </div>
                     </form>
-                  </div>
-                </div>
-              </div>
-
-              <div class="d-flex flex-row justify-content-between">
-                <button type="button" class="btn btn-lg btn-outline-primary btn-join m-3" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@fat">Create Assignment</button>
-                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Create Assignment</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                        <form action='' id='assignmentForm' name='assignmentForm' method='POST' enctype="multipart/form-data">
-                          
-                          <div class="mb-3">
-                          <label for="AssignmentTitle">Assignment Title :</label>
-                          <input type="text" class="form-control" id="AssignmentTitle" name="AssignmentTitle" placeholder="Enter Assignment Title" required>
-                            </div>
-                          <div class="mb-3">
-                            <label for="assignmentDeadline">Submission Date and Time :</label>
-                            <input type="datetime-local" name="assignmentDeadline" class="form-control" onclick="
-                            var dateString2=new Date();
-                            this.setAttribute('min',dateString2);" required>
-                          </div>
-                          <div class="mb-3">
-                          <label for="Marks">Marks :</label>
-                          <input type="number" class="form-control" id="AssignmentMarks" name="AssignmentMarks" placeholder="Enter Marks" onclick="
-                            var value=document.getElementById('semester');
-                            this.setAttribute('min',1);
-                            this.setAttribute('max',4000);
-                            " required>
-                            </div>
-                          <div class="mb-3">
-                            <label for="message-text" class="col-form-label">Instruction :</label>
-                            <textarea class="form-control" id="message-text" name="assignmentInstruction"></textarea>
-                          </div>
-                          <div class="input-group mb-2">
-                            <div class="custom-file">
-                              <label class="mb-2" for="inputGroupFile02">Upload Assignment Question :</label>
-                              <input type="file" class="custom-file-input" id="inputGroupFile02" name="assignmentName" required>
-                            </div>
-                          </div>
-
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <input type='submit' name='assignmentSubmit' value='Create' class="btn btn-primary btn-join">
-                        </form>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
