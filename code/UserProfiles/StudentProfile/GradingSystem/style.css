@@ -13,8 +13,8 @@ body{
 }
 
 .content-section.row{
-  margin-top: 10%;
-  margin-left: 5%;
+  margin: auto;
+  padding-top: 20px;
 }
 
 .content{

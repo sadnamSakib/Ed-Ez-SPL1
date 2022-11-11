@@ -37,11 +37,13 @@ $email = new EmailValidator($_SESSION['email']);
     require $profile_path . 'navbar.php';
     student_navbar($root_path);
     ?>
-    <section class="content-section row justify-content-between w-75">
+    <section class="content-section row justify-content-center w-75">
       <div class="col-md-8">
         <canvas id="chartProgress"></canvas>
       </div>
-      <div class="progressbars col-md-4">
+    </section>
+    <section class="content-section row justify-content-center">
+      <div class="progressbars col-md-4 w-50">
         <label>Attendance</label>
         <div class="progress my-2">
           <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-label="Animated striped example" style="width: 90%" aria-valuenow="66.6" aria-valuemin="0" aria-valuemax="100"></div>
