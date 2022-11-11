@@ -44,7 +44,7 @@ if(isset($_POST['quizSubmit'])){
     $quizStart=date("d/m/Y h:i:s a", strtotime($quizStart));
     $quizEnd=date("d/m/Y h:i:s a", strtotime($quizEnd));
     $link=$fileManagement->get_file_url(URLPath::getFTPServer());
-  $post_text="A Quiz has been added: <br> Title: $quiz_title <br> Start Date and Time: $quizStart <br> End Date and Time: $quizEnd <br> Marks: $marks <br>";
+    $post_text="A Quiz has been added: <br> Title: $quiz_title <br> Start Date and Time: $quizStart <br> End Date and Time: $quizEnd <br> Marks: $marks <br> Question Link: <a href=\"$link\" target=\"__blank\">Link</a>";
     $quizPost=new PostManagement($post_text,$email->get_email(),$classCode,$utility,$database);
   }
   
@@ -73,6 +73,10 @@ if(isset($_POST['assignmentSubmit'])){
    $fileManagement=new FileManagement($_FILES['assignmentName']['name'],$_FILES['assignmentName']['tmp_name'],'pdf',$database,$utility);
     $insertquery ="INSERT INTO assignment(assignment_id,assignment_title,event_id,institution,semester,marks,file_id,instructions) VALUES('$assignment_id','$assignment_title','".$eventManagement->get_event_id()."','$institution','$semester','$marks','".$fileManagement->get_file_id()."','$instructions')";
     $database->performQuery($insertquery);
+    $assignmentEnd=date("d/m/Y h:i:s a", strtotime($assignmentEnd));
+    $link=$fileManagement->get_file_url(URLPath::getFTPServer());
+    $post_text="An Assignment has been added: <br> Title: $assignment_title <br> Deadline: $assignmentEnd <br> Marks: $marks <br> Question Link: <a href=\"$link\" target=\"__blank\">Link</a>";
+    $assignmentPost=new PostManagement($post_text,$email->get_email(),$classCode,$utility,$database);
   }
 }
 
