@@ -140,6 +140,14 @@ $allTasks=$database->performQuery("SELECT * FROM task,task_classroom,event WHERE
               ?>
             </div>
           </div>
+          <div class="card text-bg-primary  mb-3">
+            <div class="card-header task-card" style="height:50px">
+              <h4 style="text-align:center">Session Code</h4>
+            </div>
+            <div class="card-body ">
+              <p class="card-text" style="text-align:center">No Ongoing Sessions</p>
+            </div>
+          </div>
           <div class="card-footer row justify-content-center">
             <div class="d-flex flex-row justify-content-between">
               <button type="button" class="btn btn-lg btn-outline-primary btn-join m-3" data-bs-toggle="modal" data-bs-target="#examplemodal1" data-bs-whatever="@fat">Create Task</button>
@@ -183,13 +191,38 @@ $allTasks=$database->performQuery("SELECT * FROM task,task_classroom,event WHERE
                               <input type="file" id="taskName" name="taskName" class="custom-file-input" accept=".pdf" required/>
                             </div>
                         </div>
-
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                       <input type="submit" name="taskSubmit" value="Create" class="btn btn-primary btn-join">
                     </div>
                     </form>
+                  </div>
+                </div>
+              </div>
+              <div class="d-flex flex-row justify-content-between">
+                <button type="button" class="btn btn-lg btn-outline-primary btn-join m-3" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@fat">Create Session</button>
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Create Session</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        <form action='' id='assignmentForm' name='assignmentForm' method='POST' enctype="multipart/form-data">
+
+                          <div class="mb-3">
+                          <label for="SessionLink">Session Link :</label>
+                          <input type="text" class="form-control" id="SessionLink" name="SessionLink" placeholder="Enter Session Link" required>
+                            </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <input type='submit' name='assignmentSubmit' value='Create' class="btn btn-primary btn-join">
+                        </form>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
