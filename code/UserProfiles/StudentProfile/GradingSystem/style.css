@@ -12,6 +12,10 @@ body{
   width : 200%;
 }
 
+.content-section.row{
+  margin-top: 10%;
+  margin-left: 5%;
+}
 
 .content{
   min-height: 100vh;
