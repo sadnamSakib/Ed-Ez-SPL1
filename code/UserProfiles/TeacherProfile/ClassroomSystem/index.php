@@ -168,6 +168,13 @@ foreach ($classrooms as $dummy_classroom) {
                           <option value="16">16</option>
                         </select>
                       </div>
+                      <div class="mb-3">
+                        <input type="number" id="courseCredit" name="courseCredit" class="form-control" placeholder="Enter Course Credit" aria-label="Leave a comment" onclick="
+                    var value=document.getElementById('courseCredit');
+                    this.setAttribute('min',0);
+                    this.setAttribute('max',5);
+                    ">
+                      </div>
 
                   </div>
                   <div class="modal-footer">
