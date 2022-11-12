@@ -4,8 +4,10 @@
     private $event_id;
     private $deadline;
     private $database;
-    function __construct($deadline,$database,$utility)
+    private $startTime;
+    function __construct($startTime,$deadline,$database,$utility)
     {
+        $this->startTime=$startTime;
         $this->deadline = $deadline;
         $this->database = $database;
         $this->utility = $utility;
@@ -22,16 +24,17 @@
 
     private function addEvent()
     {
-        $this->database->performQuery("insert into event(event_id,event_start_datetime,event_end_datetime) values('$this->event_id','".$this->get_system_date()."','$this->deadline')");
+        $this->database->performQuery("insert into event(event_id,event_start_datetime,event_end_datetime) values('$this->event_id','$this->startTime','$this->deadline')");
     }
 
     public function get_event_id(){
         return $this->event_id;
       }
 
-      private function get_system_date(){
-        $this->database->fetch_results($this->system_date,"SELECT SYSDATE() AS DATE");
-        return $this->system_date['DATE'];
+      public static function get_system_date($database){
+        $system_date=null;
+        $database->fetch_results($system_date,"SELECT SYSDATE() AS DATE");
+        return $system_date['DATE'];
     }
  }
 ?>
