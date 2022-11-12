@@ -130,7 +130,26 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
                       <form name="<?php echo $i['task_id'].'form' ?>" action="" method="POST" enctype="multipart/form-data">
                         <div class="mb-3">
                           <label for="quizDate">Instructions :</label>
-                          <p>.......................................................................................................</p>
+                          <p id="taskInstructions"><?php echo $i['instructions'] ?></p>
+                        </div>
+                        <div class="mb-3">
+                          <?php $rows=$database->performQuery("SELECT * from student_task_submission WHERE task_id='".$i['task_id']."' AND email='".$email->get_email()."'") ?>
+                          <p id="status">
+                          Current Status: 
+                        <?php
+                          $status="Due";
+                          if($rows->num_rows>0){
+                            $database->fetch_results($status,"SELECT * from student_task_submission WHERE task_id='".$i['task_id']."' AND email='".$email->get_email()."'");
+                            if($status['submission_status']==='1'){
+                              $status="Submitted On Time";
+                            }
+                            else{
+                              $status="Late Submission";
+                            }
+                          }
+                          echo $status;
+                        ?>
+                        </p>
                         </div>
                         <div class="mb-3">
                           <label for="quizDate">Question paper :</label>
