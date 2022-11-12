@@ -48,6 +48,10 @@ if(isset($_POST['taskSubmit'])){
   }
 }
 
+if(isset($_POST['assignmentSubmit'])){
+  
+}
+
 $allPost = $database->performQuery("SELECT * FROM post WHERE active='1';");
 foreach ($allPost as $j) {
   $i = $j['post_id'];
@@ -223,6 +227,18 @@ $allTasks=$database->performQuery("SELECT * FROM task,task_classroom,event WHERE
                           <label for="SessionLink">Session Link :</label>
                           <input type="text" class="form-control" id="SessionLink" name="SessionLink" placeholder="Enter Session Link" required>
                             </div>
+                            <div class="mb-3">
+                          <label for="startTime">Start Date and Time :</label>
+                          <input type="datetime-local" id="quizStart" name="quizStart" class="form-control" onclick="
+                            var dateString2=new Date();
+                            this.setAttribute('min',dateString2);" required>
+                        </div>
+                        <div class="mb-3">
+                          <label for="endTime">End Date and Time :</label>
+                          <input type="datetime-local" id="quizEnd" name="quizEnd" class="form-control" onclick="
+                            var startDateTime=document.getElementById('quizStart').value;
+                            this.setAttribute('min',startDateTime);" required>
+                        </div>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
