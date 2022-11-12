@@ -50,6 +50,7 @@ foreach ($posts as $i) {
 }
 $allPost = $database->performQuery("SELECT * FROM post WHERE active='1'");
 $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'");
+$allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHERE task.event_id=event.event_id AND task.task_id=task_classroom.task_id AND task_classroom.class_code='$classCode' order by event.event_end_datetime ASC");
 ?>
 
 <!DOCTYPE html>
@@ -85,7 +86,11 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
             <h4 style="text-align:center">Pending Tasks</h4>
           </div>
           <div class="card-body ">
-            <p class="card-text" style="text-align:center">No pending tasks.</p>
+
+            <?php 
+            $database->fetch_results($record,"SELECT count(*)CountTask FROM task,task_classroom,event WHERE task.event_id=event.event_id AND task.task_id=task_classroom.task_id AND task_classroom.class_code='$classCode' order by event.event_end_datetime ASC");           
+            ?>
+            <p class="card-text" style="text-align:center"><?php echo $record['CountTask']!=0?$record['CountTask']." Tasks Pending":"No Tasks Pending" ?></p>
           </div>
           <div class="card-footer btn bx bxs-chevron-down w-100" type="button" data-bs-toggle="collapse" data-bs-target="#taskcollapse" aria-expanded="false" aria-controls="taskcollapse">
 
@@ -93,30 +98,32 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
 
           </div>
           <div class="collapse multi-collapse" id="taskcollapse">
-            <div class="card card-body my-2 btn" data-bs-toggle="modal" data-bs-target="#examplemodal1" data-bs-whatever="@fat">
-              <div class="modal fade" id="examplemodal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <?php 
+              foreach($allTasks as $i){
+          ?>
+            <div class="card card-body my-2 btn" data-bs-toggle="modal" data-bs-target="#<?php echo $i['task_id']."modal" ?>" data-bs-whatever="@fat">
+              <div class="modal fade" id="<?php echo $i['task_id']."modal" ?>" tabindex="-1" aria-labelledby="<?php echo $i['task_id'] ?>" aria-hidden="true">
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h1 class="modal-title fs-5" id="exampleModalLabel">Task1</h1>
+                      <h1 class="modal-title fs-5" id="<?php echo $i['task_id'] ?>"><?php echo $i['task_title'] ?></h1>
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                      <form action="" method="POST">
-
+                      <form name="<?php echo $i['task_id'].'form' ?>" action="" method="POST">
                         <div class="mb-3">
                           <label for="quizDate">Instructions :</label>
                           <p>.......................................................................................................</p>
                         </div>
                         <div class="mb-3">
                           <label for="quizDate">Question paper :</label>
-                          <a href="#">question</a>
+                          <a href="<?php echo FileManagement::get_file_url_static($database,URLPath::getFTPServer(),$i['file_id']) ?>" target="__blank">question</a>
                         </div>
 
                         <label class="mb-4" for="inputGroupFile02">Upload answer script :</label>
                         <div class="input-group mb-3 justify-content-center mx-5">
                           <div class="custom-file">
-                            <input type="file" class="custom-file-input" id="inputGroupFile02">
+                            <input type="file" name="<?php echo $i['task_id'].'ans' ?>" class="custom-file-input" id="inputGroupFile02">
                           </div>
                         </div>
 
@@ -129,10 +136,11 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
                   </div>
                 </div>
               </div>
-              Task 1
+              <?php echo $i['task_title'] ?>
             </div>
-            
-            
+            <?php
+                }
+            ?>          
           </div>
         </div>
       </div>
