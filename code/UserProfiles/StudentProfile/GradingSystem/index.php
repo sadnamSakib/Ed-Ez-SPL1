@@ -7,9 +7,11 @@ require $root_path . 'LibraryFiles/SessionStore/session.php';
 require $root_path . 'LibraryFiles/Utility/Utility.php';
 require $root_path . 'LibraryFiles/ValidationPhp/InputValidation.php';
 session::profile_not_set($root_path);
+$tableName = $_SESSION['tableName'];
+$email = new EmailValidator($_SESSION['email']);
 $validate = new InputValidation();
 $classCode = $_SESSION['class_code'];
-$email = new EmailValidator($_SESSION['email']);
+$classrooms = $database->performQuery("SELECT * FROM classroom,student_classroom where classroom.class_code=student_classroom.class_code and student_classroom.email='" . $email->get_email() . "' and active='1';");
 ?>
 
 <!DOCTYPE html>
@@ -44,10 +46,16 @@ $email = new EmailValidator($_SESSION['email']);
     </section>
     <section class="content-section row justify-content-center">
       <div class="progressbars col-md-4 w-50">
-        <label>Course-1</label>
-        <div class="progress my-2">
-          <div class="progress-bar progressBar1 progress-bar-animated bg-success" role="progressbar" style="width:0%" aria-valuenow="66.6" aria-valuemin="0" aria-valuemax="100"></div>
-        </div>
+        <?php
+        foreach ($classrooms as $i) {
+        ?>
+          <label><?php echo  $i['classroom_name'] ;?></label>
+          <div class="progress my-2">
+            <div class="progress-bar progressBar1 progress-bar-animated bg-success" role="progressbar" style="width:0%" aria-valuenow="66.6" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+        <?php 
+      } 
+      ?>
       </div>
 
     </section>
