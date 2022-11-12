@@ -37,16 +37,16 @@ session::profile_not_set($root_path);
     <section class="content-section m-auto px-5">
       <div class="container-fluid bg-white rounded mt-5 mb-5"></div>
       <!-- <h2 class="fs-5">Profile</h2> -->
-      <div class="card intro-card w-50 text-bg-secondary m-auto mb-3">
+      <div class="card intro-card w-75 text-bg-secondary m-auto mb-3">
         <div class="card-header">
           <h5 class="card-title" style="text-align:center">Submissions</h5>
         </div>
         <div class="card-body btn bx bxs-chevron-down w-100" type="button" data-bs-toggle="collapse" data-bs-target="#taskcollapse" aria-expanded="false" aria-controls="taskcollapse">
           </div>
             <div class="collapse multi-collapse" id="taskcollapse">
-                <div class="d-flex">
-                <div class="card card-body btn my-1 w-100" style="text-align:left">Zaara Zabeen Arpa</div>
-                <div class="mx-5 w-75 my-2">
+                <div class="flex-container">
+                <div class="card card-body btn my-2 w-50 me-2" style="text-align:left">Zaara Zabeen Arpa</div>
+                <div class="marks w-25 my-2 me-2">
                     <form class="py-2">
                     <input type="number" id="marks" name="marks" class="form-control" placeholder="Enter Marks" aria-label="Leave a comment" onclick="
                     var value=document.getElementById('marks');
@@ -55,12 +55,14 @@ session::profile_not_set($root_path);
                     ">
                     </form>
                 </div>
+                <button type="button" class="btn btn-primary btn-xs btn-join me-2 m-auto"><b>Submit</b></button>
                 </div>
                
-                <div class="d-flex">
-                <div class="card card-body btn my-1 w-100" style="text-align:left">Zaara Zabeen Arpa</div>
-                <div class="marks mx-5 w-75 my-2">
-                    <form>
+                <div class="collapse multi-collapse" id="taskcollapse">
+                <div class="flex-container">
+                <div class="card card-body btn my-2 w-50 me-2" style="text-align:left">Zaara Zabeen Arpa</div>
+                <div class="marks w-25 my-2 me-2">
+                    <form class="py-2">
                     <input type="number" id="marks" name="marks" class="form-control" placeholder="Enter Marks" aria-label="Leave a comment" onclick="
                     var value=document.getElementById('marks');
                     this.setAttribute('min',0);
@@ -68,8 +70,8 @@ session::profile_not_set($root_path);
                     ">
                     </form>
                 </div>
+                <button type="button" class="btn btn-primary btn-xs btn-join me-2 m-auto"><b>Submit</b></button>
                 </div>
-            </div>
         </div>
 
     </section>
