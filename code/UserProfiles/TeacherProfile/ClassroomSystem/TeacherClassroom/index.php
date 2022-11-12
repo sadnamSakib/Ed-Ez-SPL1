@@ -245,7 +245,8 @@ $allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHE
           <div class="card-body task-card" style="height:50px">
             <h4 style="text-align:center">Assigned Tasks</h4>
           </div>
-          <div class="card-footer btn bx bxs-chevron-down w-100" type="button" data-bs-toggle="collapse" data-bs-target="#taskcollapse" aria-expanded="false" aria-controls="taskcollapse"></div>
+          <div class="card-footer btn bx bxs-chevron-down w-100" type="button" data-bs-toggle="collapse" data-bs-target="#taskcollapse" aria-expanded="false" aria-controls="taskcollapse">
+          </div>
             <div class="collapse multi-collapse" id="taskcollapse">
             <?php
             if ($allTasks->num_rows == 0) {
@@ -253,28 +254,14 @@ $allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHE
             } else {
               foreach ($allTasks as $i) {
                 echo "<div class=\"collapse multi-collapse\" id=\"taskcollapse\"><div class=\"card card-body my-2 btn\" style=\"text-align:center\">" . $i['task_title'] . "</div></div>";
+
             ?>
             <?php
               }
             }
             ?>
-            
-          
-
-
-
-
-
         </div>
       </div>
-      <!-- <div class="card text-bg-primary  mb-3">
-          <div class="card-header task-card" style="height:50px">
-            <h4 style="text-align:center">Session Code</h4>
-          </div>
-          <div class="card-body ">
-            <p class="card-text" style="text-align:center;color:<?php echo $sessionError === false ? 'black' : 'red'; ?>"><?php echo $session; ?></p>
-          </div>
-        </div> -->
   </div>
 
   <div class="div1">
