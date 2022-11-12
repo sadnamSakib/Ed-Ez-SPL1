@@ -10,10 +10,10 @@
             $this->filename = $filename;
             $this->file_extension = $file_extension;
             $this->database = $database;
-            $file_id = $utility->generateRandomString(10);
+            $file_id = $utility->generateRandomString(50);
             $existence = $this->database->performQuery("SELECT * FROM files where file_id='$file_id'");
             while ($existence->num_rows > 0) {
-              $file_id = $utility->generateRandomString(10);
+              $file_id = $utility->generateRandomString(50);
               $existence = $this->database->performQuery("SELECT * FROM files where file_id='$file_id'");
             }
             $this->file_id=$file_id;

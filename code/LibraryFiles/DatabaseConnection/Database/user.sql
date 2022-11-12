@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 11, 2022 at 01:33 PM
+-- Generation Time: Nov 12, 2022 at 07:34 AM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -20,34 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Database: `user`
 --
-
--- --------------------------------------------------------
-
---
--- Table structure for table `assignment`
---
-
-CREATE TABLE `assignment` (
-  `assignment_id` varchar(50) NOT NULL,
-  `assignment_title` text NOT NULL,
-  `event_id` varchar(50) NOT NULL,
-  `institution` text NOT NULL,
-  `semester` int(11) NOT NULL,
-  `marks` int(11) NOT NULL,
-  `instructions` text NOT NULL,
-  `file_id` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `assignment_classroom`
---
-
-CREATE TABLE `assignment_classroom` (
-  `assignment_id` varchar(50) NOT NULL,
-  `class_code` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -73,6 +45,18 @@ CREATE TABLE `classroom_creator` (
   `email` varchar(200) NOT NULL,
   `class_code` varchar(20) NOT NULL,
   `creation_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `classroom_session`
+--
+
+CREATE TABLE `classroom_session` (
+  `class_code` varchar(20) NOT NULL,
+  `session` varchar(10) NOT NULL,
+  `event_id` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -152,34 +136,6 @@ CREATE TABLE `post_classroom` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `quiz`
---
-
-CREATE TABLE `quiz` (
-  `quiz_id` varchar(50) NOT NULL,
-  `quiz_title` text NOT NULL,
-  `event_id` varchar(50) NOT NULL,
-  `institution` text NOT NULL,
-  `semester` int(11) NOT NULL,
-  `marks` int(11) NOT NULL,
-  `instructions` text DEFAULT NULL,
-  `file_id` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `quiz_classroom`
---
-
-CREATE TABLE `quiz_classroom` (
-  `quiz_id` varchar(50) NOT NULL,
-  `class_code` varchar(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `resources`
 --
 
@@ -224,6 +180,59 @@ CREATE TABLE `student` (
 
 CREATE TABLE `student_classroom` (
   `email` varchar(200) NOT NULL,
+  `class_code` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `student_classroom_session`
+--
+
+CREATE TABLE `student_classroom_session` (
+  `email` varchar(200) NOT NULL,
+  `session` varchar(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `student_task_submission`
+--
+
+CREATE TABLE `student_task_submission` (
+  `email` varchar(200) NOT NULL,
+  `class_code` varchar(20) NOT NULL,
+  `task_id` varchar(50) NOT NULL,
+  `fild_id` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `task`
+--
+
+CREATE TABLE `task` (
+  `task_id` varchar(50) NOT NULL,
+  `task_title` text NOT NULL,
+  `event_id` varchar(50) NOT NULL,
+  `institution` text NOT NULL,
+  `semester` int(11) NOT NULL,
+  `marks` int(11) NOT NULL,
+  `instructions` text DEFAULT NULL,
+  `file_id` varchar(50) NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT 1
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `task_classroom`
+--
+
+CREATE TABLE `task_classroom` (
+  `task_id` varchar(50) NOT NULL,
   `class_code` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -284,21 +293,6 @@ CREATE TABLE `users` (
 --
 
 --
--- Indexes for table `assignment`
---
-ALTER TABLE `assignment`
-  ADD PRIMARY KEY (`assignment_id`),
-  ADD KEY `file_id` (`file_id`),
-  ADD KEY `fk_assignment_event` (`event_id`);
-
---
--- Indexes for table `assignment_classroom`
---
-ALTER TABLE `assignment_classroom`
-  ADD PRIMARY KEY (`assignment_id`,`class_code`),
-  ADD KEY `fk_assignment_classroom` (`class_code`);
-
---
 -- Indexes for table `classroom`
 --
 ALTER TABLE `classroom`
@@ -312,6 +306,12 @@ ALTER TABLE `classroom`
 ALTER TABLE `classroom_creator`
   ADD PRIMARY KEY (`email`,`class_code`),
   ADD KEY `fk_classroom_creator_classroom` (`class_code`);
+
+--
+-- Indexes for table `classroom_session`
+--
+ALTER TABLE `classroom_session`
+  ADD PRIMARY KEY (`session`);
 
 --
 -- Indexes for table `comments`
@@ -354,21 +354,6 @@ ALTER TABLE `post_classroom`
   ADD KEY `fk_post_classroom_user` (`class_code`);
 
 --
--- Indexes for table `quiz`
---
-ALTER TABLE `quiz`
-  ADD PRIMARY KEY (`quiz_id`),
-  ADD KEY `file_id` (`file_id`),
-  ADD KEY `fk_quiz_event` (`event_id`);
-
---
--- Indexes for table `quiz_classroom`
---
-ALTER TABLE `quiz_classroom`
-  ADD PRIMARY KEY (`quiz_id`,`class_code`),
-  ADD KEY `fk_quiz_classroom` (`class_code`);
-
---
 -- Indexes for table `resources`
 --
 ALTER TABLE `resources`
@@ -394,6 +379,33 @@ ALTER TABLE `student_classroom`
   ADD PRIMARY KEY (`email`,`class_code`),
   ADD UNIQUE KEY `email` (`email`,`class_code`),
   ADD KEY `fk_student_classroom2` (`class_code`);
+
+--
+-- Indexes for table `student_classroom_session`
+--
+ALTER TABLE `student_classroom_session`
+  ADD PRIMARY KEY (`email`,`session`);
+
+--
+-- Indexes for table `student_task_submission`
+--
+ALTER TABLE `student_task_submission`
+  ADD PRIMARY KEY (`email`,`task_id`);
+
+--
+-- Indexes for table `task`
+--
+ALTER TABLE `task`
+  ADD PRIMARY KEY (`task_id`),
+  ADD KEY `file_id` (`file_id`),
+  ADD KEY `fk_task_event` (`event_id`);
+
+--
+-- Indexes for table `task_classroom`
+--
+ALTER TABLE `task_classroom`
+  ADD PRIMARY KEY (`task_id`,`class_code`),
+  ADD KEY `fk_quiz_classroom` (`class_code`);
 
 --
 -- Indexes for table `teacher`
@@ -424,20 +436,6 @@ ALTER TABLE `users`
 --
 -- Constraints for dumped tables
 --
-
---
--- Constraints for table `assignment`
---
-ALTER TABLE `assignment`
-  ADD CONSTRAINT `assignment_ibfk_1` FOREIGN KEY (`file_id`) REFERENCES `files` (`file_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_assignment_event` FOREIGN KEY (`event_id`) REFERENCES `event` (`event_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `assignment_classroom`
---
-ALTER TABLE `assignment_classroom`
-  ADD CONSTRAINT `fk_assignment_classroom` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_assignment_classroom2` FOREIGN KEY (`assignment_id`) REFERENCES `assignment` (`assignment_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `classroom_creator`
@@ -473,20 +471,6 @@ ALTER TABLE `post_classroom`
   ADD CONSTRAINT `fk_post_classroom2` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE;
 
 --
--- Constraints for table `quiz`
---
-ALTER TABLE `quiz`
-  ADD CONSTRAINT `fk_quiz_event` FOREIGN KEY (`event_id`) REFERENCES `event` (`event_id`) ON DELETE CASCADE,
-  ADD CONSTRAINT `quiz_ibfk_1` FOREIGN KEY (`file_id`) REFERENCES `files` (`file_id`) ON DELETE CASCADE;
-
---
--- Constraints for table `quiz_classroom`
---
-ALTER TABLE `quiz_classroom`
-  ADD CONSTRAINT `fk_quiz_classroom` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE,
-  ADD CONSTRAINT `fk_quiz_classroom2` FOREIGN KEY (`quiz_id`) REFERENCES `quiz` (`quiz_id`) ON DELETE CASCADE;
-
---
 -- Constraints for table `resources_classroom`
 --
 ALTER TABLE `resources_classroom`
@@ -505,6 +489,21 @@ ALTER TABLE `student`
 ALTER TABLE `student_classroom`
   ADD CONSTRAINT `fk_student_classroom` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_student_classroom2` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `task`
+--
+ALTER TABLE `task`
+  ADD CONSTRAINT `fk_quiz_event` FOREIGN KEY (`event_id`) REFERENCES `event` (`event_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_task_event` FOREIGN KEY (`event_id`) REFERENCES `event` (`event_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `task_ibfk_1` FOREIGN KEY (`file_id`) REFERENCES `files` (`file_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `task_classroom`
+--
+ALTER TABLE `task_classroom`
+  ADD CONSTRAINT `fk_quiz_classroom` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_quiz_classroom2` FOREIGN KEY (`task_id`) REFERENCES `task` (`task_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `teacher`

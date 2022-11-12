@@ -20,10 +20,10 @@ if ($authentication->num_rows == 0) {
 }
 
 if(isset($_POST['taskSubmit'])){
-  $task_id = $utility->generateRandomString(10);
+  $task_id = $utility->generateRandomString(50);
   $existence = $database->performQuery("SELECT * FROM task where task_id='$task_id'");
   while ($existence->num_rows > 0) {
-    $task_id = $utility->generateRandomString(10);
+    $task_id = $utility->generateRandomString(50);
     $existence = $database->performQuery("SELECT * FROM task where task_id='$task_id'");
   }
   $task_title=$_REQUEST['TaskTitle'];
@@ -36,7 +36,7 @@ if(isset($_POST['taskSubmit'])){
   $institution=$row['institution'];
   if (isset($_FILES['taskName']['name']))
   {
-    $eventManagement = new EventManagement($Deadline,$database,$utility);
+    $eventManagement = new EventManagement(EventManagement::get_system_date($database),$Deadline,$database,$utility);
     $fileManagement=new FileManagement($_FILES['taskName']['name'],$_FILES['taskName']['tmp_name'],'pdf',$database,$utility);
     $insertquery ="INSERT INTO task(task_id,task_title,event_id,institution,semester,marks,file_id,instructions) VALUES('$task_id','$task_title','".$eventManagement->get_event_id()."','$institution','$semester','$marks','".$fileManagement->get_file_id()."','$instructions')";
     $database->performQuery($insertquery);  
@@ -47,6 +47,45 @@ if(isset($_POST['taskSubmit'])){
     $taskPost=new PostManagement($post_text,$email->get_email(),$classCode,$utility,$database);
   }
 }
+
+$session="No ongoing sessions";
+$sessionError=false;
+if(isset($_POST['sessionSubmit'])){
+    $session=$utility->generateRandomString(10);
+    $existence=$database->performQuery("SELECT * FROM classroom_session WHERE session='$session'");
+    while($existence->num_rows>0){
+      $session=$utility->generateRandomString(10);
+      $existence=$database->performQuery("SELECT * FROM classroom_session WHERE session='$session'");
+    }
+    $startTime=$_REQUEST['sessionStart'];
+    $endTime=$_REQUEST['sessionEnd'];
+    $eventManagement = new EventManagement($startTime,$endTime,$database,$utility);
+    $database->performQuery("INSERT INTO classroom_session VALUES('$classCode','$session','".$eventManagement->get_event_id()."')");
+    $post_text="A Classroom Session Has Been Posted";
+    $online=$_REQUEST['online'];
+    $offline=$_REQUEST['offline'];
+    $sessionLink=null;
+    if($online==="online"){
+      $sessionLink=$_REQUEST['SessionLink'];
+      if($sessionLink==null || $sessionLink===""){
+        $sessionError=true;
+      }
+      $sessionLink="<a href=\"$sessionLink\" target=\"__blank\">[Click Here]</a>";
+      $post_text=$post_text.", Online Session Link: ".$sessionLink.". ";
+    }
+    else{
+      $post_text=$post_text." Session is an offline session. ";
+    }
+    $post_text=$post_text."<br> Start Date and Time: $startTime <br> End Date and Time: $endTime <br>";
+    if($online==="online" && $sessionError==true){
+        $database->performQuery("DELETE FROM classroom_session WHERE session='$session'");
+        $session="No Session Links Provided";
+    }
+    else{
+      $sessionPost=new PostManagement($post_text,$email->get_email(),$classCode,$utility,$database);
+    }
+}
+
 
 $allPost = $database->performQuery("SELECT * FROM post WHERE active='1';");
 foreach ($allPost as $j) {
@@ -145,7 +184,7 @@ $allTasks=$database->performQuery("SELECT * FROM task,task_classroom,event WHERE
               <h4 style="text-align:center">Session Code</h4>
             </div>
             <div class="card-body ">
-              <p class="card-text" style="text-align:center">No Ongoing Sessions</p>
+              <p class="card-text" style="text-align:center;color:<?php echo $sessionError===false?'black':'red';?>"><?php echo $session; ?></p>
             </div>
           </div>
           <div class="card-footer row justify-content-center">
@@ -194,7 +233,7 @@ $allTasks=$database->performQuery("SELECT * FROM task,task_classroom,event WHERE
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <input type="submit" name="taskSubmit" value="Create" class="btn btn-primary btn-join">
+                      <input type="submit" name="taskSubmit" value="Create Task" class="btn btn-primary btn-join">
                     </div>
                     </form>
                   </div>
@@ -210,7 +249,7 @@ $allTasks=$database->performQuery("SELECT * FROM task,task_classroom,event WHERE
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
-                        <form action='' id='sessionForm' name='sessionForm' method='POST' enctype="multipart/form-data">
+                        <form action='' method='POST' id='sessionForm' name='sessionForm'>
                           <div class="mb-3">
                           <label for="online">Online Session</label>
                           <input type="radio" name="online" value="online" id="online" onclick="document.getElementById('sessionURL').style.display='block';document.getElementById('offline').checked=false;">
@@ -221,14 +260,26 @@ $allTasks=$database->performQuery("SELECT * FROM task,task_classroom,event WHERE
                           </div>
                           <div class="mb-3" style="display:none" id="sessionURL">
                           <label for="SessionLink">Session Link :</label>
-                          <input type="text" class="form-control" id="SessionLink" name="SessionLink" placeholder="Enter Session Link" required>
+                          <input type="text" class="form-control" id="SessionLink" name="SessionLink" placeholder="Enter Session Link">
                             </div>
+                            <div class="mb-3">
+                          <label for="startTime">Start Date and Time :</label>
+                          <input type="datetime-local" id="sessionStart" name="sessionStart" class="form-control" onclick="
+                            var dateString2=new Date();
+                            this.setAttribute('min',dateString2);" required>
+                        </div>
+                        <div class="mb-3">
+                          <label for="endTime">End Date and Time :</label>
+                          <input type="datetime-local" id="sessionEnd" name="sessionEnd" class="form-control" onclick="
+                            var startDateTime=document.getElementById('sessionStart').value;
+                            this.setAttribute('min',startDateTime);" required>
+                        </div>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <input type='submit' name='sessionSubmit' value='Create' class="btn btn-primary btn-join">
-                        </form>
+                        <input type="submit" name="sessionSubmit" value="Create Session" class="btn btn-primary btn-join">
                       </div>
+                    </form>
                     </div>
                   </div>
                 </div>

@@ -208,7 +208,7 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
               <div>
                 <button class="btn btn-dark w-100" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample<?php echo $i['post_id'] ?>" aria-expanded="false" aria-controls="collapseExample">
                   <?php
-                  $database->fetch_results($comments, "SELECT count(*)count_comments FROM comments WHERE post_id='" . $i['post_id'] . "' and active='1'");
+                  $database->fetch_results($comments, "SELECT count(*)count_comments FROM comments,comment_post WHERE comment_post.post_id='" . $i['post_id'] . "' AND comments.comment_id=comment_post.comment_id AND active='1'");
                   echo $comments['count_comments'] . " comments";
 
                   ?>
@@ -217,7 +217,7 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
               <div class="collapse multi-collapse" id="collapseExample<?php echo $i['post_id'] ?>">
                 <?php
                 $post_id = $i['post_id'];
-                $sql = $database->performQuery("SELECT * FROM comments WHERE post_id='" . $post_id . "' and active='1' order by comment_datetime desc;");
+                $sql = $database->performQuery("SELECT * FROM comments,comment_post WHERE comments.comment_id=comment_post.comment_id AND comment_post.post_id='" . $post_id . "' and comments.active='1' order by comments.comment_datetime desc");
                 foreach ($sql as $j) {
                   $comment_id = $j['comment_id'];
                   $users_email = $j['email'];
