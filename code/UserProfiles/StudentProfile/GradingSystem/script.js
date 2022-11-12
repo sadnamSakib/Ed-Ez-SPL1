@@ -52,7 +52,5 @@
     }
   });
 
-$(".progress-bar.progressBar1").animate({
-    width: "70%",
-}, 250);
+
 

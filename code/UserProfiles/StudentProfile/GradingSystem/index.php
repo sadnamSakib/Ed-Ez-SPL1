@@ -49,13 +49,18 @@ $classrooms = $database->performQuery("SELECT * FROM classroom,student_classroom
         <?php
         foreach ($classrooms as $i) {
         ?>
-          <label><?php echo  $i['classroom_name'] ;?></label>
+          <label><?php echo  $i['classroom_name']; ?></label>
           <div class="progress my-2">
-            <div class="progress-bar progressBar1 progress-bar-animated bg-success" role="progressbar" style="width:0%" aria-valuenow="66.6" aria-valuemin="0" aria-valuemax="100"></div>
+            <div class="progress-bar progressBar<?php echo  $i['class_code']; ?> progress-bar-animated bg-success" role="progressbar" style="width:0%" aria-valuenow="66.6" aria-valuemin="0" aria-valuemax="100"></div>
           </div>
-        <?php 
-      } 
-      ?>
+          <script>
+            $(".progress-bar.progressBar<?php echo  $i['class_code']; ?>").animate({
+              width: "70%",
+            }, 250);
+          </script>
+        <?php
+        }
+        ?>
       </div>
 
     </section>
