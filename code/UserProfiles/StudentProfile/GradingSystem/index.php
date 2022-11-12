@@ -72,7 +72,7 @@ $task =
       data: {
         datasets: [{
           label: 'Total percentage',
-          percent: (50 * 100) / 75,
+          percent: ((50 * 100) / 75),
           backgroundColor: ['#2f6d8b']
         }]
       },
