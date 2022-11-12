@@ -7,9 +7,12 @@ require $root_path . 'LibraryFiles/SessionStore/session.php';
 require $root_path . 'LibraryFiles/Utility/Utility.php';
 require $root_path . 'LibraryFiles/ValidationPhp/InputValidation.php';
 session::profile_not_set($root_path);
+$tableName = $_SESSION['tableName'];
+$email = new EmailValidator($_SESSION['email']);
 $validate = new InputValidation();
 $classCode = $_SESSION['class_code'];
-$email = new EmailValidator($_SESSION['email']);
+$task =
+  $classrooms = $database->performQuery("SELECT * FROM classroom,student_classroom where classroom.class_code=student_classroom.class_code and student_classroom.email='" . $email->get_email() . "' and active='1';");
 ?>
 
 <!DOCTYPE html>
@@ -44,15 +47,77 @@ $email = new EmailValidator($_SESSION['email']);
     </section>
     <section class="content-section row justify-content-center">
       <div class="progressbars col-md-4 w-50">
-        <label>Course-1</label>
-        <div class="progress my-2">
-          <div class="progress-bar progressBar1 progress-bar-animated bg-success" role="progressbar" style="width:0%" aria-valuenow="66.6" aria-valuemin="0" aria-valuemax="100"></div>
-        </div>
+        <?php
+        foreach ($classrooms as $i) {
+        ?>
+          <label><?php echo  $i['classroom_name']; ?></label>
+          <div class="progress my-2">
+            <div class="progress-bar progressBar<?php echo  $i['class_code']; ?> progress-bar-animated bg-success" role="progressbar" style="width:0%" aria-valuenow="66.6" aria-valuemin="0" aria-valuemax="100"></div>
+          </div>
+          <script>
+            $(".progress-bar.progressBar<?php echo  $i['class_code']; ?>").animate({
+              width: "70%",
+            }, 250);
+          </script>
+        <?php
+        }
+        ?>
       </div>
 
     </section>
   </div>
+  <script>
+    var myChartCircle = new Chart('chartProgress', {
+      type: 'doughnut',
+      data: {
+        datasets: [{
+          label: 'Total percentage',
+          percent: ((50 * 100) / 75),
+          backgroundColor: ['#2f6d8b']
+        }]
+      },
+      plugins: [{
+          beforeInit: (chart) => {
+            const dataset = chart.data.datasets[0];
+            chart.data.labels = [dataset.label];
+            dataset.data = [dataset.percent, 100 - dataset.percent];
+          }
+        },
+        {
+          beforeDraw: (chart) => {
+            var width = chart.chart.width,
+              height = chart.chart.height,
+              ctx = chart.chart.ctx;
+            ctx.restore();
+            var fontSize = (height / 90).toFixed(2);
+            ctx.font = fontSize + "em sans-serif";
+            ctx.fillStyle = "#9b9b9b";
+            ctx.textBaseline = "middle";
 
+
+
+            var text = chart.data.datasets[0].percent.toFixed(2);
+            textX = Math.round((width - ctx.measureText(text).width) / 2.2),
+              textY = height / 2;
+            ctx.fillText(text + "%", textX, textY);
+            ctx.save();
+          }
+        }
+      ],
+      options: {
+        maintainAspectRatio: false,
+        aspectRatio: 1,
+        cutoutPercentage: 80,
+        rotation: Math.PI / 2,
+        legend: {
+          display: false,
+        },
+        tooltips: {
+          filter: tooltipItem => tooltipItem.index == 0
+        }
+      }
+    });
+  </script>
 </body>
 
 </html>
