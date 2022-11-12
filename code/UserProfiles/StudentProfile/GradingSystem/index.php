@@ -1,6 +1,6 @@
 <?php
 $root_path = '../../../';
-$profile_path = '';
+$profile_path = '../';
 require $root_path . 'LibraryFiles/DatabaseConnection/config.php';
 require $root_path . 'LibraryFiles/URLFinder/URLPath.php';
 require $root_path . 'LibraryFiles/SessionStore/session.php';
