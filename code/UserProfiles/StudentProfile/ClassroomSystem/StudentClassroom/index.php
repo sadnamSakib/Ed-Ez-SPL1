@@ -48,9 +48,26 @@ foreach ($posts as $i) {
     unset($_REQUEST[$post_id . 'comment_msg']);
   }
 }
+$allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHERE task.event_id=event.event_id AND task.task_id=task_classroom.task_id AND task_classroom.class_code='$classCode' order by event.event_end_datetime ASC");
+foreach($allTasks as $i){
+  if(isset($_POST[$i['task_id'].'submit'])){
+    if (isset($_FILES[$i['task_id'].'ans']['name'])) {
+      $fileManagement = new FileManagement($_FILES[$i['task_id'].'ans']['name'], $_FILES[$i['task_id'].'ans']['tmp_name'], 'pdf', $database, $utility);
+      $database->fetch_results($system_date,"SELECT SYSDATE() AS DATE");
+      $database->fetch_results($records,"SELECT * FROM task,event WHERE task.event_id=event.event_id");
+      if($records['event_end_datetime']<=$sysdate['DATE']){
+        $database->performQuery("INSERT INTO student_task_submission(email,task_id,file_id,submission_status) VALUES('".$email->get_email()."','".$i['task_id']."','".$fileManagement->get_file_id()."','1')");
+      }
+      else{
+        $database->performQuery("INSERT INTO student_task_submission(email,task_id,file_id,submission_status) VALUES('".$email->get_email()."','".$i['task_id']."','".$fileManagement->get_file_id()."','0')");
+      }
+    }
+  }
+}
+
 $allPost = $database->performQuery("SELECT * FROM post WHERE active='1'");
 $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'");
-$allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHERE task.event_id=event.event_id AND task.task_id=task_classroom.task_id AND task_classroom.class_code='$classCode' order by event.event_end_datetime ASC");
+
 ?>
 
 <!DOCTYPE html>
@@ -110,7 +127,7 @@ $allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHE
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                      <form name="<?php echo $i['task_id'].'form' ?>" action="" method="POST">
+                      <form name="<?php echo $i['task_id'].'form' ?>" action="" method="POST" enctype="multipart/form-data">
                         <div class="mb-3">
                           <label for="quizDate">Instructions :</label>
                           <p>.......................................................................................................</p>
@@ -123,14 +140,14 @@ $allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHE
                         <label class="mb-4" for="inputGroupFile02">Upload answer script :</label>
                         <div class="input-group mb-3 justify-content-center mx-5">
                           <div class="custom-file">
-                            <input type="file" name="<?php echo $i['task_id'].'ans' ?>" class="custom-file-input" id="inputGroupFile02">
+                            <input type="file" name="<?php echo $i['task_id'].'ans';?>" class="custom-file-input" id="inputGroupFile02">
                           </div>
                         </div>
 
                     </div>
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <input type="submit" name="Join" value="Submit" class="btn btn-primary btn-join">
+                      <input type="submit" name="<?php echo $i['task_id'].'submit'?>" value="Submit" class="btn btn-primary btn-join">
                     </div>
                     </form>
                   </div>
