@@ -46,7 +46,7 @@ $email = new EmailValidator($_SESSION['email']);
       <div class="progressbars col-md-4 w-50">
         <label>Course-1</label>
         <div class="progress my-2">
-          <div class="progress-bar progressBar1  progress-bar-striped progress-bar-animated bg-success" role="progressbar" aria-label="Animated striped example" style="width:0%" aria-valuenow="66.6" aria-valuemin="0" aria-valuemax="100"></div>
+          <div class="progress-bar progressBar1 progress-bar-animated bg-success" role="progressbar" style="width:0%" aria-valuenow="66.6" aria-valuemin="0" aria-valuemax="100"></div>
         </div>
       </div>
 
