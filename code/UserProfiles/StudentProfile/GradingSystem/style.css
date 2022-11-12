@@ -33,6 +33,7 @@ hr.h-color{
   animation: 3s;
   animation-duration: 1s linear infinite;
 }
+
 .sidebar li.active{
   background: #eee;
   border-radius: 8px;
