@@ -159,7 +159,7 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
       </div>
 
 
-      <div class="div3 my-auto">
+      <div class="div3">
         <?php
 
         foreach ($posts as $i) {
@@ -256,7 +256,6 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
                           </form>
                         </div>
                       </div>
-
                     </div>
                   </div>
                 <?php
