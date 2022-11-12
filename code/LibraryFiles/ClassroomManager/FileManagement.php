@@ -34,6 +34,15 @@
           function get_file_id(){
             return $this->file_id;
           }
+
+          public static function get_file_url_static($database,$ftp_server,$file_id){
+            $records=null;
+            $database->fetch_results($records,"SELECT * FROM files WHERE file_id = '$file_id'");
+            if($records==null){
+              return "File Not Found";
+            }
+            return $ftp_server.$records['file_id'].'/'.$records['filename'];
+          }
     }
 
 ?>

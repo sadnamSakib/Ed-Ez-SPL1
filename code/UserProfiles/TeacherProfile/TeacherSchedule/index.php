@@ -74,9 +74,9 @@ $temp = hash('sha512', $_SESSION['email']);
       dayMaxEvents: true,
       events: [
         <?php 
-            $recordsQuiz=$database->performQuery("select * from event,quiz,teacher_classroom,quiz_classroom where event.event_id=quiz.event_id and quiz_classroom.quiz_id=quiz.quiz_id and teacher_classroom.email='$temp' and teacher_classroom.class_code=quiz_classroom.class_code;");
+            $recordsTask=$database->performQuery("select * from event,task,teacher_classroom,task_classroom where event.event_id=task.event_id and task_classroom.task_id=task.task_id and teacher_classroom.email='$temp' and teacher_classroom.class_code=task_classroom.class_code;");
             $first=false;
-            foreach($recordsQuiz as $i){
+            foreach($recordsTask as $i){
               if(!$first){
                 $first=true;
               }
@@ -86,30 +86,7 @@ $temp = hash('sha512', $_SESSION['email']);
           ?>
         {
           
-          title: '<?php echo $i['quiz_title']; ?>',
-          start: '<?php echo $i['event_start_datetime'];?>'
-          
-        }
-        <?php
-            }
-          ?>
-           <?php 
-            $recordsAssignment=$database->performQuery("select * from event,assignment,teacher_classroom,assignment_classroom where event.event_id=assignment.event_id and assignment_classroom.assignment_id=assignment.assignment_id and teacher_classroom.email='$temp' and teacher_classroom.class_code=assignment_classroom.class_code;");
-            if($recordsQuiz->num_rows>0){
-              echo ',';
-            }
-            $first=false;
-            foreach($recordsAssignment as $i){
-              if(!$first){
-                $first=true;
-              }
-              else{
-                echo ',';
-              }
-          ?>
-        {
-          
-          title: '<?php echo $i['assignment_title']; ?>',
+          title: '<?php echo $i['task_title']; ?>',
           start: '<?php echo $i['event_start_datetime'];?>'
           
         }
