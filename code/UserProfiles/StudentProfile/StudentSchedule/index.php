@@ -30,13 +30,13 @@ $temp = hash('sha512', $_SESSION['email']);
 
 <body>
 
-  <script src="<?php echo $root_path; ?>js/bootstrap.js"></script>
+<script src="<?php echo $root_path; ?>js/bootstrap.js"></script>
   <script src="main.min.js"></script>
   <div class="main-container d-flex">
-  <?php 
-      require $profile_path.'navbar.php';
-      student_navbar($root_path);
-    ?>
+      <?php 
+        require $profile_path.'navbar.php';
+        student_navbar($root_path);
+      ?>
       <div class="container">
       <div id='calendar'></div>
       </div>
@@ -54,8 +54,8 @@ $temp = hash('sha512', $_SESSION['email']);
       },
       
       navLinks: true, // can click day/week names to navigate views
-      selectable: false,
-      selectMirror: false,
+      selectable: true,
+      selectMirror: true,
       
       select: function(arg) {
         var title = prompt('Event Title:');
@@ -69,21 +69,33 @@ $temp = hash('sha512', $_SESSION['email']);
         }
         calendar.unselect()
       },
-      
-      editable: false,
-      dayMaxEvents: true, // allow "more" link when too many events
+      editable: true,
+      dayMaxEvents: true,
       events: [
+        <?php 
+            $recordsTask=$database->performQuery("select * from event,task,student_classroom,task_classroom where event.event_id=task.event_id and task_classroom.task_id=task.task_id and student_classroom.email='$temp' and student_classroom.class_code=task_classroom.class_code;");
+            $first=false;
+            foreach($recordsTask as $i){
+              if(!$first){
+                $first=true;
+              }
+              else{
+                echo ',';
+              }
+          ?>
         {
-          title: 'SPL progress Presentation',
-          start: '2022-10-19'
+          
+          title: '<?php echo $i['task_title']; ?>',
+          start: '<?php echo $i['event_start_datetime'];?>'
+          
         }
-        
+        <?php
+            }
+          ?>
       ]
     });
 
     calendar.render();
   });
-
-</script>
-
+  </script>
 </html>
