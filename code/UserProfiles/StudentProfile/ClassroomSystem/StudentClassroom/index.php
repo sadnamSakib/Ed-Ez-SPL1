@@ -228,8 +228,8 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
                       at <?php echo date("d/m/Y h:i:s a", strtotime($j['comment_datetime'])); ?>
 
                     </div>
-                    <div class="card card-body">
-
+                  <div class="card card-body">
+                    <div class="row">
                       <p class="col py-2"><?php echo $j['comment_message']; ?> </p>
                       <div class="dropdown col-lg-auto col-sm-6 col-md-3">
                         <?php

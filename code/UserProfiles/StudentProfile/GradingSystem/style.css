@@ -29,10 +29,8 @@ hr.h-color{
 .progress-bar.bg-success{
   background-color: #4596be!important;
 }
-.progress-bar{
-  animation: 3s;
-  animation-duration: 1s linear infinite;
-}
+
+
 .sidebar li.active{
   background: #eee;
   border-radius: 8px;
@@ -146,3 +144,4 @@ form i {
   margin-left: -30px;
   cursor: pointer;
 }
+
