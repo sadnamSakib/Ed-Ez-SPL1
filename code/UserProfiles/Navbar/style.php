@@ -7,6 +7,7 @@ function navstyle(){
         min-width: 25px;
         max-width: 250px;
         transition: all 0.3s;
+        z-index: 2;
         }
         .sidebar{
         width : 200%;
@@ -34,7 +35,7 @@ function navstyle(){
                 margin-left: -250px;
                 position: fixed;
                 min-height: 100vh;
-                z-index: 1;   
+                z-index: 2;   
             }
             #side_nav.active{
                 margin-left: 0;
