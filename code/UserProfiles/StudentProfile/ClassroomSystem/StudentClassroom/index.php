@@ -97,7 +97,7 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
     <section class="content-section parent px-2 py-2">
 
       <div class="div2">
-        <div class="card text-bg-primary  mb-3">
+        <div class="card text-bg-primary ">
           <div class="card-header task-card" style="height:50px">
             <h4 style="text-align:center">Tasks</h4>
           </div>
