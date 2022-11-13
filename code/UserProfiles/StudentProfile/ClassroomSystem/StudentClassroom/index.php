@@ -48,6 +48,7 @@ foreach ($posts as $i) {
     unset($_REQUEST[$post_id . 'comment_msg']);
   }
 }
+$submission_error=null;
 $allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHERE task.event_id=event.event_id AND task.task_id=task_classroom.task_id AND task_classroom.class_code='$classCode' order by event.event_end_datetime ASC");
 foreach($allTasks as $i){
   if(isset($_POST[$i['task_id'].'submit'])){
@@ -55,12 +56,18 @@ foreach($allTasks as $i){
       $fileManagement = new FileManagement($_FILES[$i['task_id'].'ans']['name'], $_FILES[$i['task_id'].'ans']['tmp_name'], 'pdf', $database, $utility);
       $database->fetch_results($system_date,"SELECT SYSDATE() AS DATE");
       $database->fetch_results($records,"SELECT * FROM task,event WHERE task.event_id=event.event_id");
-      if($records['event_end_datetime']<=$sysdate['DATE']){
+      $submissions=$database->performQuery("SELECT * FROM student_task_submission WHERE task_id='".$i['task_id']."' AND email='".$email->get_email()."'");
+      if($submissions->num_rows>0){
+        $submission_error="Task already submitted";
+        break;
+      }
+      if($records['event_end_datetime']>=$sysdate['DATE']){
         $database->performQuery("INSERT INTO student_task_submission(email,task_id,file_id,submission_status,marks_obtained) VALUES('".$email->get_email()."','".$i['task_id']."','".$fileManagement->get_file_id()."','1','0')");
       }
       else{
         $database->performQuery("INSERT INTO student_task_submission(email,task_id,file_id,submission_status,marks_obtained) VALUES('".$email->get_email()."','".$i['task_id']."','".$fileManagement->get_file_id()."','0','0')");
       }
+      break;
     }
   }
 }
@@ -127,6 +134,9 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
                       <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                      <div id="error" class="mb-3" style="display:<?php $submission_error==null?'none':'block' ?>;color:red">
+                            <?php echo $submission_error; ?>
+                      </div>
                       <form name="<?php echo $i['task_id'].'form' ?>" action="" method="POST" enctype="multipart/form-data">
                         <div class="mb-3">
                           <label for="quizDate">Instructions :</label>
@@ -155,7 +165,7 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
                           <p id="status">
                           Marks Obtained: 
                         <?php
-                          echo $status['marks_obtained'];
+                          echo $status['marks_obtained']===null?'Not Yet Checked':$status['marks_obtained'];
                         ?>
                         </p>
                         </div>
