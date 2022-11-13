@@ -78,11 +78,9 @@ $allTaskSubmissions=$database->performQuery("SELECT student_task_submission.subm
                   foreach($allTaskSubmissions as $i)
                   {
                 ?>
-                
-                <div class="card card-body btn my-2 w-50 me-2">
-                  <span style="text-align:left"><a href="<?php echo FileManagement::get_file_url_static($database,URLPath::getFTPServer(),$i['file_id'])?>" target="_blank" style="all:unset"><?php echo $i['name'] ?></a></span>
-                  <span style="text-align:left;color:<?php echo $i['submission_status']==='1'?'green':'red'?>"><?php echo $i['submission_status']==='1'?'Submitted In Time':'Late Submission' ?></span>
-                </div>
+                <a href="<?php echo FileManagement::get_file_url_static($database,URLPath::getFTPServer(),$i['file_id'])?>" target="_blank" class="card card-body btn my-2 w-50 me-2">
+                    <?php echo $i['name'] ?><text style="display:contents;text-align:right;color:<?php echo $i['submission_status']==='1'?'green':'red'?>"><?php echo $i['submission_status']==='1'?' Submitted In Time':' Submitted Late' ?></text>
+                </a>
                 <div class="marks w-25 my-2 me-2">
                 <form action="" method="POST" name="<?php echo $i['file_id']?>form" class="py-2">
                     <input type="hidden" name="<?php echo $i['file_id'] ?>email" value="<?php echo $i['email']?>">

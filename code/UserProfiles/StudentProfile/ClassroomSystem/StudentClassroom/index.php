@@ -54,14 +54,14 @@ foreach($allTasks as $i){
   if(isset($_POST[$i['task_id'].'submit'])){
     if (isset($_FILES[$i['task_id'].'ans']['name'])) {
       $fileManagement = new FileManagement($_FILES[$i['task_id'].'ans']['name'], $_FILES[$i['task_id'].'ans']['tmp_name'], 'pdf', $database, $utility);
-      $database->fetch_results($system_date,"SELECT SYSDATE() AS DATE");
       $database->fetch_results($records,"SELECT * FROM task,event WHERE task.event_id=event.event_id");
       $submissions=$database->performQuery("SELECT * FROM student_task_submission WHERE task_id='".$i['task_id']."' AND email='".$email->get_email()."'");
       if($submissions->num_rows>0){
         $submission_error="Task already submitted";
         break;
       }
-      if($records['event_end_datetime']>=$sysdate['DATE']){
+      $database->fetch_results($system_date,"SELECT SYSDATE() AS DATE");
+      if($records['event_end_datetime']>=$system_date['DATE']){
         $database->performQuery("INSERT INTO student_task_submission(email,task_id,file_id,submission_status) VALUES('".$email->get_email()."','".$i['task_id']."','".$fileManagement->get_file_id()."','1')");
       }
       else{
@@ -173,11 +173,14 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
                           <label for="quizDate">Question paper :</label>
                           <a href="<?php echo FileManagement::get_file_url_static($database,URLPath::getFTPServer(),$i['file_id']) ?>" target="__blank">question</a>
                         </div>
+                        <div class="mb-3">
+                          Deadline: <?php echo $i['event_end_datetime'] ?>
+                        </div>
 
                         <label class="mb-4" for="inputGroupFile02">Upload answer script :</label>
                         <div class="input-group mb-3 justify-content-center mx-5">
                           <div class="custom-file">
-                            <input type="file" name="<?php echo $i['task_id'].'ans';?>" class="custom-file-input" id="inputGroupFile02">
+                            <input type="file" name="<?php echo $i['task_id'].'ans';?>" class="custom-file-input" id="inputGroupFile02" required>
                           </div>
                         </div>
 
