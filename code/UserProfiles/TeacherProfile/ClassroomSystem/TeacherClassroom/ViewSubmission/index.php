@@ -27,16 +27,17 @@ else{
   $_SESSION['searchTask']=$searchTaskResult;
 }
 
-$allTaskSubmissions=$database->performQuery("SELECT student_task_submission.submission_status as submission_status, users.name as name,task.marks as marks,student_task_submission.marks_obtained as marks_obtained,users.email as email,student_task_submission.file_id as file_loc,student_task_submission.task_id as task_id from student_task_submission,users,task WHERE task.task_id=student_task_submission.task_id AND student_task_submission.task_id='$searchTaskResult' AND users.email=student_task_submission.email");
+$allTaskSubmissions=$database->performQuery("SELECT student_task_submission.submission_status as submission_status, users.name as name,task.marks as marks,student_task_submission.marks_obtained as marks_obtained,users.email as email,student_task_submission.file_id as file_id,student_task_submission.task_id as task_id from student_task_submission,users,task WHERE task.task_id=student_task_submission.task_id AND student_task_submission.task_id='$searchTaskResult' AND users.email=student_task_submission.email");
 foreach($allTaskSubmissions as $i){
-  if(isset($_REQUEST[$i['file_loc'].'submissionView'])){
-    $email=$_POST[$i['file_loc'].'email'];
-    $file_id=$_POST[$i['file_loc'].'file_id'];
-    $marksObtained=$_POST[$i['file_loc'].'marksObtained'];
+  if(isset($_REQUEST[$i['file_id'].'submissionView'])){
+    $email=$_POST[$i['file_id'].'email'];
+    $file_id=$_POST[$i['file_id'].'file_id'];
+    $marksObtained=$_POST[$i['file_id'].'marksObtained'];
     $task_id=$i['task_id'];
     $database->performQuery("UPDATE student_task_submission SET marks_obtained='$marksObtained' WHERE task_id='$task_id' AND email='$email' AND file_id='$file_id'");
   }
 }
+$allTaskSubmissions=$database->performQuery("SELECT student_task_submission.submission_status as submission_status, users.name as name,task.marks as marks,student_task_submission.marks_obtained as marks_obtained,users.email as email,student_task_submission.file_id as file_id,student_task_submission.task_id as task_id from student_task_submission,users,task WHERE task.task_id=student_task_submission.task_id AND student_task_submission.task_id='$searchTaskResult' AND users.email=student_task_submission.email");
 ?>
 
 <!DOCTYPE html>
@@ -77,24 +78,25 @@ foreach($allTaskSubmissions as $i){
                   foreach($allTaskSubmissions as $i)
                   {
                 ?>
+                
                 <div class="card card-body btn my-2 w-50 me-2">
-                  <span style="text-align:left"><a href="<?php echo FileManagement::get_file_url_static($database,URLPath::getFTPServer(),$i['file_loc'])?>" target="_blank" style="all:unset"><?php echo $i['name'] ?></a></span>
+                  <span style="text-align:left"><a href="<?php echo FileManagement::get_file_url_static($database,URLPath::getFTPServer(),$i['file_id'])?>" target="_blank" style="all:unset"><?php echo $i['name'] ?></a></span>
                   <span style="text-align:left;color:<?php echo $i['submission_status']==='1'?'green':'red'?>"><?php echo $i['submission_status']==='1'?'Submitted In Time':'Late Submission' ?></span>
                 </div>
                 <div class="marks w-25 my-2 me-2">
-                    <form name="<?php echo $i['file_loc'] ?>form" action="" method="POST" class="py-2">
-                    <input type="hidden" name="<?php echo $i['file_loc'] ?>email" value="<?php echo $i['email']?>">
-                    <input type="hidden" name="<?php echo $i['file_loc'] ?>file_id" value="<?php echo $i['file_loc']?>">
-                    <input type="number" id="marksObtained" name="<?php echo $i['file_loc'] ?>marksObtained" class="form-control" onclick="
+                <form action="" method="POST" name="<?php echo $i['file_id']?>form" class="py-2">
+                    <input type="hidden" name="<?php echo $i['file_id'] ?>email" value="<?php echo $i['email']?>">
+                    <input type="hidden" name="<?php echo $i['file_id'] ?>file_id" value="<?php echo $i['file_id']?>">
+                    <input type="number" id="marksObtained" name="<?php echo $i['file_id'] ?>marksObtained" class="form-control" onclick="
                     var value=document.getElementById('marksObtained');
                     this.setAttribute('min',0);
                     this.setAttribute('max',<?php echo $i['marks'] ?>);
                     " required placeholder="<?php echo $i['marks_obtained']===null?'Enter Marks':$i['marks_obtained'] ?>">
-                    
+                  </div>
+                  <div>
+                <input type="submit" name="<?php echo $i['file_id'] ?>submissionView" class="btn btn-primary btn-xs btn-join me-2 m-auto" value="Submit">
                 </div>
-                <input type="submit" name="<?php echo $i['file_loc'] ?>submissionView" class="btn btn-primary btn-xs btn-join me-2 m-auto" value="Submit">
-                </form>
-                </div>
+                  </form>
                 <?php
                   }
                 ?>
