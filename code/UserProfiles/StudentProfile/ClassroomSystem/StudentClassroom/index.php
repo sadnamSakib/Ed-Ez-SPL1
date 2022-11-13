@@ -62,10 +62,10 @@ foreach($allTasks as $i){
         break;
       }
       if($records['event_end_datetime']>=$sysdate['DATE']){
-        $database->performQuery("INSERT INTO student_task_submission(email,task_id,file_id,submission_status,marks_obtained) VALUES('".$email->get_email()."','".$i['task_id']."','".$fileManagement->get_file_id()."','1','0')");
+        $database->performQuery("INSERT INTO student_task_submission(email,task_id,file_id,submission_status) VALUES('".$email->get_email()."','".$i['task_id']."','".$fileManagement->get_file_id()."','1')");
       }
       else{
-        $database->performQuery("INSERT INTO student_task_submission(email,task_id,file_id,submission_status,marks_obtained) VALUES('".$email->get_email()."','".$i['task_id']."','".$fileManagement->get_file_id()."','0','0')");
+        $database->performQuery("INSERT INTO student_task_submission(email,task_id,file_id,submission_status) VALUES('".$email->get_email()."','".$i['task_id']."','".$fileManagement->get_file_id()."','0')");
       }
       break;
     }
