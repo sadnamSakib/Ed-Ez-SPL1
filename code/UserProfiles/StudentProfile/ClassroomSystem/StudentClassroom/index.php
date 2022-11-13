@@ -56,10 +56,10 @@ foreach($allTasks as $i){
       $database->fetch_results($system_date,"SELECT SYSDATE() AS DATE");
       $database->fetch_results($records,"SELECT * FROM task,event WHERE task.event_id=event.event_id");
       if($records['event_end_datetime']<=$sysdate['DATE']){
-        $database->performQuery("INSERT INTO student_task_submission(email,task_id,file_id,submission_status) VALUES('".$email->get_email()."','".$i['task_id']."','".$fileManagement->get_file_id()."','1')");
+        $database->performQuery("INSERT INTO student_task_submission(email,task_id,file_id,submission_status,marks_obtained) VALUES('".$email->get_email()."','".$i['task_id']."','".$fileManagement->get_file_id()."','1','0')");
       }
       else{
-        $database->performQuery("INSERT INTO student_task_submission(email,task_id,file_id,submission_status) VALUES('".$email->get_email()."','".$i['task_id']."','".$fileManagement->get_file_id()."','0')");
+        $database->performQuery("INSERT INTO student_task_submission(email,task_id,file_id,submission_status,marks_obtained) VALUES('".$email->get_email()."','".$i['task_id']."','".$fileManagement->get_file_id()."','0','0')");
       }
     }
   }
@@ -86,7 +86,6 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
   <?php require 'dropdownscript.php'; ?>
   <?php require 'dropdownstyle.php'; ?>
 </head>
-
 <body>
 
   <script src="<?php echo $root_path; ?>js/bootstrap.js"></script>
@@ -100,14 +99,15 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
       <div class="div2">
         <div class="card text-bg-primary  mb-3">
           <div class="card-header task-card" style="height:50px">
-            <h4 style="text-align:center">Pending Tasks</h4>
+            <h4 style="text-align:center">Tasks</h4>
           </div>
           <div class="card-body ">
 
             <?php 
-            $database->fetch_results($record,"SELECT count(*)CountTask FROM task,task_classroom,event WHERE task.event_id=event.event_id AND task.task_id=task_classroom.task_id AND task_classroom.class_code='$classCode' order by event.event_end_datetime ASC");           
+            $database->fetch_results($record,"SELECT count(*)CountTask FROM task,task_classroom,event WHERE task.event_id=event.event_id AND task.task_id=task_classroom.task_id AND task_classroom.class_code='$classCode' order by event.event_end_datetime ASC");
+            $database->fetch_results($value,"SELECT count(*)SubmissionCount FROM (SELECT distinct student_task_submission.email,student_task_submission.task_id FROM task,student_task_submission WHERE task.task_id=student_task_submission.task_id AND email='".$email->get_email()."') AS nested;");           
             ?>
-            <p class="card-text" style="text-align:center"><?php echo $record['CountTask']!=0?$record['CountTask']." Tasks Pending":"No Tasks Pending" ?></p>
+            <p class="card-text" style="text-align:center"><?php echo $record['CountTask']-$value['SubmissionCount']!=0?$record['CountTask']-$value['SubmissionCount']." Tasks Pending":"No Tasks Pending" ?></p>
           </div>
           <div class="card-footer btn bx bxs-chevron-down w-100" type="button" data-bs-toggle="collapse" data-bs-target="#taskcollapse" aria-expanded="false" aria-controls="taskcollapse">
 
@@ -137,17 +137,25 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
                           <p id="status">
                           Current Status: 
                         <?php
-                          $status="Due";
+                          $database->fetch_results($status,"SELECT * from student_task_submission WHERE task_id='".$i['task_id']."' AND email='".$email->get_email()."'");
+                          $current_submission_status="Due";
                           if($rows->num_rows>0){
-                            $database->fetch_results($status,"SELECT * from student_task_submission WHERE task_id='".$i['task_id']."' AND email='".$email->get_email()."'");
                             if($status['submission_status']==='1'){
-                              $status="Submitted On Time";
+                              $current_submission_status="Submitted On Time";
                             }
                             else{
-                              $status="Late Submission";
+                              $current_submission_status="Late Submission";
                             }
                           }
-                          echo $status;
+                          echo $current_submission_status;
+                        ?>
+                        </p>
+                        </div>
+                        <div class="mb-3">
+                          <p id="status">
+                          Marks Obtained: 
+                        <?php
+                          echo $status['marks_obtained'];
                         ?>
                         </p>
                         </div>

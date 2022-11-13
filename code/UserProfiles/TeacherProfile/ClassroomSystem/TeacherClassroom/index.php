@@ -142,8 +142,6 @@ $allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHE
     teacher_navbar($root_path);
     ?>
     <section class="content-section parent px-2 py-2">
-
-
       <div class="div2">
         <div class="card-header d-flex flex-row justify-content-between">
           <button type="button" class="btn btn-outline-primary btn-join m-3" data-bs-toggle="modal" data-bs-target="#examplemodal1" data-bs-whatever="@fat">Create Task</button>
@@ -245,6 +243,7 @@ $allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHE
           <div class="card-body task-card" style="height:50px">
             <h4 style="text-align:center">Assigned Tasks</h4>
           </div>
+          <form id="view" name="viewPage" action="ViewSubmission/index.php" method="POST">
           <div class="card-footer btn bx bxs-chevron-down w-100" type="button" data-bs-toggle="collapse" data-bs-target="#taskcollapse" aria-expanded="false" aria-controls="taskcollapse">
           </div>
             <div class="collapse multi-collapse" id="taskcollapse">
@@ -253,13 +252,14 @@ $allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHE
               echo "<div class=\"card-text\" style=\"text-align:center\">No assigned tasks.</div>";
             } else {
               foreach ($allTasks as $i) {
-                echo "<div class=\"collapse multi-collapse\" id=\"taskcollapse\"><div class=\"card card-body my-2 btn\" style=\"text-align:center\">" . $i['task_title'] . "</div></div>";
+                echo "<div class=\"collapse multi-collapse\" id=\"taskcollapse\"><div class=\"card card-body my-2 btn\" style=\"text-align:center\"><input type='submit' style='border:none;background:none;padding:0' name='".$i['task_id']."submit' value='".$i['task_title']."'></div></div>";
 
             ?>
             <?php
               }
             }
             ?>
+            </form>
         </div>
       </div>
       <div class="card text-bg-primary mb-3">

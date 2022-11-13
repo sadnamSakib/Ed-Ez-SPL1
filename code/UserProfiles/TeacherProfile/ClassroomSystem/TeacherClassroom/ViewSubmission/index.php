@@ -4,11 +4,29 @@ $profile_path = '../../../';
 require $root_path . 'LibraryFiles/DatabaseConnection/config.php';
 require $root_path . 'LibraryFiles/URLFinder/URLPath.php';
 require $root_path . 'LibraryFiles/SessionStore/session.php';
+require $root_path . 'LibraryFiles/Utility/Utility.php';
+require $root_path . 'LibraryFiles/ValidationPhp/InputValidation.php';
+foreach (glob($root_path . 'LibraryFiles/ClassroomManager/*.php') as $filename) {
+  require $filename;
+}
 $classCode = $_SESSION['class_code'];
 session::create_or_resume_session();
 session::profile_not_set($root_path);
-// $tableName=$_SESSION['table_name'];
-
+$allTasks=$database->performQuery("SELECT * from task");
+$searchTaskResult=$_SESSION['searchTask'];
+foreach($allTasks as $i){
+  if(isset($_POST[$i['task_id'].'submit'])){
+    $searchTaskResult=$i['task_id'];
+    break;
+  }
+}
+if($searchTaskResult==null){
+  header("Location: ../index.php");
+}
+else{
+  $_SESSION['searchTask']=$searchTaskResult;
+}
+$allTaskSubmissions=$database->performQuery("SELECT users.name as name,task.marks as marks,student_task_submission.marks_obtained as marks_obtained,users.email as email,student_task_submission.file_id as file_loc from student_task_submission,users,task WHERE task.task_id='$searchTaskResult' AND student_task_submission.task_id='$searchTaskResult' AND users.email=student_task_submission.email");
 ?>
 
 <!DOCTYPE html>
@@ -45,32 +63,29 @@ session::profile_not_set($root_path);
           </div>
             <div class="collapse multi-collapse" id="taskcollapse">
                 <div class="flex-container">
-                <div class="card card-body btn my-2 w-50 me-2" style="text-align:left">Zaara Zabeen Arpa</div>
+                <?php
+                  foreach($allTaskSubmissions as $i)
+                  {
+                ?>
+                <div class="card card-body btn my-2 w-50 me-2">
+                  <span style="text-align:left"><a href="<?php echo FileManagement::get_file_url_static($database,URLPath::getFTPServer(),$i['file_loc'])?>" target="_blank" style="all:unset"><?php echo $i['name'] ?></a></span>
+                  <span style="text-align:left;color:<?php echo $i['submission_status']?'green':'red'?>"><?php echo $i['submission_status']?'Submitted In Time':'Late Submission' ?></span>
+                </div>
                 <div class="marks w-25 my-2 me-2">
-                    <form class="py-2">
-                    <input type="number" id="marks" name="marks" class="form-control" placeholder="Enter Marks" aria-label="Leave a comment" onclick="
-                    var value=document.getElementById('marks');
+                    <form name="<?php echo $i['task_id'] ?>form" action="" method="POST" class="py-2">
+                    <input type="hidden" name="email" value="<?php echo $i['email']?>">
+                    <input type="hidden" name="file_id" value="<?php echo $i['file_loc']?>">
+                    <input type="number" id="marksObtained" name="marksObtained" class="form-control" placeholder="Enter Marks" aria-label="Leave a comment" onclick="
+                    var value=document.getElementById('marksObtained');
                     this.setAttribute('min',0);
-                    this.setAttribute('max',300);
+                    this.setAttribute('max',<?php echo $i['marks'] ?>);
                     ">
                     </form>
                 </div>
-                <button type="button" class="btn btn-primary btn-xs btn-join me-2 m-auto"><b>Submit</b></button>
-                </div>
-               
-                <div class="collapse multi-collapse" id="taskcollapse">
-                <div class="flex-container">
-                <div class="card card-body btn my-2 w-50 me-2" style="text-align:left">Zaara Zabeen Arpa</div>
-                <div class="marks w-25 my-2 me-2">
-                    <form class="py-2">
-                    <input type="number" id="marks" name="marks" class="form-control" placeholder="Enter Marks" aria-label="Leave a comment" onclick="
-                    var value=document.getElementById('marks');
-                    this.setAttribute('min',0);
-                    this.setAttribute('max',300);
-                    ">
-                    </form>
-                </div>
-                <button type="button" class="btn btn-primary btn-xs btn-join me-2 m-auto"><b>Submit</b></button>
+                <input type="submit" class="btn btn-primary btn-xs btn-join me-2 m-auto" value="Submit">
+                <?php
+                  }
+                ?>
                 </div>
         </div>
 
