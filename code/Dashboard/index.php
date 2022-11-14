@@ -123,12 +123,15 @@ if ($semester == -1) {
             <div class="col-md-2">
               <img src="<?php echo $src ?>" style="border-radius:50%; height:4rem ; width:4rem;">
             </div>
-            <div class="col-md-7 justify-content-center align-self-center">
+            <div class="col-md-6 justify-content-center align-self-center">
               <p class="row m-0" style="font-weight:bold; color:white"><?php echo $name ?></p>
               <p class="row m-0" style=" color:white">Student</p>
             </div>
-            <div class="col-md-1 m-0">
-              <i class='bx bxs-bell' style="font-size:30px; color:white;"></i>
+            <div class="col-md-2 m-0">
+              
+                <i class='bx bxs-bell notification' ></i>
+                
+              
             </div>
           </div>
         </div>
