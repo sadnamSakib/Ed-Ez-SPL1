@@ -140,8 +140,8 @@ if ($semester == -1) {
           <canvas id="chartProgress"></canvas>
 
         </div>
-        <div class="row">
-          <div id='calendar'></div>
+        <div class="row justify-content-center">
+          <div class="box w-50 mt-3"><div id='calendar'></div></div>
         </div>
 
       </div>
