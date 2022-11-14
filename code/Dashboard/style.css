@@ -40,10 +40,9 @@ hr.h-color {
 }
 
 #calendar {
-  max-width: 800px;
-  width:20rem;
-  margin: 40px auto;
-
+  max-width: inherited;
+  width:inherited;
+  margin: 5px;
   size: 8px;
 }
 
@@ -128,10 +127,23 @@ hr.h-color {
   flex-direction: column;
   border: 1px 1px 0px 0px solid var(--bs-card-border-color);
   border-radius: var(--bs-card-border-radius);
-  box-shadow: 5px 5px 16px -5px rgba(77, 76, 76, 0.7);
-  -webkit-box-shadow: 7px 7px 16px -5px rgba(54, 53, 53, 0.7);
+  box-shadow: 5px 5px 16px -5px rgba(105, 104, 104, 0.7);
+  -webkit-box-shadow: 7px 7px 16px -5px rgba(90, 89, 89, 0.7);
   -moz-box-shadow: 7px 7px 16px -5px rgba(54, 53, 53, 0.7);
 }
+
+.classroomcontainer {
+  display: flex;
+  flex-direction: row;
+  overflow-x: scroll;
+  height: 15rem;
+}
+.card-body{
+  width: 20rem;
+  margin: auto;
+  
+}
+
 
 .profilebox {
   --bs-card-spacer-y: 1rem;
@@ -177,7 +189,13 @@ hr.h-color {
   color: black;
 }
 
-
+.card{
+  transition: transform .3s;
+}
+.card:hover{
+  cursor: pointer;
+  transform: scale(0.9);
+}
 
 
 /* Modal Content */
