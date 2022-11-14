@@ -97,9 +97,9 @@ if ($semester == -1) {
     require 'navbar.php';
     student_navbar($root_path, true);
     ?>
-    <section class="content-section row justify-content-center m-5">
+    <section class="content-section row justify-content-center my-5 mx-auto">
 
-      <div class="col-md-6 mx-5">
+      <div class="col-md-6 mx-auto ">
         <div class="row mb-1">
           <div class="greetingsbox">
             <h2 class="typewrite" data-period="500" data-type='["Welcome back , <?php echo $name ?>" , "How was your day?" , "Have you submitted all your tasks?" ]'>
@@ -135,19 +135,19 @@ if ($semester == -1) {
 
         </div>
       </div>
-      <div class="col-md-4 mx-5">
+      <div class="col-md-4 mx-auto">
         <div class="row justify-content-center mb-3">
-          <div class="profilebox row col-md-6 w-100 align-self-center justify-content-center">
-            <div class="col-md-2">
+          <div class="profilebox row col-md-4 w-100 align-self-around justify-content-around">
+            <div class="col-md-2 m-auto">
               <img src="<?php echo $src ?>" style="border-radius:50%; height:4rem ; width:4rem;">
             </div>
-            <div class="col-md-6 justify-content-center align-self-center">
-              <p class="row m-0" style="font-weight:bold; color:white"><?php echo $name ?></p>
-              <p class="row m-0" style=" color:white">Student</p>
+            <div class="col-md-3 m-auto">
+              <p class="row my-auto" style="font-weight:bold; color:white"><?php echo $name ?></p>
+              <p class="row my-auto" style=" color:white">Student</p>
             </div>
-            <div class="col-md-2 m-0">
+            <div class="col-md-7 m-auto justify-content-end">
 
-              <i class='bx bxs-bell notification'></i>
+              <i class='bx bxs-bell notification align-self-end ms-5'></i>
 
 
             </div>
