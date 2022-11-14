@@ -35,7 +35,7 @@ session::profile_not_set($root_path);
         <div class="col-md-6">
           <div class="card intro-card w-75 text-bg-secondary m-auto mb-3">
             <div class="card-header">
-              <h3 class="card-title" style="text-align:center">Saved Recources</h3>
+              <h3 class="card-title" style="text-align:center">Saved Resources</h3>
               <form class="d-flex" role="search">
                 <input class="form-control search me-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-primary btn-search mb-2 mt-2 me-2" type="submit">Search</button>
@@ -56,7 +56,7 @@ session::profile_not_set($root_path);
         <div class="col-md-6">
           <div class="card intro-card w-75 text-bg-secondary m-auto mb-3">
             <div class="card-header">
-              <h3 class="card-title" style="text-align:center">Uploaded Recources</h3>
+              <h3 class="card-title" style="text-align:center">Uploaded Resources</h3>
               <form class="d-flex" role="search">
                 <button type="button" class="btn btn-primary btn-upload" data-bs-toggle="modal" data-bs-target="#exampleModal">Upload</button>
 
