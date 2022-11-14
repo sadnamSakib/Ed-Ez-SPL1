@@ -37,7 +37,7 @@ session::profile_not_set($root_path);
             <div class="card-header">
               <h3 class="card-title" style="text-align:center">Saved Recources</h3>
               <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <input class="form-control search me-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-primary btn-search mb-2 mt-2 me-2" type="submit">Search</button>
               </form>
             </div>
@@ -58,8 +58,32 @@ session::profile_not_set($root_path);
             <div class="card-header">
               <h3 class="card-title" style="text-align:center">Uploaded Recources</h3>
               <form class="d-flex" role="search">
-                <button class="btn btn-primary btn-upload" for="inputGroupFile02">Upload</button>
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button type="button" class="btn btn-primary btn-upload" data-bs-toggle="modal" data-bs-target="#exampleModal">Upload</button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Upload File</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                      <div class="mb-3">
+                        <input type="text" id="title" name="title" class="form-control" placeholder="Title of the file" aria-label="Leave a comment">
+                      </div>
+                        <div class="input-group">
+                          <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Upload</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <input class="form-control search me-2" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-primary btn-search mb-2 mt-2 me-2" type="submit">Search</button>
               </form>
             </div>
