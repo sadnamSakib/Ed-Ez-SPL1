@@ -113,6 +113,11 @@ to {top: 0; opacity: 1}
   
 }
 .form-control{
+  height: auto;
+  margin: auto;
+  margin-left: 5px;
+}
+.form-control.search{
   height: 50px;
   margin: auto;
   margin-left: 5px;
