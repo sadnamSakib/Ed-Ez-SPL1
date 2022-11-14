@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 12, 2022 at 07:34 AM
+-- Generation Time: Nov 14, 2022 at 04:14 PM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -202,9 +202,10 @@ CREATE TABLE `student_classroom_session` (
 
 CREATE TABLE `student_task_submission` (
   `email` varchar(200) NOT NULL,
-  `class_code` varchar(20) NOT NULL,
   `task_id` varchar(50) NOT NULL,
-  `fild_id` varchar(50) NOT NULL
+  `file_id` varchar(50) NOT NULL,
+  `submission_status` tinyint(1) NOT NULL DEFAULT 1,
+  `marks_obtained` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -390,7 +391,9 @@ ALTER TABLE `student_classroom_session`
 -- Indexes for table `student_task_submission`
 --
 ALTER TABLE `student_task_submission`
-  ADD PRIMARY KEY (`email`,`task_id`);
+  ADD PRIMARY KEY (`task_id`,`file_id`),
+  ADD UNIQUE KEY `email` (`email`,`task_id`,`file_id`),
+  ADD KEY `file_id` (`file_id`);
 
 --
 -- Indexes for table `task`
@@ -489,6 +492,16 @@ ALTER TABLE `student`
 ALTER TABLE `student_classroom`
   ADD CONSTRAINT `fk_student_classroom` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_student_classroom2` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `student_task_submission`
+--
+ALTER TABLE `student_task_submission`
+  ADD CONSTRAINT `student_task_submission_ibfk_1` FOREIGN KEY (`task_id`) REFERENCES `task` (`task_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `student_task_submission_ibfk_2` FOREIGN KEY (`file_id`) REFERENCES `files` (`file_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `student_task_submission_ibfk_3` FOREIGN KEY (`task_id`) REFERENCES `task` (`task_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `student_task_submission_ibfk_4` FOREIGN KEY (`file_id`) REFERENCES `files` (`file_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `student_task_submission_ibfk_5` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `task`
