@@ -97,38 +97,59 @@ if ($semester == -1) {
     require 'navbar.php';
     student_navbar($root_path, true);
     ?>
-    <section class="content-section row justify-content-center m-5">
+    <section class="content-section row justify-content-center my-5 mx-auto">
 
-      <div class="col-md-4 mx-auto">
-        <div class="row mb-3">
+      <div class="col-md-6 mx-auto ">
+        <div class="row mb-1">
           <div class="greetingsbox">
             <h2 class="typewrite" data-period="500" data-type='["Welcome back , <?php echo $name ?>" , "How was your day?" , "Have you submitted all your tasks?" ]'>
             </h2>
             <span class="wrap"></span>
           </div>
         </div>
+        <div class="row mb-2">
+          <h4>My Classrooms</h4>
+        </div>
         <div class="row">
+          <div class="box classroomcontainer">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Card 1</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+
+              </div>
+            </div>
+            <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Card 2</h5>
+              <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+            </div>
+          </div>
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">Card title</h5>
               <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-              <p class="card-text">Some quick example text to build on the.</p>
             </div>
           </div>
+          </div>
+
         </div>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-4 mx-auto">
         <div class="row justify-content-center mb-3">
-          <div class="profilebox row col-md-6 w-50 align-self-center justify-content-center">
-            <div class="col-md-2">
+          <div class="profilebox row col-md-4 w-100 align-self-around justify-content-around">
+            <div class="col-md-2 m-auto">
               <img src="<?php echo $src ?>" style="border-radius:50%; height:4rem ; width:4rem;">
             </div>
-            <div class="col-md-7 justify-content-center align-self-center">
-              <p class="row m-0" style="font-weight:bold; color:white"><?php echo $name ?></p>
-              <p class="row m-0" style=" color:white">Student</p>
+            <div class="col-md-3 m-auto">
+              <p class="row my-auto" style="font-weight:bold; color:white"><?php echo $name ?></p>
+              <p class="row my-auto" style=" color:white">Student</p>
             </div>
-            <div class="col-md-1 m-0">
-              <i class='bx bxs-bell' style="font-size:30px; color:white;"></i>
+            <div class="col-md-7 m-auto justify-content-end">
+
+              <i class='bx bxs-bell notification align-self-end ms-5'></i>
+
+
             </div>
           </div>
         </div>
@@ -137,8 +158,10 @@ if ($semester == -1) {
           <canvas id="chartProgress"></canvas>
 
         </div>
-        <div class="row">
-          <div id='calendar'></div>
+        <div class="row justify-content-center">
+          <div class="box w-100 mt-3">
+            <div id='calendar'></div>
+          </div>
         </div>
 
       </div>
