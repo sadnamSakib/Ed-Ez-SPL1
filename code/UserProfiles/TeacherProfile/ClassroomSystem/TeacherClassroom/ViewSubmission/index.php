@@ -98,6 +98,7 @@ $allTaskSubmissions=$database->performQuery("SELECT student_task_submission.subm
                 <?php
                   }
                 ?>
+                </div>
         </div>
 
     </section>
