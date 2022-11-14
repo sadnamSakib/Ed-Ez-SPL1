@@ -1,45 +1,32 @@
 if (window.history.replaceState) {
   window.history.replaceState(null, null, window.location.href);
 }
-const togglePassword = document
-            .querySelector('#togglePassword');
-  
-        const password = document.querySelector('#password');
-  
-        togglePassword.addEventListener('click', () => {
-  
-            // Toggle the type attribute using
-            // getAttribure() method
-            const type = password
-                .getAttribute('type') === 'password' ?
-                'text' : 'password';
-                  
-            password.setAttribute('type', type);
-            this.classList.toggle('fa-eye');
-  });
-
-var mobileNumber=document.getElementById('mobile');
-
-form.addEventListener('submit', (e) => {
-  var errorElement=document.getElementById('error')
-  let messages=[]
-  var number=mobileNumber.value;
-  if(number==null || number.value===''){
-    return true;
-  }
-  if(number.length<11 && number.length>0){
-    messages.push('Mobile number length must be greater than 11')
-  }
-  for(let i=0;i<number.length;i++){
-    if(number.charAt(i)<'0' || number.charAt(i)>'9'){
-      messages.push('There should only be numbers so incorrect format')
-      break
-    }
-  }
-
-  if(messages.length>0){
-    e.preventDefault()
-    errorElement.innerText=messages.join(', ')
-  }
-
-})
+// JavaScript code
+function search_resources() {
+	let input = document.getElementById('searchbar').value
+	input=input.toLowerCase();
+	let x = document.getElementsByClassName('saved-resources');
+	
+	for (i = 0; i < x.length; i++) {
+		if (!x[i].innerHTML.toLowerCase().includes(input)) {
+			x[i].style.display="none";
+		}
+		else {
+			x[i].style.display="block";				
+		}
+	}
+}
+function search_uploaded_resources() {
+	let input = document.getElementById('searchbar-uploaded').value
+	input=input.toLowerCase();
+	let x = document.getElementsByClassName('uploaded-resources');
+	
+	for (i = 0; i < x.length; i++) {
+		if (!x[i].innerHTML.toLowerCase().includes(input)) {
+			x[i].style.display="none";
+		}
+		else {
+			x[i].style.display="block";				
+		}
+	}
+}

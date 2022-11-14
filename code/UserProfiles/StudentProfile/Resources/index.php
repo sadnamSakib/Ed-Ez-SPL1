@@ -37,7 +37,7 @@ session::profile_not_set($root_path);
             <div class="card-header">
               <h3 class="card-title" style="text-align:center">Saved Resources</h3>
               <form class="d-flex" role="search">
-                <input class="form-control search me-2" type="search" placeholder="Search" aria-label="Search">
+                <input class="form-control search me-2" id="searchbar" type="search" onkeyup="search_resources()" placeholder="Search" aria-label="Search">
                 <button class="btn btn-primary btn-search mb-2 mt-2 me-2" type="submit">Search</button>
               </form>
             </div>
@@ -45,9 +45,9 @@ session::profile_not_set($root_path);
         </div> -->
             <div class="flex-container w-100">
               <div class="scroll w-100">
-                <div class="card card-body my-2 me-1 btn btn-resource" style="text-align:left" id="scrollspyHeading1">First heading</div>
-                <div class="card card-body my-2 me-1 btn btn-resource" style="text-align:left" id="scrollspyHeading2">Second heading</div>
-                <div class="card card-body my-2 me-1 btn btn-resource" style="text-align:left" id="scrollspyHeading3">Third heading</div>
+                <div class="card card-body my-2 me-1 btn btn-resource saved-resources" style="text-align:left" id="scrollspyHeading1">First Heading</div>
+                <div class="card card-body my-2 me-1 btn btn-resource saved-resources" style="text-align:left" id="scrollspyHeading2">Second heading</div>
+                <div class="card card-body my-2 me-1 btn btn-resource saved-resources" style="text-align:left" id="scrollspyHeading3">Third heading</div>
               </div>
             </div>
           </div>
@@ -83,7 +83,7 @@ session::profile_not_set($root_path);
                     </div>
                   </div>
                 </div>
-                <input class="form-control search me-2" type="search" placeholder="Search" aria-label="Search">
+                <input class="form-control search me-2" id="searchbar-uploaded" type="search" onkeyup="search_uploaded_resources()"  placeholder="Search" aria-label="Search">
                 <button class="btn btn-primary btn-search mb-2 mt-2 me-2" type="submit">Search</button>
               </form>
             </div>
@@ -91,9 +91,9 @@ session::profile_not_set($root_path);
         </div> -->
             <div class="flex-container w-100">
               <div class="scroll w-100">
-                <div class="card card-body my-2 me-1 btn btn-resource" style="text-align:left" id="scrollspyHeading1">First heading</div>
-                <div class="card card-body my-2 me-1 btn btn-resource" style="text-align:left" id="scrollspyHeading2">Second heading</div>
-                <div class="card card-body my-2 me-1 btn btn-resource" style="text-align:left" id="scrollspyHeading3">Third heading</div>
+                <div class="card card-body my-2 me-1 btn btn-resource uploaded-resources" style="text-align:left" id="scrollspyHeading1">First heading</div>
+                <div class="card card-body my-2 me-1 btn btn-resource uploaded-resources" style="text-align:left" id="scrollspyHeading2">Second heading</div>
+                <div class="card card-body my-2 me-1 btn btn-resource uploaded-resources" style="text-align:left" id="scrollspyHeading3">Third heading</div>
               </div>
             </div>
           </div>
