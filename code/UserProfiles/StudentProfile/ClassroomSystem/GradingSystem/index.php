@@ -31,7 +31,6 @@ $task =
 
   <link href="<?php echo $root_path; ?>boxicons-2.1.4/css/boxicons.min.css" rel="stylesheet" />
 </head>
-
 <body>
 
   <script src="<?php echo $root_path; ?>js/bootstrap.js"></script>
@@ -51,8 +50,10 @@ $task =
         $total=0;
         $total_credit = 0;
         foreach ($classrooms as $i) {
-          $total_credit+=$i['course_credit'];
+          $total_credit+=(is_null($i['course_credit'])?0:$i['course_credit']);
           $classCode=$i['class_code'];
+          $database->fetch_results($attendance,"SELECT nvl(count(*),0)StudentAttendance FROM classroom_session,student_classroom_session WHERE classroom_session.session=student_classroom_session.session AND classroom_session.class_code='$classCode' AND student_classroom_session.email='".$email->get_email()."'");
+          $database->fetch_results($totalAttendance,"SELECT nvl(count(*),0)TotalSessions FROM classroom_session WHERE classroom_session.class_code='$classCode'");
           $database->fetch_results($taskInfo,"SELECT (sum(nvl(marks_obtained,0))/sum(nvl(marks,1)))*90 AS percentage FROM task,task_classroom,student_task_submission WHERE task.task_id=task_classroom.task_id AND task_classroom.class_code='".$classCode."' AND student_task_submission.task_id=task.task_id AND task.active='1'");
           if(is_null($taskInfo)){
             $percentage=0;
@@ -60,7 +61,12 @@ $task =
           else{
             $percentage=$taskInfo['percentage'];
           }
-          $percentage=$taskInfo['percentage']+$i['attendance'];//for now attendance is assumed to be 10, it would change with session implementation
+          if($totalAttendance['TotalSessions']==0){
+            $percentage=$taskInfo['percentage']+10;
+          }
+          else{
+            $percentage=$taskInfo['percentage']+($attendance['StudentAttendance']*10)/$totalAttendance['TotalSessions'];
+          }
           $total+=(($percentage*$i['course_credit'])/100);
         ?>
           <label><?php echo  $i['classroom_name']; ?></label>
@@ -80,12 +86,15 @@ $task =
     </section>
   </div>
   <script>
+    <?php 
+    $result=($total * 100) / $total_credit;
+    ?>
     var myChartCircle = new Chart('chartProgress', {
       type: 'doughnut',
       data: {
         datasets: [{
           label: 'Total percentage',
-          percent: ((<?php echo $total ?> * 100) / <?php echo $total_credit ?>),
+          percent: <?php echo $result?>,
           backgroundColor: ['#2f6d8b']
         }]
       },

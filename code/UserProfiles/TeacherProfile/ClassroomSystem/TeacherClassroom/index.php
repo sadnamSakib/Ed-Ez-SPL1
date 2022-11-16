@@ -58,7 +58,8 @@ if (isset($_POST['sessionSubmit'])) {
   $startTime = $_REQUEST['sessionStart'];
   $endTime = $_REQUEST['sessionEnd'];
   $eventManagement = new EventManagement($startTime, $endTime, $database, $utility);
-  $database->performQuery("INSERT INTO classroom_session VALUES('$classCode','$session','" . $eventManagement->get_event_id() . "')");
+  $deadline=$_REQUEST['attendanceDeadline'];
+  $database->performQuery("INSERT INTO classroom_session VALUES('$classCode','$session','" . $eventManagement->get_event_id() . "','$deadline')");
   $post_text = "A Classroom Session Has Been Posted";
   $online = $_REQUEST['online'];
   $offline = $_REQUEST['offline'];
@@ -221,6 +222,12 @@ $allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHE
                         <input type="datetime-local" id="sessionStart" name="sessionStart" class="form-control" onclick="
                             var dateString2=new Date();
                             this.setAttribute('min',dateString2);" required>
+                      </div>
+                      <div class="mb-3">
+                        <label for="attendanceDeadline">Attendance Deadline :</label>
+                        <input type="datetime-local" id="attendanceDeadline" name="attendanceDeadline" class="form-control" onclick="
+                            var startDateTime1=document.getElementById('sessionStart').value;
+                            this.setAttribute('min',startDateTime1);" required>
                       </div>
                       <div class="mb-3">
                         <label for="endTime">End Date and Time :</label>

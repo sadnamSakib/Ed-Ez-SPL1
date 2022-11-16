@@ -40,6 +40,19 @@ if (isset($_REQUEST['post_msg'])) {
   $postManagement=new PostManagement($validate->post_sanitise_text('post_value'),$email->get_email(),$classCode,$utility,$database);
 }
 
+$errorAttendance=null;
+if(isset($_POST['AttendanceSubmit'])){
+  $sessionCode=$validate->post_sanitise_regular_input('SessionCode');
+  $row=$database->performQuery("SELECT * FROM student_classroom_session WHERE email='".$email->get_email()."' AND session='$sessionCode'");
+  if($row->num_rows>0){
+    $errorAttendance="Attendance Already Given";
+  }
+  else{
+    $database->performQuery("INSERT INTO student_classroom_session VALUES('".$email->get_email()."','$sessionCode')");
+  }
+  
+}
+
 $posts = $database->performQuery("SELECT * FROM post,post_classroom WHERE post.post_id=post_classroom.post_id and post_classroom.class_code='$classCode' and active='1' order by post_datetime desc;");
 foreach ($posts as $i) {
   $post_id = $i['post_id'];
@@ -198,6 +211,32 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
             <?php
                 }
             ?>          
+          </div>
+          <div class="card-footer btn btn-primary" style="height:50px">
+              <button style="all:unset" data-bs-toggle="modal" data-bs-target="#Attendance" data-bs-whatever="@fat">Give Attendance</button>
+              <div class="modal fade" id="Attendance" tabindex="-1" aria-labelledby="Attendance" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="attendanceModalTitle">Give Attendance</h1>
+                    </div>
+                    <div class="modal-body">
+                    <div id="error" class="mb-3" style="display:<?php $errorAttendance==null?'none':'block' ?>;color:red">
+                            <?php echo $errorAttendance; ?>
+                      </div>
+                      <form name="AttendanceForm" action="" method="POST">
+                      <div class="mb-3">
+                        <input type="text" name="SessionCode" id="SessionCode" class="form-control" placeholder="Enter session code" aria-label="Leave a comment">
+                      </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <input type="submit" name="AttendanceSubmit" value="Submit" class="btn btn-primary btn-join">
+                    </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
           </div>
         </div>
       </div>
