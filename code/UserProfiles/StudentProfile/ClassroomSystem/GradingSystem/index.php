@@ -49,11 +49,11 @@ $task =
       <div class="progressbars col-md-4 w-50">
         <?php
         $total=0;
-        $total_credit=0;
+        $total_credit = 0;
         foreach ($classrooms as $i) {
           $total_credit+=$i['course_credit'];
           $classCode=$i['class_code'];
-          $database->fetch_results($taskInfo,"SELECT (sum(nvl(marks_obtained,0))/sum(nvl(marks,0)))*90 AS percentage FROM task,task_classroom,student_task_submission WHERE task.task_id=task_classroom.task_id AND task_classroom.class_code='".$classCode."' AND student_task_submission.task_id=task.task_id AND task.active='1'");
+          $database->fetch_results($taskInfo,"SELECT (sum(nvl(marks_obtained,0))/sum(nvl(marks,1)))*90 AS percentage FROM task,task_classroom,student_task_submission WHERE task.task_id=task_classroom.task_id AND task_classroom.class_code='".$classCode."' AND student_task_submission.task_id=task.task_id AND task.active='1'");
           if(is_null($taskInfo)){
             $percentage=0;
           }
