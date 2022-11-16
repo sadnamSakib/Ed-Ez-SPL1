@@ -27,7 +27,15 @@ if (isset($_POST['Join'])) {
   if ($database->performQuery("SELECT * FROM classroom WHERE class_code='$classCode' and active='1'")->num_rows == 0) {
     $error = "classroom doesn't exist";
   } else if ($existenceCheck->num_rows == 0) {
-    $database->performQuery("INSERT INTO student_classroom(email,class_code) VALUES('" . $email->get_email() . "','$classCode');");
+    $database->fetch_results($classroomRecords,"SELECT * FROM classroom WHERE class_code='$classCode'");
+    $database->fetch_results($userRecords,"SELECT * FROM users WHERE email='".$email->get_email()."'");
+    if($classroomRecords['semester']===$userRecords['semester']) {
+      $database->performQuery("INSERT INTO student_classroom(email,class_code) VALUES('" . $email->get_email() . "','$classCode');");
+    }
+    else{
+      $error="Student is not elligible for this classroom";
+    }
+    
   } else {
     $error = "You are already enrolled in this classroom";
   }

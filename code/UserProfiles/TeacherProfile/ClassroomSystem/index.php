@@ -44,10 +44,12 @@ if (isset($_POST['Create'])) {
   }
   $className = $validate->post_sanitise_regular_input('courseName');
   $courseCode = $validate->post_sanitise_regular_input('courseCode');
+  $attendancePercentage = $validate->post_sanitise_regular_input('attendancePercentage');
+  $courseCredit=$validate->post_sanitise_regular_input('courseCredit');
   $semester = $validate->post_sanitise_number('semester');
-  if ($className !== null && $courseCode !== null && $semester !== null) {
+  if ($className !== null && $courseCode !== null && $semester !== null && $attendancePercentage !== null && $courseCredit !== null) {
     $date = date('Y-m-d H:i:s');
-    $database->performQuery("INSERT INTO classroom(class_code,classroom_name,course_code,semester) VALUES('$classCode','$className','$courseCode','$semester')");
+    $database->performQuery("INSERT INTO classroom(class_code,classroom_name,course_code,semester,course_credit,attendance) VALUES('$classCode','$className','$courseCode','$semester','$courseCredit','$attendancePercentage')");
     $database->performQuery("INSERT INTO teacher_classroom(email,class_code) VALUES('" . $email->get_email() . "','$classCode')");
     $database->performQuery("INSERT INTO classroom_creator(email,class_code,creation_date) VALUES('" . $email->get_email() . "','$classCode','$date')");
   } else {
@@ -169,10 +171,17 @@ foreach ($classrooms as $dummy_classroom) {
                         </select>
                       </div>
                       <div class="mb-3">
-                        <input type="number" id="courseCredit" name="courseCredit" class="form-control" placeholder="Enter Course Credit" aria-label="Leave a comment" onclick="
+                        <input type="number" id="courseCredit" name="courseCredit" class="form-control" step="0.01" placeholder="Enter Course Credit" aria-label="Leave a comment" onclick="
                     var value=document.getElementById('courseCredit');
                     this.setAttribute('min',0);
                     this.setAttribute('max',5);
+                    ">
+                      </div>
+                      <div class="mb-3">
+                        <input type="number" id="attendancePercentage" name="attendancePercentage" step="0.01" class="form-control" placeholder="Enter Attendance Percentage" aria-label="Leave a comment" onclick="
+                    var value=document.getElementById('courseCredit');
+                    this.setAttribute('min',0);
+                    this.setAttribute('max',100);
                     ">
                       </div>
 

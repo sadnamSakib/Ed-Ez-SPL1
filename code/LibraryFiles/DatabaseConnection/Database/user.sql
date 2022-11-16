@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 14, 2022 at 04:14 PM
+-- Generation Time: Nov 16, 2022 at 04:18 PM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -30,9 +30,11 @@ SET time_zone = "+00:00";
 CREATE TABLE `classroom` (
   `class_code` varchar(20) NOT NULL,
   `classroom_name` text NOT NULL,
-  `course_code` varchar(10) DEFAULT NULL,
-  `semester` int(11) DEFAULT NULL,
-  `active` tinyint(1) NOT NULL DEFAULT 1
+  `course_code` varchar(10) NOT NULL,
+  `semester` int(11) NOT NULL,
+  `active` tinyint(1) NOT NULL DEFAULT 1,
+  `course_credit` double NOT NULL,
+  `attendance` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
