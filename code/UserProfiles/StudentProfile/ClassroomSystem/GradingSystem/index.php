@@ -48,9 +48,20 @@ $task =
     <section class="content-section row justify-content-center">
       <div class="progressbars col-md-4 w-50">
         <?php
+        $total=0;
+        $total_credit=0;
         foreach ($classrooms as $i) {
-          $database->fetch_results($taskInfo,"SELECT (sum(nvl(marks_obtained,0))/sum(nvl(marks,0)))*100 AS percentage FROM task,task_classroom,student_task_submission WHERE task.task_id=task_classroom.task_id AND student_task_submission.task_id=task.task_id AND task.active='1'");
-          $percentage=is_null($taskInfo)?0:$taskInfo['percentage'];
+          $total_credit+=$i['course_credit'];
+          $classCode=$i['class_code'];
+          $database->fetch_results($taskInfo,"SELECT (sum(nvl(marks_obtained,0))/sum(nvl(marks,0)))*90 AS percentage FROM task,task_classroom,student_task_submission WHERE task.task_id=task_classroom.task_id AND task_classroom.class_code='".$classCode."' AND student_task_submission.task_id=task.task_id AND task.active='1'");
+          if(is_null($taskInfo)){
+            $percentage=0;
+          }
+          else{
+            $percentage=$taskInfo['percentage'];
+          }
+          $percentage=$taskInfo['percentage']+$i['attendance'];//for now attendance is assumed to be 10, it would change with session implementation
+          $total+=(($percentage*$i['course_credit'])/100);
         ?>
           <label><?php echo  $i['classroom_name']; ?></label>
           <div class="progress my-2">
@@ -74,7 +85,7 @@ $task =
       data: {
         datasets: [{
           label: 'Total percentage',
-          percent: ((50 * 100) / 75),
+          percent: ((<?php echo $total ?> * 100) / <?php echo $total_credit ?>),
           backgroundColor: ['#2f6d8b']
         }]
       },
