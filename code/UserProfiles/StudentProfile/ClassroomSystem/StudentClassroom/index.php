@@ -66,7 +66,7 @@ $allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHE
 foreach($allTasks as $i){
   if(isset($_POST[$i['task_id'].'submit'])){
     if (isset($_FILES[$i['task_id'].'ans']['name'])) {
-      $fileManagement = new FileManagement($_FILES[$i['task_id'].'ans']['name'], $_FILES[$i['task_id'].'ans']['tmp_name'], 'pdf', $database, $utility);
+      $fileManagement = new FileManagement($_FILES[$i['task_id'].'ans']['name'], $_FILES[$i['task_id'].'ans']['tmp_name'], $database, $utility);
       $database->fetch_results($records,"SELECT * FROM task,event WHERE task.event_id=event.event_id");
       $submissions=$database->performQuery("SELECT * FROM student_task_submission WHERE task_id='".$i['task_id']."' AND email='".$email->get_email()."'");
       if($submissions->num_rows>0){

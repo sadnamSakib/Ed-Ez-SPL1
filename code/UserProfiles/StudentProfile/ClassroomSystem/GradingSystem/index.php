@@ -6,13 +6,38 @@ require $root_path . 'LibraryFiles/URLFinder/URLPath.php';
 require $root_path . 'LibraryFiles/SessionStore/session.php';
 require $root_path . 'LibraryFiles/Utility/Utility.php';
 require $root_path . 'LibraryFiles/ValidationPhp/InputValidation.php';
+require 'CSVHandler.php';
 session::profile_not_set($root_path);
 $tableName = $_SESSION['tableName'];
 $email = new EmailValidator($_SESSION['email']);
 $validate = new InputValidation();
 $classCode = $_SESSION['class_code'];
-$task =
-  $classrooms = $database->performQuery("SELECT * FROM classroom,student_classroom where classroom.class_code=student_classroom.class_code and student_classroom.email='" . $email->get_email() . "' and active='1';");
+$classrooms = $database->performQuery("SELECT * FROM classroom,student_classroom where classroom.class_code=student_classroom.class_code and student_classroom.email='" . $email->get_email() . "' and active='1';");
+if (isset($_POST['DownloadCSV'])) {
+  $csvHandler = new CSVHandler($email->get_email());
+  $csvHandler->write('SUBJECT','PERCENTAGE');
+  foreach ($classrooms as $i) {
+    $total_credit += (is_null($i['course_credit']) ? 0 : $i['course_credit']);
+    $classCode = $i['class_code'];
+    $database->fetch_results($attendance, "SELECT nvl(count(*),0)StudentAttendance FROM classroom_session,student_classroom_session WHERE classroom_session.session=student_classroom_session.session AND classroom_session.class_code='$classCode' AND student_classroom_session.email='" . $email->get_email() . "'");
+    $database->fetch_results($totalAttendance, "SELECT nvl(count(*),0)TotalSessions FROM classroom_session WHERE classroom_session.class_code='$classCode'");
+    $database->fetch_results($taskInfo, "SELECT (sum(nvl(marks_obtained,0))/sum(nvl(marks,1)))*90 AS percentage FROM task,task_classroom,student_task_submission WHERE task.task_id=task_classroom.task_id AND task_classroom.class_code='" . $classCode . "' AND student_task_submission.task_id=task.task_id AND task.active='1'");
+    if (is_null($taskInfo)) {
+      $percentage = 0;
+    } else {
+      $percentage = $taskInfo['percentage'];
+    }
+    if ($totalAttendance['TotalSessions'] == 0) {
+      $percentage = $taskInfo['percentage'] + 10;
+    } else {
+      $percentage = $taskInfo['percentage'] + ($attendance['StudentAttendance'] * 10) / $totalAttendance['TotalSessions'];
+    }
+    $total += (($percentage * $i['course_credit']) / 100);
+    $csvHandler->write($i['classroom_name'],$percentage);
+  }
+  $result = ($total * 100) / $total_credit;
+  $csvHandler->write('RESULT',$result);
+}
 ?>
 
 <!DOCTYPE html>
@@ -31,6 +56,7 @@ $task =
 
   <link href="<?php echo $root_path; ?>boxicons-2.1.4/css/boxicons.min.css" rel="stylesheet" />
 </head>
+
 <body>
 
   <script src="<?php echo $root_path; ?>js/bootstrap.js"></script>
@@ -47,27 +73,25 @@ $task =
     <section class="content-section row justify-content-center">
       <div class="progressbars col-md-4 w-50">
         <?php
-        $total=0;
+        $total = 0;
         $total_credit = 0;
         foreach ($classrooms as $i) {
-          $total_credit+=(is_null($i['course_credit'])?0:$i['course_credit']);
-          $classCode=$i['class_code'];
-          $database->fetch_results($attendance,"SELECT nvl(count(*),0)StudentAttendance FROM classroom_session,student_classroom_session WHERE classroom_session.session=student_classroom_session.session AND classroom_session.class_code='$classCode' AND student_classroom_session.email='".$email->get_email()."'");
-          $database->fetch_results($totalAttendance,"SELECT nvl(count(*),0)TotalSessions FROM classroom_session WHERE classroom_session.class_code='$classCode'");
-          $database->fetch_results($taskInfo,"SELECT (sum(nvl(marks_obtained,0))/sum(nvl(marks,1)))*90 AS percentage FROM task,task_classroom,student_task_submission WHERE task.task_id=task_classroom.task_id AND task_classroom.class_code='".$classCode."' AND student_task_submission.task_id=task.task_id AND task.active='1'");
-          if(is_null($taskInfo)){
-            $percentage=0;
+          $total_credit += (is_null($i['course_credit']) ? 0 : $i['course_credit']);
+          $classCode = $i['class_code'];
+          $database->fetch_results($attendance, "SELECT nvl(count(*),0)StudentAttendance FROM classroom_session,student_classroom_session WHERE classroom_session.session=student_classroom_session.session AND classroom_session.class_code='$classCode' AND student_classroom_session.email='" . $email->get_email() . "'");
+          $database->fetch_results($totalAttendance, "SELECT nvl(count(*),0)TotalSessions FROM classroom_session WHERE classroom_session.class_code='$classCode'");
+          $database->fetch_results($taskInfo, "SELECT (sum(nvl(marks_obtained,0))/sum(nvl(marks,1)))*90 AS percentage FROM task,task_classroom,student_task_submission WHERE task.task_id=task_classroom.task_id AND task_classroom.class_code='" . $classCode . "' AND student_task_submission.task_id=task.task_id AND task.active='1'");
+          if (is_null($taskInfo)) {
+            $percentage = 0;
+          } else {
+            $percentage = $taskInfo['percentage'];
           }
-          else{
-            $percentage=$taskInfo['percentage'];
+          if ($totalAttendance['TotalSessions'] == 0) {
+            $percentage = $taskInfo['percentage'] + 10;
+          } else {
+            $percentage = $taskInfo['percentage'] + ($attendance['StudentAttendance'] * 10) / $totalAttendance['TotalSessions'];
           }
-          if($totalAttendance['TotalSessions']==0){
-            $percentage=$taskInfo['percentage']+10;
-          }
-          else{
-            $percentage=$taskInfo['percentage']+($attendance['StudentAttendance']*10)/$totalAttendance['TotalSessions'];
-          }
-          $total+=(($percentage*$i['course_credit'])/100);
+          $total += (($percentage * $i['course_credit']) / 100);
         ?>
           <label><?php echo  $i['classroom_name']; ?></label>
           <div class="progress my-2">
@@ -81,20 +105,25 @@ $task =
         <?php
         }
         ?>
+        <div>
+          <form action="" method="POST">
+            <input type="submit" class="btn btn-primary" name="DownloadCSV" value="Download Grade Sheet">
+          </form>
+        </div>
       </div>
 
     </section>
   </div>
   <script>
-    <?php 
-    $result=($total * 100) / $total_credit;
+    <?php
+    $result = ($total * 100) / $total_credit;
     ?>
     var myChartCircle = new Chart('chartProgress', {
       type: 'doughnut',
       data: {
         datasets: [{
           label: 'Total percentage',
-          percent: <?php echo $result?>,
+          percent: <?php echo $result ?>,
           backgroundColor: ['#2f6d8b']
         }]
       },

@@ -35,7 +35,7 @@ if (isset($_POST['taskSubmit'])) {
   $institution = $row['institution'];
   if (isset($_FILES['taskName']['name'])) {
     $eventManagement = new EventManagement(EventManagement::get_system_date($database), $Deadline, $database, $utility);
-    $fileManagement = new FileManagement($_FILES['taskName']['name'], $_FILES['taskName']['tmp_name'], 'pdf', $database, $utility);
+    $fileManagement = new FileManagement($_FILES['taskName']['name'], $_FILES['taskName']['tmp_name'], $database, $utility);
     $insertquery = "INSERT INTO task(task_id,task_title,event_id,institution,semester,marks,file_id,instructions) VALUES('$task_id','$task_title','" . $eventManagement->get_event_id() . "','$institution','$semester','$marks','" . $fileManagement->get_file_id() . "','$instructions')";
     $database->performQuery($insertquery);
     $database->performQuery("INSERT INTO task_classroom(task_id,class_code) VALUES('$task_id','$classCode')");
