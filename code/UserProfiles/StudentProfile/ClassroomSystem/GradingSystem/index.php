@@ -49,6 +49,8 @@ $task =
       <div class="progressbars col-md-4 w-50">
         <?php
         foreach ($classrooms as $i) {
+          $database->fetch_results($taskInfo,"SELECT (sum(nvl(marks_obtained,0))/sum(nvl(marks,0)))*100 AS percentage FROM task,task_classroom,student_task_submission WHERE task.task_id=task_classroom.task_id AND student_task_submission.task_id=task.task_id AND task.active='1'");
+          $percentage=is_null($taskInfo)?0:$taskInfo['percentage'];
         ?>
           <label><?php echo  $i['classroom_name']; ?></label>
           <div class="progress my-2">
@@ -56,7 +58,7 @@ $task =
           </div>
           <script>
             $(".progress-bar.progressBar<?php echo  $i['class_code']; ?>").animate({
-              width: "70%",
+              width: "<?php echo $percentage ?>%",
             }, 250);
           </script>
         <?php
