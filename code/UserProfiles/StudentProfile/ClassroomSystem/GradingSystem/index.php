@@ -37,6 +37,7 @@ if (isset($_POST['DownloadCSV'])) {
   }
   $result = ($total * 100) / $total_credit;
   $csvHandler->write('RESULT',$result);
+  $csvHandler->download();
 }
 ?>
 

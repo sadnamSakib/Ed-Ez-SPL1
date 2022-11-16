@@ -3,6 +3,7 @@
         private $filename;
         private $directory;
         private $newFile;
+        private $location;
         function __construct($directory){
             $this->filename = "GradeSheet";
             $this->directory = $directory;
@@ -12,6 +13,7 @@
         public function init(){
             mkdir(URLPath::getFTPServerRoot().$this->directory.'/',true);
             $this->newFile = fopen(URLPath::getFTPServerRoot().$this->directory.'/'.$this->filename.".csv", "w");
+            $this->location=URLPath::getFTPServer().$this->directory.'/'.$this->filename.'.csv';
         }
 
         public function write(...$args){
@@ -26,6 +28,10 @@
                 }
             }
             fwrite($this->newFile,"\n");
+        }
+
+        public function download(){
+            header('Location:'.$this->location.'');
         }
     }
 ?>
