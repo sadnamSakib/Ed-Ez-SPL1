@@ -2,7 +2,7 @@
     
     require 'script.php';
     require 'style.php';
-    function navbar($Dashboard,$Profile,$Schedule,$ClassroomSystem,$Grades,$root_path,$updatePassword=NULL){
+    function navbar($Dashboard,$Profile,$Schedule,$ClassroomSystem,$root_path,$updatePassword=NULL,$Grades=NULL){
         ?>
     <?php echo navstyle(); ?>
     <div class="sidebar" id="side_nav">
@@ -24,7 +24,12 @@
         ?>
         <li class=""><a href="<?php echo $Schedule?>" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-calendar-plus pe-2'></i>Schedule</a></li>
         <li class=""><a href="<?php echo $ClassroomSystem?>" class="text-decoration-none px-3 py-2 d-block"><i class='bx bx-chalkboard pe-2'></i>Classrooms</a></li>
-        <li class=""><a href="<?php echo $Grades?>" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-bar-chart-alt-2 pe-2'></i>Grades</a></li>
+        <?php if(!is_null($Grades))
+        {
+          ?>
+          <li class=""><a href="<?php echo $Grades?>" class="text-decoration-none px-3 py-2 d-block"><i class='bx bxs-bar-chart-alt-2 pe-2'></i>Grades</a></li>
+          <?php
+         } ?>
       </ul>
     </div>
     <div class="content">
