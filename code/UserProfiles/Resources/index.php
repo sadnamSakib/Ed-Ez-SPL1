@@ -1,5 +1,5 @@
 <?php
-$root_path = '../../../';
+$root_path = '../../';
 require $root_path . 'LibraryFiles/DatabaseConnection/config.php';
 require $root_path . 'LibraryFiles/URLFinder/URLPath.php';
 require $root_path . 'LibraryFiles/SessionStore/session.php';
@@ -25,8 +25,9 @@ session::profile_not_set($root_path);
   <script src="<?php echo $root_path; ?>js/bootstrap.js"></script>
   <div class="main-container d-flex">
     <?php
-    require '../navbar.php';
-    student_navbar($root_path, false);
+    $profile_type=$tableName=$_SESSION['tableName']==='student'?'../StudentProfile/':'../TeacherProfile/';
+    require $profile_type.'navbar.php';
+    $profile_type==='../StudentProfile/'?student_navbar($root_path, false):teacher_navbar($root_path, false);
     ?>
     <section class="content-section m-auto px-5">
       <div class="container-fluid bg-white rounded mt-5 mb-5"></div>
