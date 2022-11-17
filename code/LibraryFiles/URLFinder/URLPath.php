@@ -30,6 +30,7 @@
 
         public static function getFTPServerRoot(){   
             return 'D:/XAMPP/htdocs/Files/pdf/';
+            return 'C:/xampp/htdocs/Files/';
         }
 
         public static function getFTPServer(){   
@@ -37,7 +38,7 @@
             $url = "https://";   
             else  
                 $url = "http://";   
-            return $url.$_SERVER['HTTP_HOST'] . '/Files/pdf/';
+            return $url.$_SERVER['HTTP_HOST'] . '/Files/';
         }
     }
 ?>

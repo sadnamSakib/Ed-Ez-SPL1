@@ -28,7 +28,7 @@ if (isset($_POST['Join'])) {
     $error = "classroom doesn't exist";
   } else if ($existenceCheck->num_rows == 0) {
     $database->fetch_results($classroomRecords,"SELECT * FROM classroom WHERE class_code='$classCode'");
-    $database->fetch_results($userRecords,"SELECT * FROM users WHERE email='".$email->get_email()."'");
+    $database->fetch_results($userRecords,"SELECT * FROM users,student WHERE student.email='".$email->get_email()."' AND users.email='".$email->get_email()."'");
     if($classroomRecords['semester']===$userRecords['semester']) {
       $database->performQuery("INSERT INTO student_classroom(email,class_code) VALUES('" . $email->get_email() . "','$classCode');");
     }

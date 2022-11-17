@@ -6,9 +6,8 @@
         private $file_tmp_name;
         private $database;
 
-        function __construct($filename,$file_tmp_name, $file_extension,$database,$utility){
+        function __construct($filename,$file_tmp_name,$database,$utility){
             $this->filename = $filename;
-            $this->file_extension = $file_extension;
             $this->database = $database;
             $file_id = $utility->generateRandomString(50);
             $existence = $this->database->performQuery("SELECT * FROM files where file_id='$file_id'");
@@ -22,7 +21,7 @@
         }
 
         private function addFile(){
-            $this->database->performQuery("insert into files(file_id,filename,file_ext) values('$this->file_id','$this->filename','$this->file_extension')");
+            $this->database->performQuery("insert into files(file_id,filename) values('$this->file_id','$this->filename')");
             mkdir(URLPath::getFTPServerRoot().$this->file_id.'/');
             move_uploaded_file($this->file_tmp_name,URLPath::getFTPServerRoot().$this->file_id.'/'.$this->filename);
           }
