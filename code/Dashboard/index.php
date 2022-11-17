@@ -14,43 +14,9 @@ if ($verified['Verified'] !== '1') {
 $error = null;
 $errorColor = "red";
 
-if (isset($_REQUEST['profileimg'])) {
-  $fileName = basename($_FILES["image"]["name"]);
-  $fileType = pathinfo($fileName, PATHINFO_EXTENSION);
-  $allowTypes = array('jpg', 'png', 'jpeg');
-  if (in_array($fileType, $allowTypes)) {
-    $image = $_FILES["image"]["tmp_name"];
-    $imgContent = addslashes(file_get_contents($image));
-  }
-  $updateProfilePicture = "UPDATE users SET profile_picture='$imgContent' WHERE email = '" . $email->get_email() . "'";
-  $database->performQuery($updateProfilePicture);
-}
+$classrooms = $database->performQuery("SELECT * FROM classroom,student_classroom where classroom.class_code=student_classroom.class_code and student_classroom.email='" . $email->get_email() . "' and active='1';");
 
-if (isset($_POST['UpdateProfile'])) {
-  $validate = new InputValidation();
-  $_SESSION['name'] = $name = $validate->post_sanitise_regular_input('name');
-  $department = $validate->post_sanitise_regular_input('department');
-  $semester = $validate->post_sanitise_number('semester');
-  $country = $validate->post_sanitise_regular_input('country');
-  $studentID = $validate->post_sanitise_digits('studentID');
-  $database->fetch_results($row, "SELECT * FROM users WHERE email = '" . $email->get_email() . "'");
-  if ($_REQUEST['mobile'] != '') {
-    $mobileNumber = $validate->post_sanitise_digits('mobile');
-  } else {
-    $mobileNumber = $row['mobileNumber'];
-  }
 
-  if (password_verify(hash('sha512', $validate->post_sanitise_password('password')), $row['password'])) {
-    if ($semester == '') {
-      $semester = -1;
-    }
-    $database->performQuery("UPDATE users SET name='$name',mobileNumber='$mobileNumber',country='$country',department='$department' WHERE email='" . $email->get_email() . "'");
-    $database->performQuery("UPDATE student SET semester='$semester',studentID='$studentID' WHERE email = '" . $email->get_email() . "'");
-  } else {
-    $error = "Incorrect Password, Cannot make changes to profile";
-    $errorColor = "red";
-  }
-}
 
 $database->fetch_results($row, "SELECT * FROM users INNER JOIN student ON users.email=student.email WHERE users.email = '" . $email->get_email() . "'");
 
@@ -79,7 +45,7 @@ if ($semester == -1) {
   <meta charset="UTF-8">
   <title>Profile</title>
   <link rel="icon" href="<?php echo $root_path; ?>title_icon.jpg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="main.min.css" />
   <link rel="stylesheet" href="<?php echo $root_path; ?>css/bootstrap.css" />
@@ -97,14 +63,31 @@ if ($semester == -1) {
     require 'navbar.php';
     student_navbar($root_path, true);
     ?>
-    <section class="content-section row justify-content-center my-5 mx-auto">
+    <section class="content-section row justify-content-center my-5 mx-5">
 
-      <div class="col-md-6 mx-auto ">
+      <div class="col-md-6 mx-5">
         <div class="row mb-1">
           <div class="greetingsbox">
             <h2 class="typewrite" data-period="500" data-type='["Welcome back , <?php echo $name ?>" , "How was your day?" , "Have you submitted all your tasks?" ]'>
             </h2>
             <span class="wrap"></span>
+
+          </div>
+        </div>
+        <div class=" small-profile row justify-content-center mb-3 ">
+          <div class="profilebox col-md-4 w-100">
+            <div class="row my-auto">
+              <div class="col my-auto">
+                <img src="<?php echo $src ?>" style="border-radius:75%; height:3rem ; width:3rem;">
+              </div>
+              <div class="col-5 my-auto">
+                <p class="my-auto align-self-start"" style=" font-weight:bold; color:white;font-size:15px"><?php echo $name ?></p>
+                <p class="my-auto align-self-start"" style=" color:white">Student</p>
+              </div>
+              <div class="col my-auto">
+                <i class="bx bxs-bell notification align-self-end ms-5"></i>
+              </div>
+            </div>
           </div>
         </div>
         <div class="row mb-2">
@@ -112,51 +95,65 @@ if ($semester == -1) {
         </div>
         <div class="row">
           <div class="box classroomcontainer">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">Card 1</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-
+            <?php
+            foreach ($classrooms as $i) {
+              $classCode = $i['class_code'];
+              $classTitle = $i['classroom_name'];
+              $database->fetch_results($teacher_records, "SELECT * FROM users,teacher_classroom,classroom WHERE users.email=teacher_classroom.email and classroom.class_code='$classCode'");
+            ?>
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title"><?php echo $classTitle ?></h5>
+                  <h6 class="card-subtitle mb-2 text-muted"><?php echo $teacher_records['name'] ?></h6>
+                </div>
               </div>
-            </div>
-            <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Card 2</h5>
-              <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-            </div>
-          </div>
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-            </div>
-          </div>
-          </div>
+            <?php } ?>
 
+
+          </div>
         </div>
-      </div>
-      <div class="col-md-4 mx-auto">
-        <div class="row justify-content-center mb-3">
-          <div class="profilebox row col-md-4 w-100 align-self-around justify-content-around">
-            <div class="col-md-2 m-auto">
-              <img src="<?php echo $src ?>" style="border-radius:50%; height:4rem ; width:4rem;">
-            </div>
-            <div class="col-md-3 m-auto">
-              <p class="row my-auto" style="font-weight:bold; color:white"><?php echo $name ?></p>
-              <p class="row my-auto" style=" color:white">Student</p>
-            </div>
-            <div class="col-md-7 m-auto justify-content-end">
 
-              <i class='bx bxs-bell notification align-self-end ms-5'></i>
-
-
-            </div>
-          </div>
+        <div class="row mb-2 mt-5">
+          <h4>My Resources</h4>
         </div>
         <div class="row">
+          <div class="box classroomcontainer">
 
-          <canvas id="chartProgress"></canvas>
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Card</h5>
+                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+              </div>
+            </div>
 
+
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3 mx-5">
+
+        <div class="big-profile row justify-content-center mb-3">
+          <div class="profilebox col-md-4 w-100">
+            <div class="row my-auto">
+              <div class="col my-auto">
+                <img src="<?php echo $src ?>" style="border-radius:75%; height:3rem ; width:3rem;">
+              </div>
+              <div class="col-5 my-auto">
+                <p class="my-auto align-self-start"" style=" font-weight:bold; color:white;font-size:15px"><?php echo $name ?></p>
+                <p class="my-auto align-self-start"" style=" color:white">Student</p>
+              </div>
+              <div class="col my-auto">
+                <i class="bx bxs-bell notification align-self-end ms-5"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row gradebox mt-5">
+          <div class="row mt-3"><canvas id="chartProgress"></canvas></div>
+          <div class="row justify-content-center  mt-4" style="text-align:center; ">
+            <h5>Grade percentage</h5>
+          </div>
         </div>
         <div class="row justify-content-center">
           <div class="box w-100 mt-3">

@@ -29,6 +29,7 @@
         }
 
         public static function getFTPServerRoot(){   
+            return 'D:/XAMPP/htdocs/Files/pdf/';
             return 'C:/xampp/htdocs/Files/';
         }
 
