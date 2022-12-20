@@ -1,5 +1,6 @@
 <?php
-$root_path = '../';
+$root_path = '../../../';
+$profile_path = '../';
 require $root_path . 'LibraryFiles/DatabaseConnection/config.php';
 require $root_path . 'LibraryFiles/URLFinder/URLPath.php';
 require $root_path . 'LibraryFiles/SessionStore/session.php';
@@ -59,9 +60,9 @@ if ($semester == -1) {
   <script src="<?php echo $root_path; ?>js/bootstrap.js"></script>
   <script src="main.min.js"></script>
   <div class="main-container d-flex">
-    <?php
-    require 'navbar.php';
-    student_navbar($root_path, true);
+  <?php
+    require $profile_path . 'navbar.php';
+    student_navbar($root_path);
     ?>
     <section class="content-section row justify-content-center my-5 mx-5">
 
