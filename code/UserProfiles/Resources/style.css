@@ -122,6 +122,12 @@ to {top: 0; opacity: 1}
   margin: auto;
   margin-left: 5px;
 }
+.form-control.search.search-global{
+  background-color: #fefefe;
+  margin: auto;
+  margin-left: 5rem;
+  box-shadow: inset 0 0 5px rgba(10, 186, 239, 0.5);
+}
 .btn.btn-outline-secondary{
   margin-top: 10%;
   background-color: #4596be;
