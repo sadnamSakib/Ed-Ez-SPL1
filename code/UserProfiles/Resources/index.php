@@ -30,7 +30,14 @@ session::profile_not_set($root_path);
     $profile_type === '../StudentProfile/' ? student_navbar($root_path, false) : teacher_navbar($root_path, false);
     ?>
     <section class="content-section m-auto px-5">
-      <div class="container-fluid bg-white rounded mt-5 mb-5"></div>
+      <div class="container-fluid bg-white rounded mt-5 mb-5">
+        <div class="container">
+          <form class="d-flex mx-5" role="search">
+            <input class="form-control search search-global me-2 w-75" id="searchbar" type="search" placeholder="Search global resources" aria-label="Search">
+            <button class="btn btn-primary btn-search mb-2 mt-2 me-2" type="submit">Search</button>
+          </form>
+        </div>
+      </div>
       <!-- Saved Resources -->
       <div class="row">
         <div class="col-md-6">
