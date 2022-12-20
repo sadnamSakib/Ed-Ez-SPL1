@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 16, 2022 at 04:18 PM
+-- Generation Time: Dec 20, 2022 at 07:26 PM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -58,7 +58,8 @@ CREATE TABLE `classroom_creator` (
 CREATE TABLE `classroom_session` (
   `class_code` varchar(20) NOT NULL,
   `session` varchar(10) NOT NULL,
-  `event_id` varchar(50) NOT NULL
+  `event_id` varchar(50) NOT NULL,
+  `deadline` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -106,8 +107,7 @@ CREATE TABLE `event` (
 
 CREATE TABLE `files` (
   `file_id` varchar(50) NOT NULL,
-  `filename` text NOT NULL,
-  `file_ext` text NOT NULL
+  `filename` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -206,7 +206,7 @@ CREATE TABLE `student_task_submission` (
   `email` varchar(200) NOT NULL,
   `task_id` varchar(50) NOT NULL,
   `file_id` varchar(50) NOT NULL,
-  `submission_status` tinyint(1) NOT NULL DEFAULT 1,
+  `submission_status` tinyint(1) NOT NULL DEFAULT 0,
   `marks_obtained` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -314,7 +314,9 @@ ALTER TABLE `classroom_creator`
 -- Indexes for table `classroom_session`
 --
 ALTER TABLE `classroom_session`
-  ADD PRIMARY KEY (`session`);
+  ADD PRIMARY KEY (`session`),
+  ADD KEY `class_code` (`class_code`),
+  ADD KEY `event_id` (`event_id`);
 
 --
 -- Indexes for table `comments`
@@ -448,6 +450,13 @@ ALTER TABLE `users`
 ALTER TABLE `classroom_creator`
   ADD CONSTRAINT `fk_classroom_creator_classroom` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_classroom_creator_users` FOREIGN KEY (`email`) REFERENCES `teacher` (`email`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `classroom_session`
+--
+ALTER TABLE `classroom_session`
+  ADD CONSTRAINT `classroom_session_ibfk_1` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE,
+  ADD CONSTRAINT `classroom_session_ibfk_2` FOREIGN KEY (`event_id`) REFERENCES `event` (`event_id`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `comments`
