@@ -25,12 +25,19 @@ session::profile_not_set($root_path);
   <script src="<?php echo $root_path; ?>js/bootstrap.js"></script>
   <div class="main-container d-flex">
     <?php
-    $profile_type=$tableName=$_SESSION['tableName']==='student'?'../StudentProfile/':'../TeacherProfile/';
-    require $profile_type.'navbar.php';
-    $profile_type==='../StudentProfile/'?student_navbar($root_path, false):teacher_navbar($root_path, false);
+    $profile_type = $tableName = $_SESSION['tableName'] === 'student' ? '../StudentProfile/' : '../TeacherProfile/';
+    require $profile_type . 'navbar.php';
+    $profile_type === '../StudentProfile/' ? student_navbar($root_path, false) : teacher_navbar($root_path, false);
     ?>
     <section class="content-section m-auto px-5">
-      <div class="container-fluid bg-white rounded mt-5 mb-5"></div>
+      <div class="container-fluid bg-white rounded mt-5 mb-5">
+        <div class="container">
+          <form class="d-flex mx-5" role="search">
+            <input class="form-control search search-global me-2 w-75" id="searchbar" type="search" placeholder="Search global resources" aria-label="Search">
+            <button class="btn btn-primary btn-search mb-2 mt-2 me-2" type="submit">Search</button>
+          </form>
+        </div>
+      </div>
       <!-- Saved Resources -->
       <div class="row">
         <div class="col-md-6">
@@ -70,13 +77,25 @@ session::profile_not_set($root_path);
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
-                      <div class="mb-3">
-                        <input type="text" id="title" name="title" class="form-control" placeholder="Title of the file" aria-label="Leave a comment">
-                      </div>
+                        <div class="mb-3">
+                          <input type="text" id="title" name="title" class="form-control" placeholder="Title of the file" aria-label="Leave a comment">
+                        </div>
                         <div class="input-group">
                           <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
                         </div>
                       </div>
+                      <div class="mx-4">
+                        <label style="color: black">Set resource as: </label>
+                        <div class="form-check form-check-inline mx-2">
+                          <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                          <label class="form-check-label" style="color: black" for="inlineRadio1">Public</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                          <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                          <label class="form-check-label" style="color: black" for="inlineRadio2">Private</label>
+                        </div>
+                      </div>
+
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary">Upload</button>
@@ -84,7 +103,7 @@ session::profile_not_set($root_path);
                     </div>
                   </div>
                 </div>
-                <input class="form-control search me-2" id="searchbar-uploaded" type="search" onkeyup="search_uploaded_resources()"  placeholder="Search" aria-label="Search">
+                <input class="form-control search me-2" id="searchbar-uploaded" type="search" onkeyup="search_uploaded_resources()" placeholder="Search" aria-label="Search">
                 <button class="btn btn-primary btn-search mb-2 mt-2 me-2" type="submit">Search</button>
               </form>
             </div>
