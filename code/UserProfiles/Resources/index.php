@@ -32,8 +32,8 @@ session::profile_not_set($root_path);
     <section class="content-section m-auto px-5">
       <div class="container-fluid bg-white rounded mt-5 mb-5">
         <div class="container">
-          <form class="d-flex mx-5" role="search">
-            <input class="form-control search search-global me-2 w-75" id="searchbar" type="search" placeholder="Search global resources" aria-label="Search">
+          <form class="d-flex mx-auto" role="search">
+            <input class="form-control search search-global me-2 w-75" id="searchbar2" type="search" placeholder="Search for resources..." aria-label="Search">
             <button class="btn btn-primary btn-search mb-2 mt-2 me-2" type="submit">Search</button>
           </form>
         </div>
@@ -53,9 +53,11 @@ session::profile_not_set($root_path);
         </div> -->
             <div class="flex-container w-100">
               <div class="scroll w-100">
-                <div class="card card-body my-2 me-1 btn btn-resource saved-resources" style="text-align:left" id="scrollspyHeading1">First Heading</div>
-                <div class="card card-body my-2 me-1 btn btn-resource saved-resources" style="text-align:left" id="scrollspyHeading2">Second heading</div>
-                <div class="card card-body my-2 me-1 btn btn-resource saved-resources" style="text-align:left" id="scrollspyHeading3">Third heading</div>
+                <div class="card card-body my-2 me-1 btn btn-resource saved-resources" style="text-align:left" id="scrollspyHeading1">
+                <div class="public-box mb-1">Public</div>
+                <h5>A resource that you saved God knows why</h5>
+                <p style="font-size: 12px;">Why did you save this resource? Do you think any resource can compensate for your lack of intelligence?</p>
+              </div> 
               </div>
             </div>
           </div>
@@ -80,6 +82,9 @@ session::profile_not_set($root_path);
                         <div class="mb-3">
                           <input type="text" id="title" name="title" class="form-control" placeholder="Title of the file" aria-label="Leave a comment">
                         </div>
+                        <div class="mb-3">
+                          <input type="text" id="title" name="title" class="form-control" placeholder="Brief description" aria-label="Leave a comment">
+                        </div>
                         <div class="input-group">
                           <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
                         </div>
@@ -95,7 +100,14 @@ session::profile_not_set($root_path);
                           <label class="form-check-label" style="color: black" for="inlineRadio2">Private</label>
                         </div>
                       </div>
-
+                      <div class="mb-3 mx-4 classSelector" >
+                        <select class="form-select" style="display:none;"aria-label="selectClassroom" name="classroom" id="classroom" >
+                          <option selected value="0">Select Classroom</option>
+                          <option value="1">Data Structures</option>
+                          <option value="2">Linear Algebra</option>
+                          <option value="3">Object Oriented Programming</option>
+                        </select>
+                      </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         <button type="button" class="btn btn-primary">Upload</button>
@@ -111,9 +123,11 @@ session::profile_not_set($root_path);
         </div> -->
             <div class="flex-container w-100">
               <div class="scroll w-100">
-                <div class="card card-body my-2 me-1 btn btn-resource uploaded-resources" style="text-align:left" id="scrollspyHeading1">First heading</div>
-                <div class="card card-body my-2 me-1 btn btn-resource uploaded-resources" style="text-align:left" id="scrollspyHeading2">Second heading</div>
-                <div class="card card-body my-2 me-1 btn btn-resource uploaded-resources" style="text-align:left" id="scrollspyHeading3">Third heading</div>
+              <div class="card card-body my-2 me-1 btn btn-resource saved-resources" style="text-align:left" id="scrollspyHeading1">
+              <div class="private-box mb-1">Private</div>
+                <h5>A resource that you uploaded</h5>
+                <p style="font-size: 12px;">Oh wow you are uploading resources now? Who do you think you are? </p>
+              </div> 
               </div>
             </div>
           </div>

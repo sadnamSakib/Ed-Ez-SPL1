@@ -30,3 +30,31 @@ function search_uploaded_resources() {
 		}
 	}
 }
+
+const selectElement = document.querySelector('#classroom');
+const optionElements = selectElement.querySelectorAll('option');
+
+optionElements.forEach(option => {
+  option.addEventListener('click', () => {
+    option.selected = !option.selected;
+  });
+});
+
+const radioButton = document.querySelector('#inlineRadio2');
+const radioButton2 = document.querySelector('#inlineRadio1');
+const dropdownMenu = document.querySelector('#classroom');
+
+radioButton.addEventListener('click', () => {
+  if(radioButton.checked) {
+    dropdownMenu.style.display = 'block';
+  } else {
+    dropdownMenu.style.display = 'none';
+  }
+});
+
+radioButton2.addEventListener('click', () => {
+	if(radioButton2.checked) {
+	  dropdownMenu.style.display = 'none';
+	}
+  });
+
