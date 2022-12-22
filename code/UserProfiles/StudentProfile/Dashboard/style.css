@@ -313,7 +313,10 @@ hr.h-color {
   --bs-btn-bg: #2f6d8b;
   --bs-btn-border-color: #2f6d8b;
 }
-
+.btn{
+  --bs-btn-active-border-color: transparent !important;
+  --bs-btn-hover-border-color: transparent !important;
+}
 .btn.btn-dark.btn-update {
   width: 150px;
   text-align: center !important;

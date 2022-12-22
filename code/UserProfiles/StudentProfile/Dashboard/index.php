@@ -60,7 +60,7 @@ if ($semester == -1) {
   <script src="<?php echo $root_path; ?>js/bootstrap.js"></script>
   <script src="main.min.js"></script>
   <div class="main-container d-flex">
-  <?php
+    <?php
     require $profile_path . 'navbar.php';
     student_navbar($root_path);
     ?>
@@ -143,8 +143,18 @@ if ($semester == -1) {
                 <p class="my-auto align-self-start"" style=" font-weight:bold; color:white;font-size:20px"><?php echo $name ?></p>
                 <p class="my-auto align-self-start"" style=" color:white">Student</p>
               </div>
-              <div class="col my-auto">
-                <i class="bx bxs-bell notification align-self-end ms-5"></i>
+              <div class="col-2 my-auto">
+                
+                <div class="dropdown-center">
+                  <button class="btn btn-xs dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="true">
+                  <i class="bx bxs-bell notification"></i>
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Action</a></li>
+                    <li><a class="dropdown-item" href="#">Action two</a></li>
+                    <li><a class="dropdown-item" href="#">Action three</a></li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
