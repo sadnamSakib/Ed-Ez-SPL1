@@ -199,9 +199,11 @@ hr.h-color {
   flex-direction: column;
   min-width: 0;
   height: var(--bs-card-height);
-  box-shadow: 7px 7px 16px -5px rgba(214, 213, 213, 0.7);
-  -webkit-box-shadow: 7px 7px 16px -5px rgba(209, 209, 209, 0.7);
-  -moz-box-shadow: 7px 7px 16px -5px rgba(201, 199, 199, 0.7);
+  box-shadow:-10px -10px 16px -5px rgba(214, 213, 213, 0.5),
+  -10px -10px 16px -5px rgba(214, 213, 213, 0.5);
+  -webkit-box-shadow: -10px 10px 16px -5px rgba(209, 209, 209, 0.5),
+  10px -10px 16px -5px rgba(209, 209, 209, 0.5);
+  -moz-box-shadow: 10px 10px 16px -5px rgba(201, 199, 199, 0.7);
   word-wrap: break-word;
   background-color: white!important;
   background-clip: border-box;
