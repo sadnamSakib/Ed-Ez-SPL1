@@ -53,7 +53,7 @@ session::profile_not_set($root_path);
           </div>
           <div>
             <a title = "Save">
-            <i class='bx btn bx-sm bxs-save justify-content-end'></i>
+            <i class='bx btn bx-sm bxs-save'></i>
             </a>
           </div>
         </div>
