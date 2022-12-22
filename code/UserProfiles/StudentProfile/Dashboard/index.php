@@ -127,21 +127,20 @@ if ($semester == -1) {
               </div>
             </div>
 
-
           </div>
         </div>
       </div>
 
-      <div class="col-md-3 mx-5">
+      <div class="col-md-4 mx-5">
 
         <div class="big-profile row justify-content-center mb-3">
           <div class="profilebox col-md-4 w-100">
             <div class="row my-auto">
-              <div class="col my-auto">
+              <div class="col my-auto mx-2">
                 <img src="<?php echo $src ?>" style="border-radius:75%; height:3rem ; width:3rem;">
               </div>
-              <div class="col-5 my-auto">
-                <p class="my-auto align-self-start"" style=" font-weight:bold; color:white;font-size:15px"><?php echo $name ?></p>
+              <div class="col-6 my-auto">
+                <p class="my-auto align-self-start"" style=" font-weight:bold; color:white;font-size:20px"><?php echo $name ?></p>
                 <p class="my-auto align-self-start"" style=" color:white">Student</p>
               </div>
               <div class="col my-auto">
@@ -150,7 +149,7 @@ if ($semester == -1) {
             </div>
           </div>
         </div>
-        <div class="row gradebox mt-5">
+        <div class="row gradebox mt-5 my-2">
           <div class="row mt-3"><canvas id="chartProgress"></canvas></div>
           <div class="row justify-content-center  mt-4" style="text-align:center; ">
             <h5>Grade percentage</h5>
