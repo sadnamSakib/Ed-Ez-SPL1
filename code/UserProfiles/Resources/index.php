@@ -53,7 +53,7 @@ session::profile_not_set($root_path);
         </div> -->
             <div class="flex-container w-100">
               <div class="scroll w-100">
-                <div class="card card-body my-2 me-1 btn btn-resource saved-resources" style="text-align:left" id="scrollspyHeading1">
+                <div class="card card-body mx-1 my-2 me-1 btn btn-resource saved-resources" style="text-align:left" id="scrollspyHeading1">
                 <div class="public-box mb-1">Public</div>
                 <h5>A resource that you saved God knows why</h5>
                 <p style="font-size: 12px;">Why did you save this resource? Do you think any resource can compensate for your lack of intelligence?</p>
@@ -123,7 +123,7 @@ session::profile_not_set($root_path);
         </div> -->
             <div class="flex-container w-100">
               <div class="scroll w-100">
-              <div class="card card-body my-2 me-1 btn btn-resource saved-resources" style="text-align:left" id="scrollspyHeading1">
+              <div class="card card-body my-2 mx-1 me-1 btn btn-resource saved-resources" style="text-align:left" id="scrollspyHeading1">
               <div class="private-box mb-1">Private</div>
                 <h5>A resource that you uploaded</h5>
                 <p style="font-size: 12px;">Oh wow you are uploading resources now? Who do you think you are? </p>
