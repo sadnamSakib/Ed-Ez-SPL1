@@ -40,8 +40,8 @@ optionElements.forEach(option => {
   });
 });
 
-const radioButton = document.querySelector('#inlineRadio2');
-const radioButton2 = document.querySelector('#inlineRadio1');
+const radioButton = document.querySelector('#privateResource');
+const radioButton2 = document.querySelector('#publicResource');
 const dropdownMenu = document.querySelector('#classroom');
 
 radioButton.addEventListener('click', () => {
@@ -50,11 +50,13 @@ radioButton.addEventListener('click', () => {
   } else {
     dropdownMenu.style.display = 'none';
   }
+	radioButton2.checked = !radioButton.checked;
 });
 
 radioButton2.addEventListener('click', () => {
 	if(radioButton2.checked) {
 	  dropdownMenu.style.display = 'none';
 	}
+	radioButton.checked = !radioButton2.checked;
   });
 
