@@ -85,9 +85,10 @@ if (isset($_POST['DownloadCSV'])) {
               <div class="scroll w-100">
                 <div class="card card-body mx-1 my-2 me-1 btn btn-resource saved-resources" style="text-align:left" id="scrollspyHeading1">
                 <div class="d-flex justify-content-between">
-                <h3 class="my-4">CSE-4303 gradesheet</h3>
+                <h4 class="my-auto">CSE-4303 : Data Structures</h4>
                 <button type="button" class="btn btn-primary btn-gradeDownload my-3">Download</button>
-                </div>
+              </div>
+              
       
               </div> 
               </div>
