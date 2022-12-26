@@ -2,7 +2,7 @@
     
     require 'script.php';
     require 'style.php';
-    function navbar($Dashboard,$Profile,$Schedule,$Resources,$ClassroomSystem,$root_path,$updatePassword=NULL,$Grades){
+    function navbar($Dashboard,$Profile,$Schedule,$Resources,$ClassroomSystem,$root_path,$Grades,$updatePassword=NULL){
         ?>
     <?php echo navstyle(); ?>
     <div class="sidebar" id="side_nav">
