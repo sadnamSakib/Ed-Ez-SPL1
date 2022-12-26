@@ -1,6 +1,32 @@
 if (window.history.replaceState) {
   window.history.replaceState(null, null, window.location.href);
 }
+
+$(document).ready(function(){
+	$('.search-box input[type="search"]').on("keyup input", function(){
+			/* Get input value on change */
+			var inputVal = $(this).val();
+			var resultDropdown = $(this).siblings(".result");
+			var element=document.getElementById("uploadsave");
+			if(inputVal.length){
+				element.style.display="none";
+					$.get("search.php", {term: inputVal}).done(function(data){
+							// Display the returned data in browser
+							resultDropdown.html(data);
+					});
+			} else{
+				element.style.display=null;
+					resultDropdown.empty();
+			}
+	});
+	
+	// Set search input value on click of result item
+	$(document).on("click", ".result button", function(){
+			$(this).parents(".search-box").find('input[type="search"]').val($(this).text());
+			$(this).parent(".result").empty();
+	});
+});
+
 // JavaScript code
 function search_resources() {
 	let input = document.getElementById('searchbar').value

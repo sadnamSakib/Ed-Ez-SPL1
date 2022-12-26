@@ -54,8 +54,10 @@ if (isset($_POST['uploadSubmit'])) {
   <link rel="stylesheet" href="<?php echo $root_path; ?>css/bootstrap.css" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <link href="<?php echo $root_path; ?>boxicons-2.1.4/css/boxicons.min.css" rel="stylesheet" />
-</head>
+<script>
 
+</script>
+</head>
 <body>
   <script src="<?php echo $root_path; ?>js/bootstrap.js"></script>
   <div class="main-container d-flex">
@@ -65,16 +67,15 @@ if (isset($_POST['uploadSubmit'])) {
     $_SESSION['tableName'] === 'student'  ? student_navbar($root_path, false) : teacher_navbar($root_path, false);
     ?>
     <section class="content-section m-auto px-5">
-      <div class="container-fluid bg-white rounded mt-5 mb-5">
+      <div class="container-fluid bg-white rounded mt-5 mb-5 search-box">
         <div class="container">
-          <form class="d-flex mx-auto" role="search">
-            <input class="form-control search search-global me-2 w-75" id="searchbar2" type="search" placeholder="Search for resources by tag..." aria-label="Search">
-            <button class="btn btn-primary btn-search mb-2 mt-2 me-2" type="submit">Search</button>
-          </form>
+        <input class="form-control search search-global me-2 w-75" id="searchbar2" type="search" placeholder="Search for resources by tag..." autocomplete="off" aria-label="Search">
+        <div class="me-2 w-75 result"></div>
         </div>
+        
       </div>
       <!-- Saved Resources -->
-      <div class="row">
+      <div class="row" id="uploadsave">
         <div class="col-md-6">
           <div class="card intro-card w-75 text-bg-secondary m-auto mb-3">
             <div class="card-header">

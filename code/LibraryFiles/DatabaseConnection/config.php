@@ -52,6 +52,23 @@
             $result=$this->performQuery($sql);
             $record=mysqli_fetch_assoc($result);
         }
+
+        public function prepared_statement($sql){
+            return mysqli_prepare($this->connection, $sql);
+        }
+
+        public function setPreparedStatement($stmt,&$param_term){
+            mysqli_stmt_bind_param($stmt, "s", $param_term);
+        }
+
+        public function executePreparedStatement(mysqli_stmt $stmt){
+            mysqli_stmt_execute($stmt);
+        }
+
+        public function getPreparedStatementResult($stmt,&$result){
+          mysqli_stmt_execute($stmt);
+          $result=mysqli_stmt_get_result($stmt);
+        }
         
     }
     

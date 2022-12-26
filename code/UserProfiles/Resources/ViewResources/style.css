@@ -12,6 +12,24 @@ body{
   
   }
   
+    .result{
+        position: absolute;        
+        z-index: 9999;
+        top: 100%;
+        left: 0;
+    }
+    /* Formatting result items */
+    .result p{
+        margin: 0;
+        padding: 7px 10px;
+        border: 1px solid #CCCCCC;
+        border-top: none;
+        cursor: pointer;
+    }
+    .result p:hover{
+        background: #f2f2f2;
+    }
+  
   .modal {
     display: none; /* Hidden by default */
     position: fixed; /* Stay in place */
