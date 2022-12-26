@@ -54,16 +54,15 @@ if (isset($_POST['uploadSubmit'])) {
   <link rel="stylesheet" href="<?php echo $root_path; ?>css/bootstrap.css" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <link href="<?php echo $root_path; ?>boxicons-2.1.4/css/boxicons.min.css" rel="stylesheet" />
-  <script defer src="script.js"></script>
 </head>
 
 <body>
   <script src="<?php echo $root_path; ?>js/bootstrap.js"></script>
   <div class="main-container d-flex">
     <?php
-    $profile_type = $tableName = $_SESSION['tableName'] === 'student' ? '../StudentProfile/' : '../TeacherProfile/';
+    $profile_type = $_SESSION['tableName'] === 'student' ? '../StudentProfile/' : '../TeacherProfile/';
     require $profile_type . 'navbar.php';
-    $profile_type === '../StudentProfile/' ? student_navbar($root_path, false) : teacher_navbar($root_path, false);
+    $_SESSION['tableName'] === 'student'  ? student_navbar($root_path, false) : teacher_navbar($root_path, false);
     ?>
     <section class="content-section m-auto px-5">
       <div class="container-fluid bg-white rounded mt-5 mb-5">
@@ -97,7 +96,7 @@ if (isset($_POST['uploadSubmit'])) {
                 <div class="card card-body mx-1 my-2 me-1 btn btn-resource saved-resources" style="text-align:left" id="scrollspyHeading1">
                 <button type="submit" name="<?php echo $dummy_resource['resource_id'] ?>" style="all:unset">
                   <div class="public-box mb-1"><?php echo $dummy_resource['resource_visibility']; ?></div>
-                  <h5><?php echo $dummy_resource['resource_visibility']; ?></h5>
+                  <h5><?php echo $dummy_resource['title']; ?></h5>
                   <p style="font-size: 12px;">Resource Tag: <?php echo $dummy_resource['resource_tag']; ?></p>
                   <p style="font-size: 12px;"><?php echo $dummy_resource['resource_description']; ?></p>
                   </button>
@@ -186,7 +185,7 @@ if (isset($_POST['uploadSubmit'])) {
                 $resource = $database->performQuery("SELECT * FROM resources,resource_uploaded WHERE resources.resource_id=resource_uploaded.resource_id;");
                 foreach ($resource as $dummy_resource) {
                 ?>
-                    <div class="card card-body my-2 mx-1 me-1 btn btn-resource saved-resources" style="text-align:left" id="scrollspyHeading1">
+                    <div class="card card-body my-2 mx-1 me-1 btn btn-resource uploaded-resources" style="text-align:left" id="scrollspyHeading1">
                       <button type="submit" name="<?php echo $dummy_resource['resource_id'] ?>" style="all:unset">
                         <div class="private-box mb-1"><?php echo $dummy_resource['resource_visibility']; ?></div>
                         <h5><?php echo $dummy_resource['title']; ?></h5>
@@ -208,5 +207,5 @@ if (isset($_POST['uploadSubmit'])) {
   </div>
 
 </body>
-
+<script defer src="script.js"></script>
 </html>
