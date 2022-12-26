@@ -157,11 +157,11 @@ if ($semester == -1) {
                 </div> -->
                 <div class="dropdown">
                 <i class="bx bxs-bell notification dropbtn" onclick="myFunction()"></i>
-                  <div id="myDropdown" class="dropdown-content">
+                  <div id="myDropdown" class="dropdown-content w-50">
                     <a href="#">Link 1</a>
                     <a href="#">Link 2</a>
                     <a href="#">Link 3</a>
-                    <a href="#">Show all notifications</a>
+                    <a href="#" class="amarMonChaise">Show all notifications</a>
                   </div>
                 </div>
               </div>
