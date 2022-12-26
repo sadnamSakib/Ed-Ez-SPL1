@@ -148,7 +148,17 @@ $allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHE
           <button class="btn btn-primary btn-create dropbtn" onclick="myFunction()">Create <i class='bx bx-chevron-down'></i></button>
           <div id="myDropdown" class="dropdown-content">
             <a href="#" data-bs-toggle="modal" data-bs-target="#examplemodal1" data-bs-whatever="@fat">Create Task
-              <div class="modal fade" id="examplemodal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              
+            </a>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@fat">Create Session
+              
+            </a>
+          </div>
+        </div>
+         <button type="button" class="btn btn-primary btn-create">Resources</button>
+
+         <!-- task modal -->
+         <div class="modal fade" id="examplemodal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                   <div class="modal-content">
                     <div class="modal-header">
@@ -196,8 +206,7 @@ $allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHE
                   </div>
                 </div>
               </div>
-            </a>
-            <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@fat">Create Session
+                <!-- session modal -->
               <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                   <div class="modal-content">
@@ -246,10 +255,7 @@ $allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHE
                   </div>
                 </div>
               </div>
-            </a>
-          </div>
-        </div>
-         <button type="button" class="btn btn-primary btn-create">Resources</button>
+
 
         <div class="card text-bg-primary mb-3">
           <div class="card-body task-card" style="height:50px">
