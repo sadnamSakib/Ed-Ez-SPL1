@@ -89,12 +89,23 @@ if (isset($_POST['uploadSubmit'])) {
         </div> -->
             <div class="flex-container w-100">
               <div class="scroll w-100">
+              <form name="resource_form" id="resource_form" action="ViewResources/index.php" method="POST">
+              <?php
+                $resource = $database->performQuery("SELECT * FROM resources,resource_saved WHERE resources.resource_id=resource_saved.resource_id;");
+                foreach ($resource as $dummy_resource) {
+                ?>
                 <div class="card card-body mx-1 my-2 me-1 btn btn-resource saved-resources" style="text-align:left" id="scrollspyHeading1">
-                  <div class="public-box mb-1">public</div>
-                  <h5>A resource that you saved God knows why</h5>
-                  <p style="font-size: 12px;">Resource Tag: </p>
-                  <p style="font-size: 12px;">Why did you save this resource? Do you think any resource can compensate for your lack of intelligence?</p>
+                <button type="submit" name="<?php echo $dummy_resource['resource_id'] ?>" style="all:unset">
+                  <div class="public-box mb-1"><?php echo $dummy_resource['resource_visibility']; ?></div>
+                  <h5><?php echo $dummy_resource['resource_visibility']; ?></h5>
+                  <p style="font-size: 12px;">Resource Tag: <?php echo $dummy_resource['resource_tag']; ?></p>
+                  <p style="font-size: 12px;"><?php echo $dummy_resource['resource_description']; ?></p>
+                  </button>
                 </div>
+                <?php
+                }
+                ?>
+                </form>
               </div>
             </div>
           </div>
@@ -180,7 +191,7 @@ if (isset($_POST['uploadSubmit'])) {
                         <div class="private-box mb-1"><?php echo $dummy_resource['resource_visibility']; ?></div>
                         <h5><?php echo $dummy_resource['title']; ?></h5>
                         <p style="font-size: 12px;">Resource Tag: <?php echo $dummy_resource['resource_tag']; ?></p>
-                        <p style="font-size: 12px;"><?php echo $dummy_resource['resource_description']; ?> </p>
+                        <p style="font-size: 12px;"><?php echo $dummy_resource['resource_description']; ?></p>
                       </button>
                     </div>
                 <?php
