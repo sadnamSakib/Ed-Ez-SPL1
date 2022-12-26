@@ -1,6 +1,8 @@
 if (window.history.replaceState) {
     window.history.replaceState(null, null, window.location.href);
   }
+
+  
   // JavaScript code
   function search_resources() {
       let input = document.getElementById('searchbar').value
