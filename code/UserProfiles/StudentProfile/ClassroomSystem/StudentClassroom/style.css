@@ -254,6 +254,10 @@ form i {
   border: 1px solid #888;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
+.btn.btn-primary.btn-attendance{
+  width: 150px;
+  margin-bottom: 10px;
+}
 
 /* Add Animation */
 @keyframes animatetop {
