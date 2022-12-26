@@ -403,3 +403,6 @@ form i {
   text-decoration: bold;
   background-color: #4596be;
 }
+.badge.badge-sm{
+  font-size: 12px;
+}
