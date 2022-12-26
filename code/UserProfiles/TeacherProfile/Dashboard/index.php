@@ -146,7 +146,11 @@ if ($semester == -1) {
               </div>
               <div class="col my-auto">
               <div class="dropdown">
-                <i class="bx bxs-bell notification dropbtn" onclick="myFunction()"></i>
+                <i class="bx bxs-bell notification dropbtn" onclick="myFunction()">
+                <span class="position-absolute top-0 start-100 translate-middle badge badge-sm rounded-pill bg-danger ">
+    99+
+    <span class="visually-hidden">unread messages</span>
+  </span></i>
                   <div id="myDropdown" class="dropdown-content">
                     <a href="#">Link 1</a>
                     <a href="#">Link 2</a>
