@@ -145,7 +145,15 @@ if ($semester == -1) {
                 <p class="my-auto align-self-start" style=" color:white">Teacher</p>
               </div>
               <div class="col my-auto">
-                <i class="bx bxs-bell notification align-self-end ms-5"></i>
+              <div class="dropdown">
+                <i class="bx bxs-bell notification dropbtn" onclick="myFunction()"></i>
+                  <div id="myDropdown" class="dropdown-content">
+                    <a href="#">Link 1</a>
+                    <a href="#">Link 2</a>
+                    <a href="#">Link 3</a>
+                    <a href="#" class="amarMonChaise">Show all notifications</a>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
