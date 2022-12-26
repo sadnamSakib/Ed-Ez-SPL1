@@ -58,7 +58,7 @@ if (isset($_POST['sessionSubmit'])) {
   $startTime = $_REQUEST['sessionStart'];
   $endTime = $_REQUEST['sessionEnd'];
   $eventManagement = new EventManagement($startTime, $endTime, $database, $utility);
-  $deadline=$_REQUEST['attendanceDeadline'];
+  $deadline = $_REQUEST['attendanceDeadline'];
   $database->performQuery("INSERT INTO classroom_session VALUES('$classCode','$session','" . $eventManagement->get_event_id() . "','$deadline')");
   $post_text = "A Classroom Session Has Been Posted";
   $online = $_REQUEST['online'];
@@ -144,139 +144,144 @@ $allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHE
     ?>
     <section class="content-section parent px-2 py-2">
       <div class="div2">
-        <div class="card-header d-flex flex-row justify-content-between">
-          <button type="button" class="btn btn-outline-primary btn-join m-3" data-bs-toggle="modal" data-bs-target="#examplemodal1" data-bs-whatever="@fat">Create Task</button>
-          <div class="modal fade" id="examplemodal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h1 class="modal-title fs-5" id="exampleModalLabel">Create Task</h1>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <div id="error" style="display:none">
-                  </div>
-                  <form action="" method="POST" name="taskForm" id="taskForm" enctype="multipart/form-data">
-                    <div class="mb-3">
-                      <label for="TaskTitle">Task Title :</label>
-                      <input type="text" class="form-control" id="TaskTitle" name="TaskTitle" placeholder="Enter Task Title" required>
+        <div class="dropdown my-2 p-3">
+          <button class="btn btn-primary btn-create dropbtn" onclick="myFunction()">Create <i class='bx bx-chevron-down'></i></button>
+          <div id="myDropdown" class="dropdown-content">
+            <a href="#" data-bs-toggle="modal" data-bs-target="#examplemodal1" data-bs-whatever="@fat">Create Task
+              <div class="modal fade" id="examplemodal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">Create Task</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="mb-3">
-                      <label for="taskDateTime">Deadline :</label>
-                      <input type="datetime-local" id="Deadline" name="Deadline" class="form-control" onclick="
+                    <div class="modal-body">
+                      <div id="error" style="display:none">
+                      </div>
+                      <form action="" method="POST" name="taskForm" id="taskForm" enctype="multipart/form-data">
+                        <div class="mb-3">
+                          <label for="TaskTitle">Task Title :</label>
+                          <input type="text" class="form-control" id="TaskTitle" name="TaskTitle" placeholder="Enter Task Title" required>
+                        </div>
+                        <div class="mb-3">
+                          <label for="taskDateTime">Deadline :</label>
+                          <input type="datetime-local" id="Deadline" name="Deadline" class="form-control" onclick="
                             var dateString=new Date();
                             this.setAttribute('min',dateString);" required>
-                    </div>
-                    <div class="mb-3">
-                      <label for="Marks">Marks :</label>
-                      <input type="number" class="form-control" id="taskMarks" name="Marks" placeholder="Enter Marks" onclick="
+                        </div>
+                        <div class="mb-3">
+                          <label for="Marks">Marks :</label>
+                          <input type="number" class="form-control" id="taskMarks" name="Marks" placeholder="Enter Marks" onclick="
                         var value=document.getElementById('taskMarks');
                         this.setAttribute('min',1);
                         this.setAttribute('max',4000);
                         " required>
+                        </div>
+                        <div class="mb-3">
+                          <label for="message-text" class="col-form-label">Instruction :</label>
+                          <textarea class="form-control" id="message-text" name="instruction" required></textarea>
+                        </div>
+                        <div class="input-group mb-2">
+                          <div class="custom-file">
+                            <label class="mb-2" for="taskName">Upload Question Paper :</label>
+                            <input type="file" id="taskName" name="taskName" class="custom-file-input" accept=".pdf" required />
+                          </div>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                      <label for="message-text" class="col-form-label">Instruction :</label>
-                      <textarea class="form-control" id="message-text" name="instruction" required></textarea>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <input type="submit" name="taskSubmit" value="Create Task" class="btn btn-primary btn-join">
                     </div>
-                    <div class="input-group mb-2">
-                      <div class="custom-file">
-                        <label class="mb-2" for="taskName">Upload Question Paper :</label>
-                        <input type="file" id="taskName" name="taskName" class="custom-file-input" accept=".pdf" required />
-                      </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  <input type="submit" name="taskSubmit" value="Create Task" class="btn btn-primary btn-join">
-                </div>
-                </form>
-              </div>
-            </div>
-          </div>
-          <div class="d-flex flex-row justify-content-between">
-            <button type="button" class="btn btn-outline-primary btn-join m-3" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@fat">Create Session</button>
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Create Session</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </form>
                   </div>
-                  <div class="modal-body">
-                    <form action='' method='POST' id='sessionForm' name='sessionForm'>
-                      <div class="mb-3">
-                        <label for="online">Online Session</label>
-                        <input type="radio" name="online" value="online" id="online" onclick="document.getElementById('sessionURL').style.display='block';document.getElementById('offline').checked=false;">
-                      </div>
-                      <div class="mb-3">
-                        <label for="offline">Offline Session</label>
-                        <input type="radio" name="offline" value="offline" id="offline" onclick="document.getElementById('sessionURL').style.display='none';document.getElementById('online').checked=false;">
-                      </div>
-                      <div class="mb-3" style="display:none" id="sessionURL">
-                        <label for="SessionLink">Session Link :</label>
-                        <input type="text" class="form-control" id="SessionLink" name="SessionLink" placeholder="Enter Session Link">
-                      </div>
-                      <div class="mb-3">
-                        <label for="startTime">Start Date and Time :</label>
-                        <input type="datetime-local" id="sessionStart" name="sessionStart" class="form-control" onclick="
+                </div>
+              </div>
+            </a>
+            <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@fat">Create Session
+              <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">Create Session</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <form action='' method='POST' id='sessionForm' name='sessionForm'>
+                        <div class="mb-3">
+                          <label for="online">Online Session</label>
+                          <input type="radio" name="online" value="online" id="online" onclick="document.getElementById('sessionURL').style.display='block';document.getElementById('offline').checked=false;">
+                        </div>
+                        <div class="mb-3">
+                          <label for="offline">Offline Session</label>
+                          <input type="radio" name="offline" value="offline" id="offline" onclick="document.getElementById('sessionURL').style.display='none';document.getElementById('online').checked=false;">
+                        </div>
+                        <div class="mb-3" style="display:none" id="sessionURL">
+                          <label for="SessionLink">Session Link :</label>
+                          <input type="text" class="form-control" id="SessionLink" name="SessionLink" placeholder="Enter Session Link">
+                        </div>
+                        <div class="mb-3">
+                          <label for="startTime">Start Date and Time :</label>
+                          <input type="datetime-local" id="sessionStart" name="sessionStart" class="form-control" onclick="
                             var dateString2=new Date();
                             this.setAttribute('min',dateString2);" required>
-                      </div>
-                      <div class="mb-3">
-                        <label for="attendanceDeadline">Attendance Deadline :</label>
-                        <input type="datetime-local" id="attendanceDeadline" name="attendanceDeadline" class="form-control" onclick="
+                        </div>
+                        <div class="mb-3">
+                          <label for="attendanceDeadline">Attendance Deadline :</label>
+                          <input type="datetime-local" id="attendanceDeadline" name="attendanceDeadline" class="form-control" onclick="
                             var startDateTime1=document.getElementById('sessionStart').value;
                             this.setAttribute('min',startDateTime1);" required>
-                      </div>
-                      <div class="mb-3">
-                        <label for="endTime">End Date and Time :</label>
-                        <input type="datetime-local" id="sessionEnd" name="sessionEnd" class="form-control" onclick="
+                        </div>
+                        <div class="mb-3">
+                          <label for="endTime">End Date and Time :</label>
+                          <input type="datetime-local" id="sessionEnd" name="sessionEnd" class="form-control" onclick="
                             var startDateTime=document.getElementById('sessionStart').value;
                             this.setAttribute('min',startDateTime);" required>
-                      </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <input type="submit" name="sessionSubmit" value="Create Session" class="btn btn-primary btn-join">
+                    </div>
+                    </form>
                   </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <input type="submit" name="sessionSubmit" value="Create Session" class="btn btn-primary btn-join">
-                  </div>
-                  </form>
                 </div>
               </div>
-            </div>
+            </a>
           </div>
         </div>
+         <button type="button" class="btn btn-primary btn-create">Resources</button>
+
         <div class="card text-bg-primary mb-3">
           <div class="card-body task-card" style="height:50px">
             <h4 style="text-align:center">Assigned Tasks</h4>
           </div>
           <form id="view" name="viewPage" action="ViewSubmission/index.php" method="POST">
-          <div class="card-footer btn bx bxs-chevron-down w-100" type="button" data-bs-toggle="collapse" data-bs-target="#taskcollapse" aria-expanded="false" aria-controls="taskcollapse">
-          </div>
+            <div class="card-footer btn bx bxs-chevron-down w-100" type="button" data-bs-toggle="collapse" data-bs-target="#taskcollapse" aria-expanded="false" aria-controls="taskcollapse">
+            </div>
             <div class="collapse multi-collapse" id="taskcollapse">
-            <?php
-            if ($allTasks->num_rows == 0) {
-              echo "<div class=\"card-text\" style=\"text-align:center\">No assigned tasks.</div>";
-            } else {
-              foreach ($allTasks as $i) {
-                echo "<div class=\"collapse multi-collapse\" id=\"taskcollapse\"><div class=\"card card-body my-2 btn\" style=\"text-align:center\"><input type='submit' style='border:none;background:none;padding:0' name='".$i['task_id']."submit' value='".$i['task_title']."'></div></div>";
+              <?php
+              if ($allTasks->num_rows == 0) {
+                echo "<div class=\"card-text\" style=\"text-align:center\">No assigned tasks.</div>";
+              } else {
+                foreach ($allTasks as $i) {
+                  echo "<div class=\"collapse multi-collapse\" id=\"taskcollapse\"><div class=\"card card-body my-2 btn\" style=\"text-align:center\"><input type='submit' style='border:none;background:none;padding:0' name='" . $i['task_id'] . "submit' value='" . $i['task_title'] . "'></div></div>";
 
-            ?>
-            <?php
+              ?>
+              <?php
+                }
               }
-            }
-            ?>
-            </form>
+              ?>
+          </form>
         </div>
       </div>
       <div class="card text-bg-primary mb-3">
-          <div class="card-body task-card" style="height:50px">
-            <h4 style="text-align:center">Session Code</h4>
-          </div>
-          <div class="card-footer btn bx bxs-chevron-down w-100" type="button" data-bs-toggle="collapse" data-bs-target="#sessionCollapse" aria-expanded="false" aria-controls="sessionCollapse">
-          </div>
-            <div class="collapse multi-collapse" id="sessionCollapse">
-            <div class="card-text" style="text-align:center;color:<?php echo $sessionError===true?'red':'black' ?>"><?php echo $session; ?></div>
+        <div class="card-body task-card" style="height:50px">
+          <h4 style="text-align:center">Session Code</h4>
+        </div>
+        <div class="card-footer btn bx bxs-chevron-down w-100" type="button" data-bs-toggle="collapse" data-bs-target="#sessionCollapse" aria-expanded="false" aria-controls="sessionCollapse">
+        </div>
+        <div class="collapse multi-collapse" id="sessionCollapse">
+          <div class="card-text" style="text-align:center;color:<?php echo $sessionError === true ? 'red' : 'black' ?>"><?php echo $session; ?></div>
         </div>
       </div>
   </div>
