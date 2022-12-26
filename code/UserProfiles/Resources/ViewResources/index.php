@@ -5,7 +5,25 @@ require $root_path . 'LibraryFiles/DatabaseConnection/config.php';
 require $root_path . 'LibraryFiles/URLFinder/URLPath.php';
 require $root_path . 'LibraryFiles/SessionStore/session.php';
 require $root_path . 'LibraryFiles/ValidationPhp/InputValidation.php';
+require $root_path . 'LibraryFiles/Utility/Utility.php';
+foreach (glob($root_path . 'LibraryFiles/ClassroomManager/*.php') as $filename) {
+  require $filename;
+}
 session::profile_not_set($root_path);
+session::profile_not_set($root_path);
+$validate = new InputValidation();
+$email = new EmailValidator($_SESSION['email']);
+$resources = $database->performQuery("SELECT * FROM resources");
+$resource_id = null;
+foreach($resources as $resource)
+{
+  if(isset($_POST[$resource['resource_id']])){
+    $resource_id=$resource['resource_id'];
+  }
+}
+
+$database->fetch_results($resource, "SELECT * FROM resources,resource_uploaded WHERE resources.resource_id = '$resource_id' AND resource_uploaded.resource_id = '$resource_id'");
+$database->fetch_results($user,"SELECT * FROM users WHERE email='".$resource['email']."'");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -33,11 +51,11 @@ session::profile_not_set($root_path);
     <section class="content-section m-auto px-5 py-3">
       <div class="card intro-card w-75 text-bg-secondary m-auto mb-3">
         <div class="card-header">
-          <h5 class="card-title" style="text-align:left">Shared By Zaara Zabeen Arpa at 9:48pm 21/12/2022</h5>
+          <h5 class="card-title" style="text-align:left">Shared By <?php echo $user['name'] ?> <?php echo $resource['post_date_time'] ?></h5>
         </div>
         <div class="card-body text-success">
-          <object data="Notes on PLSQL.pdf#page=1" type="application/pdf" width="100%" height="500px">
-            <p>It appears your Web browser is not configured to display PDF files. No worries, just <a href="Notes on PLSQL.pdf"></p>
+          <object data="<?php echo FileManagement::get_file_url_static($database,URLPath::getFTPServer(),$resource['file_id']) ?>" type="application/pdf" width="100%" height="500px">
+            <p>It appears your Web browser is not configured to display PDF files. No worries, just <a href="<?php echo FileManagement::get_file_url_static($database,URLPath::getFTPServer(),$resource['file_id']) ?>"></p>
           </object>
         </div>
         <div class="card-footer d-flex justify-content-between border-success">

@@ -12,30 +12,29 @@ foreach (glob($root_path . 'LibraryFiles/ClassroomManager/*.php') as $filename) 
 session::profile_not_set($root_path);
 $validate = new InputValidation();
 $email = new EmailValidator($_SESSION['email']);
-if(isset($_POST['uploadSubmit'])){
+if (isset($_POST['uploadSubmit'])) {
   $resource_id = $utility->generateRandomString(50);
   $existence = $database->performQuery("SELECT * FROM resources WHERE resource_id='$resource_id'");
   while ($existence->num_rows > 0) {
     $resource_id = $utility->generateRandomString(50);
     $existence = $database->performQuery("SELECT * FROM resources WHERE resource_id='$resource_id'");
   }
-  $title=$validate->post_sanitise_text('title');
-  $briefDescription=$validate->post_sanitise_text('briefDescription');
-  $tag=$validate->post_sanitise_text('tag');
+  $title = $validate->post_sanitise_text('title');
+  $briefDescription = $validate->post_sanitise_text('briefDescription');
+  $tag = $validate->post_sanitise_text('tag');
   $public = $_REQUEST['publicResource'];
   $private = $_REQUEST['privateResource'];
   if ($public === 'public') {
     $visibility = 'public';
-  }
-  else{
+  } else {
     $visibility = 'private';
   }
-  $database->fetch_results($system_date,"SELECT SYSDATE() AS DATE");
-  if(isset($_FILES['uploadResource']['name'])){
+  $database->fetch_results($system_date, "SELECT SYSDATE() AS DATE");
+  if (isset($_FILES['uploadResource']['name'])) {
     $fileManagement = new FileManagement($_FILES['uploadResource']['name'], $_FILES['uploadResource']['tmp_name'], $database, $utility);
-    try{
-      echo $system_date;
-      $database->performQuery("INSERT INTO resources VALUES('$resource_id','$title','$tag','".$system_date."','".$fileManagement->get_file_id()."','$visibility','$briefDescription')");
+    try {
+      $database->performQuery("INSERT INTO resources VALUES('$resource_id','$title','$tag','" . $system_date['DATE'] . "','" . $fileManagement->get_file_id() . "','$visibility','$briefDescription')");
+      $database->performQuery("INSERT INTO resource_uploaded VALUES('$resource_id','" . $email->get_email() . "')");
     } catch (Exception $e) {
       echo $e->getMessage();
     }
@@ -91,11 +90,11 @@ if(isset($_POST['uploadSubmit'])){
             <div class="flex-container w-100">
               <div class="scroll w-100">
                 <div class="card card-body mx-1 my-2 me-1 btn btn-resource saved-resources" style="text-align:left" id="scrollspyHeading1">
-                <div class="public-box mb-1">public</div>
-                <h5>A resource that you saved God knows why</h5>
-                <p style="font-size: 12px;">Resource Tag: </p>
-                <p style="font-size: 12px;">Why did you save this resource? Do you think any resource can compensate for your lack of intelligence?</p>
-              </div> 
+                  <div class="public-box mb-1">public</div>
+                  <h5>A resource that you saved God knows why</h5>
+                  <p style="font-size: 12px;">Resource Tag: </p>
+                  <p style="font-size: 12px;">Why did you save this resource? Do you think any resource can compensate for your lack of intelligence?</p>
+                </div>
               </div>
             </div>
           </div>
@@ -140,21 +139,20 @@ if(isset($_POST['uploadSubmit'])){
                           <label class="form-check-label" style="color: black" for="privateResource">private</label>
                         </div>
                       </div>
-                      <div class="mb-3 mx-4 classSelector" >
-                        <select class="form-select" style="display:none;"aria-label="selectClassroom" name="classroom" id="classroom" >
-                        <?php
-                        $record=$database->performQuery("select * from classroom");
-                        ?>
+                      <div class="mb-3 mx-4 classSelector">
+                        <select class="form-select" style="display:none;" aria-label="selectClassroom" name="classroom" id="classroom">
+                          <?php
+                          $record = $database->performQuery("select * from classroom");
+                          ?>
                           <option selected value="0">Select Classroom</option>
                           <?php
-                            foreach($record as $i)
-                            {
-                              ?>
-                              <option value="<?php echo $i['class_code']; ?>"><?php echo $i['classroom_name']; ?></option>
-                              <?php
-                            }
+                          foreach ($record as $i) {
                           ?>
-                          
+                            <option value="<?php echo $i['class_code']; ?>"><?php echo $i['classroom_name']; ?></option>
+                          <?php
+                          }
+                          ?>
+
                         </select>
                       </div>
                       <div class="modal-footer">
@@ -172,12 +170,23 @@ if(isset($_POST['uploadSubmit'])){
         </div> -->
             <div class="flex-container w-100">
               <div class="scroll w-100">
-              <div class="card card-body my-2 mx-1 me-1 btn btn-resource saved-resources" style="text-align:left" id="scrollspyHeading1">
-              <div class="private-box mb-1">private</div>
-                <h5>A resource that you uploaded</h5>
-                <p  style="font-size: 12px;">Resource Tag: </p>
-                <p style="font-size: 12px;">Oh wow you are uploading resources now? Who do you think you are? </p>
-              </div> 
+              <form name="resource_form" id="resource_form" action="ViewResources/index.php" method="POST">
+                <?php
+                $resource = $database->performQuery("SELECT * FROM resources,resource_uploaded WHERE resources.resource_id=resource_uploaded.resource_id;");
+                foreach ($resource as $dummy_resource) {
+                ?>
+                    <div class="card card-body my-2 mx-1 me-1 btn btn-resource saved-resources" style="text-align:left" id="scrollspyHeading1">
+                      <button type="submit" name="<?php echo $dummy_resource['resource_id'] ?>" style="all:unset">
+                        <div class="private-box mb-1"><?php echo $dummy_resource['resource_visibility']; ?></div>
+                        <h5><?php echo $dummy_resource['title']; ?></h5>
+                        <p style="font-size: 12px;">Resource Tag: <?php echo $dummy_resource['resource_tag']; ?></p>
+                        <p style="font-size: 12px;"><?php echo $dummy_resource['resource_description']; ?> </p>
+                      </button>
+                    </div>
+                <?php
+                }
+                ?>
+                </form>
               </div>
             </div>
           </div>
