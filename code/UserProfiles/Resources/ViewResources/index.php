@@ -13,17 +13,53 @@ session::profile_not_set($root_path);
 session::profile_not_set($root_path);
 $validate = new InputValidation();
 $email = new EmailValidator($_SESSION['email']);
-$resources = $database->performQuery("SELECT * FROM resources");
 $resource_id = null;
-foreach($resources as $resource)
-{
-  if(isset($_POST[$resource['resource_id']])){
-    $resource_id=$resource['resource_id'];
+$resource_id = $_SESSION['resource_id'];
+$resources = $database->performQuery("SELECT * FROM resources");
+foreach ($resources as $resource) {
+  if (isset($_POST[$resource['resource_id']])) {
+    $resource_id = $resource['resource_id'];
   }
 }
 
 $database->fetch_results($resource, "SELECT * FROM resources,resource_uploaded WHERE resources.resource_id = '$resource_id' AND resource_uploaded.resource_id = '$resource_id'");
-$database->fetch_results($user,"SELECT * FROM users WHERE email='".$resource['email']."'");
+$database->fetch_results($user, "SELECT * FROM users WHERE email='" . $resource['email'] . "'");
+
+if(isset($_POST['upvote']) && $resource['email']!==$email->get_email()){
+  $rows=$database->performQuery("SELECT * FROM resource_upvote WHERE resource_id='$resource_id' AND  email='".$email->get_email()."'");
+  if($rows->num_rows==0){
+    $database->performQuery("INSERT INTO resource_upvote VALUES('$resource_id','".$email->get_email()."')");
+  }
+  else{
+    $database->performQuery("DELETE FROM resource_upvote WHERE resource_id='$resource_id' AND email='".$email->get_email()."'");
+  }
+}
+
+if(isset($_POST['downvote']) && $resource['email']!==$email->get_email()){
+  $rows=$database->performQuery("SELECT * FROM resource_downvote WHERE resource_id='$resource_id' AND  email='".$email->get_email()."'");
+  if($rows->num_rows==0){
+    $database->performQuery("INSERT INTO resource_downvote VALUES('$resource_id','".$email->get_email()."')");
+  }
+  else{
+    $database->performQuery("DELETE FROM resource_downvote WHERE resource_id='$resource_id' AND email='".$email->get_email()."'");
+  }
+}
+
+if(isset($_POST['save'])){
+  $rows=$database->performQuery("SELECT * FROM resource_saved WHERE resource_id='$resource_id' AND  email='".$email->get_email()."'");
+  if($rows->num_rows==0){
+    $database->performQuery("INSERT INTO resource_saved VALUES('$resource_id','".$email->get_email()."')");
+  }
+  else{
+    $database->performQuery("DELETE FROM resource_saved WHERE resource_id='$resource_id' AND email='".$email->get_email()."'");
+  }
+}
+
+$_SESSION['resource_id'] = $resource_id;
+
+
+$database->fetch_results($resource_upvote, "SELECT count(*) AS upvote FROM resource_upvote WHERE resource_id = '$resource_id'");
+$database->fetch_results($resource_downvote, "SELECT count(*) AS downvote FROM resource_downvote WHERE resource_id = '$resource_id'");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -44,39 +80,43 @@ $database->fetch_results($user,"SELECT * FROM users WHERE email='".$resource['em
   <script src="<?php echo $root_path; ?>js/bootstrap.js"></script>
   <div class="main-container d-flex">
     <?php
-    $profile_type = $tableName = $_SESSION['tableName'] === 'student' ? '../../StudentProfile/' : '../../TeacherProfile/';
+    $profile_type = $_SESSION['tableName'] === 'student' ? '../../StudentProfile/' : '../../TeacherProfile/';
     require $profile_type . 'navbar.php';
-    $profile_type === '../StudentProfile/' ? student_navbar($root_path, false) : teacher_navbar($root_path, false);
+    $_SESSION['tableName'] === 'student' ? student_navbar($root_path, false) : teacher_navbar($root_path, false);
     ?>
     <section class="content-section m-auto px-5 py-3">
-      <div class="card intro-card w-75 text-bg-secondary m-auto mb-3">
-        <div class="card-header">
-          <h5 class="card-title" style="text-align:left">Shared By <?php echo $user['name'] ?> <?php echo $resource['post_date_time'] ?></h5>
-        </div>
-        <div class="card-body text-success">
-          <object data="<?php echo FileManagement::get_file_url_static($database,URLPath::getFTPServer(),$resource['file_id']) ?>" type="application/pdf" width="100%" height="500px">
-            <p>It appears your Web browser is not configured to display PDF files. No worries, just <a href="<?php echo FileManagement::get_file_url_static($database,URLPath::getFTPServer(),$resource['file_id']) ?>"></p>
-          </object>
-        </div>
-        <div class="card-footer d-flex justify-content-between border-success">
-          <div>
-            <a title = "UpVote">
-            <i class='bx btn bx-sm  bxs-up-arrow me-2'></i>
-            </a>
-            <label>0</label>
-            <a title = "DownVote">
-            <i class='bx btn bx-sm  bxs-down-arrow'></i>
-            </a>
-            <label>0</label>
+      <?php
+      if (!is_null($resource_id)) {
+      ?>
+        <div class="card intro-card w-75 text-bg-secondary m-auto mb-3">
+          <div class="card-header">
+            <h5 class="card-title" style="text-align:left">Shared By <?php echo $user['name'] ?> <?php echo $resource['post_date_time'] ?></h5>
           </div>
-          <div>
-            <a title = "Save">
-            <i class='bx btn bx-sm bxs-save'></i>
-            </a>
+          <div class="card-body text-success">
+            <object data="<?php echo FileManagement::get_file_url_static($database, URLPath::getFTPServer(), $resource['file_id']) ?>" type="application/pdf" width="100%" height="500px">
+              <p>It appears your Web browser is not configured to display PDF files. No worries, just <a href="<?php echo FileManagement::get_file_url_static($database, URLPath::getFTPServer(), $resource['file_id']) ?>"></p>
+            </object>
           </div>
-        </div>
-      </div>
-
+          <form name="Review" action="" method="POST">
+            <div class="card-footer d-flex justify-content-between border-success">
+              <div>
+                <button type="submit" id="upvote" name="upvote" class="bx btn bx-sm  bxs-up-arrow me-2"></button>
+                <label for="upvote"><?php echo is_null($resource_upvote['upvote'])?0:$resource_upvote['upvote'] ?></label>
+                <button type="submit" id="downvote" name="downvote" class='bx btn bx-sm  bxs-down-arrow'></button>
+                <label for="downvote"><?php echo is_null($resource_downvote['downvote'])?0:$resource_downvote['downvote'] ?></label>
+              </div>
+              <div>
+              <button type="submit" id="save" name="save" class='bx btn bx-sm bxs-save'></button>
+              </div>
+            </div>
+          </form>
+        <?php
+      } else {
+        ?>
+          <h5>There are no files to load</h5>
+        <?php
+      }
+        ?>
 
     </section>
   </div>
