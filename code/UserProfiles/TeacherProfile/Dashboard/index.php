@@ -86,7 +86,7 @@ if ($semester == -1) {
                 <p class="my-auto align-self-start" style=" color:white">Teacher</p>
               </div>
               <div class="col my-auto">
-                <i class="bx bxs-bell notification align-self-end ms-5"></i>
+                <i class="bx btn bxs-bell notification align-self-end ms-5"></i>
               </div>
             </div>
           </div>

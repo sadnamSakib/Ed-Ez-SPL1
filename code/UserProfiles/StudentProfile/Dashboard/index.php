@@ -144,8 +144,8 @@ if ($semester == -1) {
                 <p class="my-auto align-self-start"" style=" color:white">Student</p>
               </div>
               <div class="col-2 my-auto">
-                
-                <div class="dropdown-center">
+
+                <!-- <div class="dropdown-center">
                   <button class="btn btn-xs dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="true">
                   <i class="bx bxs-bell notification"></i>
                   </button>
@@ -154,6 +154,15 @@ if ($semester == -1) {
                     <li><a class="dropdown-item" href="#">Action two</a></li>
                     <li><a class="dropdown-item" href="#">Action three</a></li>
                   </ul>
+                </div> -->
+                <div class="dropdown">
+                <i class="bx bxs-bell notification dropbtn" onclick="myFunction()"></i>
+                  <div id="myDropdown" class="dropdown-content">
+                    <a href="#">Link 1</a>
+                    <a href="#">Link 2</a>
+                    <a href="#">Link 3</a>
+                    <a href="#">Show all notifications</a>
+                  </div>
                 </div>
               </div>
             </div>
