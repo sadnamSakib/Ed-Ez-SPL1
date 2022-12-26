@@ -376,9 +376,10 @@ form i {
   display: none;
   position: absolute;
   background-color: #f1f1f1;
-  min-width: 160px;
+  min-width: 400px;
   box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
   z-index: 1;
+  left: -400px;
 }
 
 /* Links inside the dropdown */
@@ -390,7 +391,15 @@ form i {
 }
 
 /* Change color of dropdown links on hover */
-.dropdown-content a:hover {background-color: #ddd;}
+.dropdown-content a:hover {background-color: #2f6d8b;
+  text-decoration: none;
+  color: white;
+  }
 
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
 .show {display:block;}
+.amarMonChaise{
+  text-align: center;
+  text-decoration: bold;
+  background-color: #4596be;
+}
