@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 20, 2022 at 07:26 PM
+-- Generation Time: Dec 26, 2022 at 10:08 AM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -143,12 +143,12 @@ CREATE TABLE `post_classroom` (
 
 CREATE TABLE `resources` (
   `resource_id` varchar(50) NOT NULL,
-  `resource_tag` varchar(100) DEFAULT NULL,
+  `title` text NOT NULL,
+  `resource_tag` text DEFAULT NULL,
   `post_date_time` datetime DEFAULT NULL,
-  `file_url` text DEFAULT NULL,
+  `file_id` text DEFAULT NULL,
   `resource_visibility` set('private','public') DEFAULT NULL,
-  `institution` text DEFAULT NULL,
-  `semester` int(11) DEFAULT NULL
+  `resource_description` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------

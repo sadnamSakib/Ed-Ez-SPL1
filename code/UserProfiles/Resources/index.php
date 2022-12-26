@@ -4,7 +4,44 @@ require $root_path . 'LibraryFiles/DatabaseConnection/config.php';
 require $root_path . 'LibraryFiles/URLFinder/URLPath.php';
 require $root_path . 'LibraryFiles/SessionStore/session.php';
 require $root_path . 'LibraryFiles/ValidationPhp/InputValidation.php';
+require $root_path . 'LibraryFiles/Utility/Utility.php';
+foreach (glob($root_path . 'LibraryFiles/ClassroomManager/*.php') as $filename) {
+  require $filename;
+}
+
 session::profile_not_set($root_path);
+$validate = new InputValidation();
+$email = new EmailValidator($_SESSION['email']);
+if(isset($_POST['uploadSubmit'])){
+  $resource_id = $utility->generateRandomString(50);
+  $existence = $database->performQuery("SELECT * FROM resources WHERE resource_id='$resource_id'");
+  while ($existence->num_rows > 0) {
+    $resource_id = $utility->generateRandomString(50);
+    $existence = $database->performQuery("SELECT * FROM resources WHERE resource_id='$resource_id'");
+  }
+  $title=$validate->post_sanitise_text('title');
+  $briefDescription=$validate->post_sanitise_text('briefDescription');
+  $tag=$validate->post_sanitise_text('tag');
+  $public = $_REQUEST['publicResource'];
+  $private = $_REQUEST['privateResource'];
+  if ($public === 'public') {
+    $visibility = 'public';
+  }
+  else{
+    $visibility = 'private';
+  }
+  $database->fetch_results($system_date,"SELECT SYSDATE() AS DATE");
+  if(isset($_FILES['uploadResource']['name'])){
+    $fileManagement = new FileManagement($_FILES['uploadResource']['name'], $_FILES['uploadResource']['tmp_name'], $database, $utility);
+    try{
+      echo $system_date;
+      $database->performQuery("INSERT INTO resources VALUES('$resource_id','$title','$tag','".$system_date."','".$fileManagement->get_file_id()."','$visibility','$briefDescription')");
+    } catch (Exception $e) {
+      echo $e->getMessage();
+    }
+  }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -33,7 +70,7 @@ session::profile_not_set($root_path);
       <div class="container-fluid bg-white rounded mt-5 mb-5">
         <div class="container">
           <form class="d-flex mx-auto" role="search">
-            <input class="form-control search search-global me-2 w-75" id="searchbar2" type="search" placeholder="Search for resources..." aria-label="Search">
+            <input class="form-control search search-global me-2 w-75" id="searchbar2" type="search" placeholder="Search for resources by tag..." aria-label="Search">
             <button class="btn btn-primary btn-search mb-2 mt-2 me-2" type="submit">Search</button>
           </form>
         </div>
@@ -54,8 +91,9 @@ session::profile_not_set($root_path);
             <div class="flex-container w-100">
               <div class="scroll w-100">
                 <div class="card card-body mx-1 my-2 me-1 btn btn-resource saved-resources" style="text-align:left" id="scrollspyHeading1">
-                <div class="public-box mb-1">Public</div>
+                <div class="public-box mb-1">public</div>
                 <h5>A resource that you saved God knows why</h5>
+                <p style="font-size: 12px;">Resource Tag: </p>
                 <p style="font-size: 12px;">Why did you save this resource? Do you think any resource can compensate for your lack of intelligence?</p>
               </div> 
               </div>
@@ -67,9 +105,8 @@ session::profile_not_set($root_path);
           <div class="card intro-card w-75 text-bg-secondary m-auto mb-3">
             <div class="card-header">
               <h3 class="card-title" style="text-align:center">Uploaded Resources</h3>
-              <form class="d-flex" role="search">
+              <form class="d-flex" action="" method="POST" role="search" name="uploadForm" enctype="multipart/form-data">
                 <button type="button" class="btn btn-primary btn-upload" data-bs-toggle="modal" data-bs-target="#exampleModal">Upload</button>
-
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                   <div class="modal-dialog modal-dialog-centered">
@@ -83,34 +120,46 @@ session::profile_not_set($root_path);
                           <input type="text" id="title" name="title" class="form-control" placeholder="Title of the file" aria-label="Leave a comment">
                         </div>
                         <div class="mb-3">
-                          <input type="text" id="title" name="title" class="form-control" placeholder="Brief description" aria-label="Leave a comment">
+                          <input type="text" id="briefDescription" name="briefDescription" class="form-control" placeholder="Brief description" aria-label="Leave a comment">
+                        </div>
+                        <div class="mb-3">
+                          <input type="text" id="tag" name="tag" class="form-control" placeholder="Enter a tag to identify resource" aria-label="Leave a comment">
                         </div>
                         <div class="input-group">
-                          <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                          <input type="file" class="form-control" name="uploadResource" id="uploadResource" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
                         </div>
                       </div>
                       <div class="mx-4">
                         <label style="color: black">Set resource as: </label>
                         <div class="form-check form-check-inline mx-2">
-                          <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
-                          <label class="form-check-label" style="color: black" for="inlineRadio1">Public</label>
+                          <input class="form-check-input" type="radio" name="publicResource" id="publicResource" value="public">
+                          <label class="form-check-label" style="color: black" for="publicResource">public</label>
                         </div>
                         <div class="form-check form-check-inline">
-                          <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
-                          <label class="form-check-label" style="color: black" for="inlineRadio2">Private</label>
+                          <input class="form-check-input" type="radio" name="privateResource" id="privateResource" value="private">
+                          <label class="form-check-label" style="color: black" for="privateResource">private</label>
                         </div>
                       </div>
                       <div class="mb-3 mx-4 classSelector" >
                         <select class="form-select" style="display:none;"aria-label="selectClassroom" name="classroom" id="classroom" >
+                        <?php
+                        $record=$database->performQuery("select * from classroom");
+                        ?>
                           <option selected value="0">Select Classroom</option>
-                          <option value="1">Data Structures</option>
-                          <option value="2">Linear Algebra</option>
-                          <option value="3">Object Oriented Programming</option>
+                          <?php
+                            foreach($record as $i)
+                            {
+                              ?>
+                              <option value="<?php echo $i['class_code']; ?>"><?php echo $i['classroom_name']; ?></option>
+                              <?php
+                            }
+                          ?>
+                          
                         </select>
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Upload</button>
+                        <input type="submit" value="Upload" name="uploadSubmit" class="btn btn-primary">
                       </div>
                     </div>
                   </div>
@@ -124,8 +173,9 @@ session::profile_not_set($root_path);
             <div class="flex-container w-100">
               <div class="scroll w-100">
               <div class="card card-body my-2 mx-1 me-1 btn btn-resource saved-resources" style="text-align:left" id="scrollspyHeading1">
-              <div class="private-box mb-1">Private</div>
+              <div class="private-box mb-1">private</div>
                 <h5>A resource that you uploaded</h5>
+                <p  style="font-size: 12px;">Resource Tag: </p>
                 <p style="font-size: 12px;">Oh wow you are uploading resources now? Who do you think you are? </p>
               </div> 
               </div>
