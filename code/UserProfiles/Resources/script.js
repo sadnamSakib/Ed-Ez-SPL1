@@ -32,29 +32,35 @@ function search_resources() {
 	let input = document.getElementById('searchbar').value
 	input=input.toLowerCase();
 	let x = document.getElementsByClassName('saved-resources');
+	let y = document.getElementsByClassName('saved');
 	
 	for (i = 0; i < x.length; i++) {
-		if (!x[i].innerHTML.toLowerCase().includes(input)) {
-			x[i].style.display="none";
-		}
-		else {
-			x[i].style.display="block";				
-		}
+			if (!x[i].innerHTML.toLowerCase().includes(input)) {
+					x[i].style.display="none";
+					y[i].style.display="none";
+			}
+			else {
+					x[i].style.display="block";	
+					y[i].style.display="block";			
+			}
 	}
 }
+
 function search_uploaded_resources() {
 	let input = document.getElementById('searchbar-uploaded').value
 	input=input.toLowerCase();
 	let x = document.getElementsByClassName('uploaded-resources');
-	
+	let y = document.getElementsByClassName('uploaded');
 	for (i = 0; i < x.length; i++) {
 		if (!x[i].innerHTML.toLowerCase().includes(input)) {
-			x[i].style.display="none";
+				x[i].style.display="none";
+				y[i].style.display="none";
 		}
 		else {
-			x[i].style.display="block";				
+				x[i].style.display="block";	
+				y[i].style.display="block";			
 		}
-	}
+}
 }
 
 const selectElement = document.querySelector('#classroom');

@@ -92,10 +92,10 @@ if (isset($_POST['uploadSubmit'])) {
                 $resource = $database->performQuery("SELECT * FROM resources,resource_saved WHERE resources.resource_id=resource_saved.resource_id;");
                 foreach ($resource as $dummy_resource) {
                 ?>
-                <div class="card card-body mx-1 my-2 me-1 btn btn-resource saved-resources" style="text-align:left" id="scrollspyHeading1">
+                <div class="card card-body mx-1 my-2 me-1 btn btn-resource saved" style="text-align:left" id="scrollspyHeading1">
                 <button type="submit" name="<?php echo $dummy_resource['resource_id'] ?>" style="all:unset">
                   <div class="<?php echo $dummy_resource['resource_visibility']; ?>-box mb-1"><?php echo $dummy_resource['resource_visibility']; ?></div>
-                  <h5><?php echo $dummy_resource['title']; ?></h5>
+                  <h5 class="saved-resources"><?php echo $dummy_resource['title']; ?></h5>
                   <p style="font-size: 12px;">Resource Tag: <?php echo $dummy_resource['resource_tag']; ?></p>
                   <p style="font-size: 12px;"><?php echo $dummy_resource['resource_description']; ?></p>
                   </button>
@@ -184,10 +184,10 @@ if (isset($_POST['uploadSubmit'])) {
                 $resource = $database->performQuery("SELECT * FROM resources,resource_uploaded WHERE resources.resource_id=resource_uploaded.resource_id;");
                 foreach ($resource as $dummy_resource) {
                 ?>
-                    <div class="card card-body my-2 mx-1 me-1 btn btn-resource uploaded-resources" style="text-align:left" id="scrollspyHeading1">
+                    <div class="card card-body my-2 mx-1 me-1 btn btn-resource uploaded" style="text-align:left" id="scrollspyHeading1">
                       <button type="submit" name="<?php echo $dummy_resource['resource_id'] ?>" style="all:unset">
                         <div class="<?php echo $dummy_resource['resource_visibility']; ?>-box mb-1"><?php echo $dummy_resource['resource_visibility']; ?></div>
-                        <h5><?php echo $dummy_resource['title']; ?></h5>
+                        <h5 class="uploaded-resources"><?php echo $dummy_resource['title']; ?></h5>
                         <p style="font-size: 12px;">Resource Tag: <?php echo $dummy_resource['resource_tag']; ?></p>
                         <p style="font-size: 12px;"><?php echo $dummy_resource['resource_description']; ?></p>
                       </button>
