@@ -120,12 +120,25 @@ if ($semester == -1) {
         <div class="row">
           <div class="box classroomcontainer">
 
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title">Card</h5>
-                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+
+
+            <?php
+            $resource = $database->performQuery("SELECT * FROM resources,resource_saved WHERE resources.resource_id=resource_saved.resource_id;");
+           
+            foreach ($resource as $dummy_resource) {
+            ?>
+              <div class="card">
+                <div class="card-body">
+                <?php $visibility = $dummy_resource['resource_visibility']; ?>
+                <div class="<?php echo $visibility ?>-box mb-1"><?php echo $visibility ?></div>
+                  <h5 class="card-title"><?php echo $dummy_resource['title']; ?></h5>
+                  <h6 class="card-subtitle mb-2 text-muted"><?php echo $dummy_resource['resource_description']; ?></h6>
+                </div>
               </div>
-            </div>
+              
+            <?php
+            }
+            ?>
 
           </div>
         </div>
@@ -156,11 +169,11 @@ if ($semester == -1) {
                   </ul>
                 </div> -->
                 <div class="dropdown">
-                <i class="bx bxs-bell notification dropbtn position-relative" onclick="myFunction()">
-                <span class="position-absolute top-0 start-100 translate-middle badge badge-sm rounded-pill bg-danger ">
-    99+
-    <span class="visually-hidden">unread messages</span>
-  </span></i>
+                  <i class="bx bxs-bell notification dropbtn position-relative" onclick="myFunction()">
+                    <span class="position-absolute top-0 start-100 translate-middle badge badge-sm rounded-pill bg-danger ">
+                      99+
+                      <span class="visually-hidden">unread messages</span>
+                    </span></i>
                   <div id="myDropdown" class="dropdown-content w-50">
                     <a href="#">Link 1</a>
                     <a href="#">Link 2</a>

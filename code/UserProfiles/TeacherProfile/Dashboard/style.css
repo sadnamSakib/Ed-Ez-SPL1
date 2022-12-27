@@ -375,3 +375,21 @@ a:hover{
 .badge.badge-sm{
   font-size: 12px;
 }
+.private-box {
+  width: 50px;
+  height: 20px;
+  background-color: red;
+  color: white;
+  font-size: 12px;
+  text-align: center;
+  border-radius: 4px;
+}
+.public-box {
+  width: 50px;
+  height: 20px;
+  background-color: blue;
+  color: white;
+  font-size: 12px;
+  text-align: center;
+  border-radius: 4px;
+}
