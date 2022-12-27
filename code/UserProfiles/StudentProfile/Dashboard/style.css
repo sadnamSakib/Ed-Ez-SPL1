@@ -424,3 +424,11 @@ form i {
   text-align: center;
   border-radius: 4px;
 }
+.btn.btn-primary.btn-notification{
+  color: white !important;
+  background-color: transparent !important;
+  --bs-btn-hover-bg: transparent;
+  --bs-btn-active-bg: #2f6d8b;
+  --bs-btn-hover-border-color: white !important;
+  --bs-btn-disabled-bg: #2f6d8b;
+}
