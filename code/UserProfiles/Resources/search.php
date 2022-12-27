@@ -1,8 +1,26 @@
 <?php
 $root_path = '../../';
 require $root_path . 'LibraryFiles/DatabaseConnection/config.php';
+require $root_path . 'LibraryFiles/ValidationPhp/InputValidation.php';
+require $root_path . 'LibraryFiles/SessionStore/session.php';
+$email = new EmailValidator($_SESSION['email']);
+
 if(isset($_REQUEST["term"])){
-    $sql = "SELECT * FROM resources WHERE resource_tag LIKE ?";
+
+    if($_SESSION['tableName']==='student')
+    {
+        $sql = "SELECT * FROM resources,resources_classroom,student_classroom WHERE 
+    ((resources_classroom.class_code=student_classroom.class_code AND student_classroom.email='".$email->get_email()."'
+    AND resources.resource_id=resources_classroom.resource_id) OR resources.resource_visibility='public')
+     AND resource_tag LIKE ?";
+    }
+    else{
+        $sql = "SELECT * FROM resources,resources_classroom,teacher_classroom WHERE 
+    ((resources_classroom.class_code=teacher_classroom.class_code AND teacher_classroom.email='".$email->get_email()."'
+    AND resources.resource_id=resources_classroom.resource_id) OR resources.resource_visibility='public')
+     AND resource_tag LIKE ?";
+    }
+    
     
     if($stmt = $database->prepared_statement($sql)){
         $database->setPreparedStatement($stmt, $param_term);
