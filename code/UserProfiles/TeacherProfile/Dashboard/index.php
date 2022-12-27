@@ -95,6 +95,7 @@ if ($semester == -1) {
           <h4>My Classrooms</h4>
         </div>
         <div class="row">
+          
           <div class="box classroomcontainer">
             <?php
             foreach ($classrooms as $i) {
@@ -105,12 +106,10 @@ if ($semester == -1) {
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title"><?php echo $classTitle ?></h5>
-                  <h6 class="card-subtitle mb-2 text-muted"><?php echo $teacher_records['name'] ?></h6>
+                  <h6 class="card-subtitle mb-2 text-muted"><?php echo $i['course_code']?></h6>
                 </div>
               </div>
             <?php } ?>
-
-
           </div>
         </div>
 
