@@ -16,7 +16,7 @@
             $this->location=URLPath::getFTPServer().$this->directory.'/'.$this->filename.'.csv';
         }
 
-        public function write(...$args){
+        public function write(&$args){
             $found=false;
             foreach($args as $i){
                 if($found==false){

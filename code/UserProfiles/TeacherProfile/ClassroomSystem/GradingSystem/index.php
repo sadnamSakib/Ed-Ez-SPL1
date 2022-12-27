@@ -13,31 +13,54 @@ $email = new EmailValidator($_SESSION['email']);
 $validate = new InputValidation();
 $classCode = $_SESSION['class_code'];
 $classrooms = $database->performQuery("SELECT * FROM classroom,teacher_classroom where classroom.class_code=teacher_classroom.class_code and teacher_classroom.email='" . $email->get_email() . "' and active='1';");
-if (isset($_POST['DownloadCSV'])) {
-  $csvHandler = new CSVHandler($email->get_email());
-  $csvHandler->write('SUBJECT','PERCENTAGE');
-  foreach ($classrooms as $i) {
-    $total_credit += (is_null($i['course_credit']) ? 0 : $i['course_credit']);
-    $classCode = $i['class_code'];
-    $database->fetch_results($attendance, "SELECT nvl(count(*),0)StudentAttendance FROM classroom_session,teacher_classroom_session WHERE classroom_session.session=teacher_classroom_session.session AND classroom_session.class_code='$classCode' AND teacher_classroom_session.email='" . $email->get_email() . "'");
-    $database->fetch_results($totalAttendance, "SELECT nvl(count(*),0)TotalSessions FROM classroom_session WHERE classroom_session.class_code='$classCode'");
-    $database->fetch_results($taskInfo, "SELECT (sum(nvl(marks_obtained,0))/sum(nvl(marks,1)))*90 AS percentage FROM task,task_classroom,student_task_submission WHERE task.task_id=task_classroom.task_id AND task_classroom.class_code='" . $classCode . "' AND student_task_submission.task_id=task.task_id AND task.active='1'");
-    if (is_null($taskInfo)) {
-      $percentage = 0;
-    } else {
-      $percentage = $taskInfo['percentage'];
+foreach ($classrooms as $classroom) {
+  if (isset($_POST[$classroom['class_code']])) {
+    $csvHandler = new CSVHandler($classroom['class_code']);
+    $classCode = $classroom['class_code'];
+    $tasks = $database->performQuery("SELECT * FROM task,task_classroom WHERE task.task_id=task_classroom.task_id AND task_classroom.class_code='$classCode' AND task.active='1' order by task.task_title asc");
+    $totalMarks = 0;
+    $task_array = ['Name', 'Student ID'];
+    foreach ($tasks as $task) {
+      array_push($task_array, $task['task_title']);
+      $totalMarks+=$task['marks'];
     }
-    if ($totalAttendance['TotalSessions'] == 0) {
-      $percentage = $taskInfo['percentage'] + 10;
-    } else {
-      $percentage = $taskInfo['percentage'] + ($attendance['StudentAttendance'] * 10) / $totalAttendance['TotalSessions'];
+    array_push($task_array, 'Attendance', 'Total Marks', 'Percentage');
+    $csvHandler->write($task_array);
+    try {
+      $users = $database->performQuery("SELECT DISTINCT student.email,student.studentID,users.name from classroom,student_classroom,users,student WHERE classroom.class_code=student_classroom.class_code AND users.email=student_classroom.email AND student.email=users.email");
+      foreach ($users as $user) {
+        $user_marks = [$user['name'], is_null($user['studentID']) ? 'N/A' : $user['studentID']];
+        $total = 0;
+        $marks = [];
+        foreach ($tasks as $task) {
+          $result = null;
+          $database->fetch_results($result, "SELECT marks_obtained from student_task_submission WHERE email='" . $user['email'] . "' AND task_id='" . $task['task_id'] . "'");
+          is_null($result) ? array_push($user_marks, 0) : array_push($user_marks, $result['marks_obtained']);
+          $total += $result['marks_obtained'];
+        }
+        $database->fetch_results($attendance, "SELECT nvl(count(*),0)StudentAttendance FROM classroom_session,student_classroom_session WHERE classroom_session.session=student_classroom_session.session AND classroom_session.class_code='$classCode' AND student_classroom_session.email='" . $user['email'] . "'");
+        $database->fetch_results($totalAttendance, "SELECT nvl(count(*),0)TotalSessions FROM classroom_session WHERE classroom_session.class_code='$classCode'");
+        if ($totalAttendance['TotalSessions'] == 0) {
+          $attendancePercentage = $classroom['attendance'];
+        } else {
+          $attendancePercentage = ($attendance['StudentAttendance'] * $classroom['attendance']) / $totalAttendance['TotalSessions'];
+        }
+        array_push($user_marks,$attendancePercentage);
+        array_push($user_marks,$total);
+        if($totalMarks!==0){
+          $totalMarks = ($total * 90) / $totalMarks;
+        }
+        else{
+          $totalMarks = 0;
+        }
+        array_push($user_marks, $totalMarks+$attendancePercentage);
+        $csvHandler->write($user_marks);
+        $csvHandler->download();
+      }
+    } catch (Exception $e) {
+      echo $e->getMessage();
     }
-    $total += (($percentage * $i['course_credit']) / 100);
-    $csvHandler->write($i['classroom_name'],$percentage);
   }
-  $result = ($total * 100) / $total_credit;
-  $csvHandler->write('RESULT',$result);
-  $csvHandler->download();
 }
 ?>
 
@@ -67,93 +90,30 @@ if (isset($_POST['DownloadCSV'])) {
     teacher_navbar($root_path);
     ?>
     <section class="content-section row">
-        <!-- <div>
-          <form action="" method="POST">
-            <input type="submit" class="btn btn-primary" name="DownloadCSV" value="Download Grade Sheet">
-          </form>
-        </div> -->
-        
-        
-          <div class="card intro-card w-75 text-bg-secondary m-auto">
-            <div class="card-header">
-              <h3 class="card-title" style="text-align:center">Gradesheets</h3>
-              
-            </div>
-            <!-- <div class="card-body btn bx bxs-chevron-down w-100" type="button" data-bs-toggle="collapse" data-bs-target="#taskcollapse" aria-expanded="false" aria-controls="taskcollapse">
-        </div> -->
-            <div class="flex-container w-100">
-              <div class="scroll w-100">
-                <div class="card card-body mx-1 my-2 me-1 btn btn-resource saved-resources" style="text-align:left" id="scrollspyHeading1">
-                <div class="d-flex justify-content-between">
-                <h4 class="my-auto">CSE-4303 : Data Structures</h4>
-                <button type="button" class="btn btn-primary btn-gradeDownload my-3">Download</button>
-              </div>
-              
-      
-              </div> 
-              </div>
-            </div>
-          </div>
-        
-      
+      <div class="card intro-card w-75 text-bg-secondary m-auto">
+        <div class="card-header">
+          <h3 class="card-title" style="text-align:center">Gradesheets</h3>
 
+        </div>
+        <div class="flex-container w-100">
+          <div class="scroll w-100">
+            <?php
+            foreach ($classrooms as $classroom) {
+            ?>
+              <div class="card card-body mx-1 my-2 me-1 btn btn-resource saved-resources" style="text-align:left" id="scrollspyHeading1">
+                <div class="d-flex justify-content-between">
+                  <h4 class="my-auto"><?php echo $classroom['course_code'] . ': ' . $classroom['classroom_name'] ?></h4>
+                  <form action="" method="POST"><button type="submit" class="btn btn-primary btn-gradeDownload my-3" name="<?php echo $classroom['class_code'] ?>">Download</button></form>
+                </div>
+              </div>
+            <?php
+            }
+            ?>
+          </div>
+        </div>
+      </div>
     </section>
   </div>
-  <script>
-    <?php
-    $result = ($total * 100) / $total_credit;
-    ?>
-    var myChartCircle = new Chart('chartProgress', {
-      type: 'doughnut',
-      data: {
-        datasets: [{
-          label: 'Total percentage',
-          percent: <?php echo $result ?>,
-          backgroundColor: ['#2f6d8b']
-        }]
-      },
-      plugins: [{
-          beforeInit: (chart) => {
-            const dataset = chart.data.datasets[0];
-            chart.data.labels = [dataset.label];
-            dataset.data = [dataset.percent, 100 - dataset.percent];
-          }
-        },
-        {
-          beforeDraw: (chart) => {
-            var width = chart.chart.width,
-              height = chart.chart.height,
-              ctx = chart.chart.ctx;
-            ctx.restore();
-            var fontSize = (height / 90).toFixed(2);
-            ctx.font = fontSize + "em sans-serif";
-            ctx.fillStyle = "#9b9b9b";
-            ctx.textBaseline = "middle";
-
-
-
-            var text = chart.data.datasets[0].percent.toFixed(2);
-            textX = Math.round((width - ctx.measureText(text).width) / 2.2),
-              textY = height / 2;
-            ctx.fillText(text + "%", textX, textY);
-            ctx.save();
-          }
-        }
-      ],
-      options: {
-        maintainAspectRatio: false,
-        aspectRatio: 1,
-        cutoutPercentage: 80,
-        rotation: Math.PI / 2,
-        legend: {
-          display: false,
-        },
-        tooltips: {
-          filter: tooltipItem => tooltipItem.index == 0
-        }
-      }
-    });
-  </script>
 </body>
 
 </html>
