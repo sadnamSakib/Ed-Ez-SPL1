@@ -155,8 +155,7 @@ $allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHE
             </a>
           </div>
         </div>
-         <button type="button" class="btn btn-primary btn-create">Resources</button>
-
+        <a href="ResourcesList/index.php" style="all:unset"> <button type="button" class="btn btn-primary btn-create">Resources</button></a>
          <!-- task modal -->
          <div class="modal fade" id="examplemodal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
