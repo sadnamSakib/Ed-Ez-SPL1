@@ -78,7 +78,7 @@ $database->fetch_results($resource_downvote, "SELECT count(*) AS downvote FROM r
     <div class="main-container d-flex">
         <?php
         require $profile_path . 'navbar.php';
-        teacher_navbar($root_path);
+        student_navbar($root_path);
         ?>
         <section class="content-section m-auto px-5 py-3">
             <div class="card intro-card w-75 text-bg-secondary m-auto mb-3">
@@ -88,15 +88,15 @@ $database->fetch_results($resource_downvote, "SELECT count(*) AS downvote FROM r
                 <div class="card-body text-success">
                     <div class="card mb-2">
                         <div class="card-body">
-                            <h5 class="card-title">New Task</h5>
-                            <p class="card-text">A new task has been assigned as assignment-1 in CSE-4303</p>
+                            <h5 class="card-title" style="color:black;">New Task</h5>
+                            <p class="card-text" style="color:black;">A new task has been assigned as assignment-1 in CSE-4303</p>
                             <a href="#" class="btn btn-primary">View Task</a>
                         </div>
                     </div>
                     <div class="card mb-2">
                         <div class="card-body">
-                            <h5 class="card-title">New Resource</h5>
-                            <p class="card-text">A new resource has been shared in CSE-4303</p>
+                            <h5 class="card-title" style="color:black;">New Resource</h5>
+                            <p class="card-text" style="color:black;">A new resource has been shared in CSE-4303</p>
                             <a href="#" class="btn btn-primary">View resource</a>
                         </div>
                     </div>

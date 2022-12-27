@@ -220,13 +220,13 @@ body{
   .card{
     background-color: white!important;
   }
-  .card.card-body{
+  .card.card.card-body{
     margin-left: 5px;
     color: white;
     height: 100px;
     font-size: large;
   }
-  .card.text-bg-secondary{
+  .card.card.text-bg-secondary{
     background-color: white !important;
     
   }
@@ -247,13 +247,16 @@ body{
     min-width: 50%;
   
   }
+  .h5{
+    color: black;
+  }
   .btn.btn-resource{
     background-color: #fff;
     box-shadow: 7px 6px 8px -3px rgba(149,159,163,0.75);
     -webkit-box-shadow: 7px 6px 8px -3px rgba(149,159,163,0.75);
     -moz-box-shadow: 7px 6px 8px -3px rgba(149,159,163,0.75);
   }
-  .card.text-bg-primary{
+  .card.card.text-bg-primary{
     background-color:white!important;
     color: #000!important;
   }

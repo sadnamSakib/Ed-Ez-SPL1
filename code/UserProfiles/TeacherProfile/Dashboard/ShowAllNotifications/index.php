@@ -88,15 +88,15 @@ $database->fetch_results($resource_downvote, "SELECT count(*) AS downvote FROM r
                 <div class="card-body text-success">
                     <div class="card mb-2">
                         <div class="card-body">
-                            <h5 class="card-title">New Submission</h5>
-                            <p class="card-text">A new submission has been done for assignment-1 in CSE-4303</p>
+                            <h5 class="card-title" style="color:black;">New Submission</h5>
+                            <p class="card-text" style="color:black;">A new submission has been done for assignment-1 in CSE-4303</p>
                             <a href="#" class="btn btn-primary">View Submission</a>
                         </div>
                     </div>
                     <div class="card mb-2">
                         <div class="card-body">
-                            <h5 class="card-title">New Resource</h5>
-                            <p class="card-text">A new resource has been shared in CSE-4303</p>
+                            <h5 class="card-title" style="color:black;">New Resource</h5>
+                            <p class="card-text" style="color:black;">A new resource has been shared in CSE-4303</p>
                             <a href="#" class="btn btn-primary">View resource</a>
                         </div>
                     </div>
