@@ -165,7 +165,12 @@ if ($semester == -1) {
                     <a href="#">Link 1</a>
                     <a href="#">Link 2</a>
                     <a href="#">Link 3</a>
-                    <a href="#" class="amarMonChaise">Show all notifications</a>
+                    <a href="#" class="amarMonChaise">
+                      <div class="d-flex justify-content-around">
+                      <button type="button" class="btn btn-primary btn-notification">Show All Notification</button>
+                      <button type="button" class="btn btn-primary btn-notification">Clear</button>
+                      </div>
+                    </a>
                   </div>
                 </div>
               </div>
