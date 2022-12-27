@@ -1,4 +1,4 @@
-# Documentation for tools used
+# Documentation for out of the box tools used
 
 ## FullCalendar
 

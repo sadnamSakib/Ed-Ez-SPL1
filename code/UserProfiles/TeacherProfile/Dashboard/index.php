@@ -54,6 +54,45 @@ if ($semester == -1) {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
   <link href="<?php echo $root_path; ?>boxicons-2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <script defer src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+  var calendarEl = document.getElementById('calendar');
+
+  var calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'listWeek',
+    themeSystem: 'bootstrap5',
+    header: {
+      left: '',
+      center: '',
+      right: ''
+    },
+
+    events: [
+        <?php 
+            $recordsTask=$database->performQuery("select * from event,task,teacher_classroom,task_classroom where event.event_id=task.event_id and task_classroom.task_id=task.task_id and teacher_classroom.email='".$email->get_email()."' and teacher_classroom.class_code=task_classroom.class_code;");
+            $first=false;
+            foreach($recordsTask as $i){
+              if(!$first){
+                $first=true;
+              }
+              else{
+                echo ',';
+              }
+          ?>
+        {
+          
+          title: '<?php echo $i['task_title']; ?>',
+          start: '<?php echo $i['event_start_datetime'];?>'
+          
+        }
+        <?php
+            }
+          ?>
+      ]
+  });
+  calendar.render();
+});
+  </script>
 </head>
 
 <body>
