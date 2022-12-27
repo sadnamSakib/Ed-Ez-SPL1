@@ -14,12 +14,12 @@ Those who contributed to this project:
 
 
 ## Tools used:
+
+<img src="https://img.shields.io/badge/MySQL-00000F?style=for-the-badge&logo=mysql&logoColor=white">
 <img src="https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white">
-1) HTML(Front End Skeleton)
-2) CSS(Front End Presentation)
-3) Javascript (Client-Side Scripting/Front-End)
-4) Php (Server-Side Scripting/Backend)
-5) MySQL (Database)
+<img src="https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E">
+<img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white">
+<img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white">
 
 We used bootsrap as our CSS modules that helped further improve the presentation of our website and helped ensure responsiveness.
 
