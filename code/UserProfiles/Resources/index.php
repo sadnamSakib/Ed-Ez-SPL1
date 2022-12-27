@@ -66,13 +66,10 @@ if (isset($_POST['uploadSubmit'])) {
     require $profile_type . 'navbar.php';
     $_SESSION['tableName'] === 'student'  ? student_navbar($root_path, false) : teacher_navbar($root_path, false);
     ?>
-    <section class="content-section m-auto px-5">
+    <section class="content-section mx-auto px-5">
       <div class="container-fluid bg-white rounded mt-5 mb-5 search-box">
-        <div class="container">
-        <input class="form-control search search-global me-2 w-75" id="searchbar2" type="search" placeholder="Search for resources by tag..." autocomplete="off" aria-label="Search">
-        <div class="me-2 w-75 result"></div>
-        </div>
-        
+        <input class="form-control search search-global" id="searchbar2" type="search" placeholder="Search for resources by tag..." autocomplete="off" aria-label="Search">
+        <div class="mx-auto w-75 result"></div>
       </div>
       <!-- Saved Resources -->
       <div class="row" id="uploadsave">
