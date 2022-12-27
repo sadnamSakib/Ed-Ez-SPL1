@@ -53,28 +53,7 @@ var myChartCircle = new Chart('chartProgress', {
   }
 });
 
-document.addEventListener('DOMContentLoaded', function () {
-  var calendarEl = document.getElementById('calendar');
 
-  var calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'listWeek',
-    themeSystem: 'bootstrap5',
-    header: {
-      left: '',
-      center: '',
-      right: ''
-    },
-
-    events: [{
-      title: 'Meeting',
-      start: '2022-11-15',
-      end: '2022-11-17'
-
-    }]
-  });
-
-  calendar.render();
-});
 
 class TxtType {
   constructor(el, toRotate, period) {
@@ -153,3 +132,4 @@ window.onclick = function(event) {
     }
   }
 };
+
