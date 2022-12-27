@@ -3,7 +3,7 @@ $root_path = '../../../../';
 $profile_path = '../../';
 require $root_path . 'LibraryFiles/DatabaseConnection/config.php';
 require $root_path . 'LibraryFiles/URLFinder/URLPath.php';
-require $root_path . 'LibraryFiles/SessionStore/session.php';
+include $root_path . 'LibraryFiles/SessionStore/session.php';
 require $root_path . 'LibraryFiles/Utility/Utility.php';
 require $root_path . 'LibraryFiles/ValidationPhp/InputValidation.php';
 foreach (glob($root_path . 'LibraryFiles/ClassroomManager/*.php') as $filename) {

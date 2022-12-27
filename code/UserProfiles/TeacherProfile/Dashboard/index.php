@@ -37,6 +37,16 @@ $teacherID = $row['teacherID'];
 if ($semester == -1) {
   $semester = '';
 }
+$notifications = $database->performQuery("SELECT * FROM notifications,classroom,teacher_classroom WHERE notifications.class_code=classroom.class_code  AND teacher_classroom.email='".$email->get_email()."' AND classroom.class_code=teacher_classroom.class_code order by notification_datetime desc");
+foreach($notifications as $notification){
+    if(isset($_POST['notification'.$notification['notification_id']])){
+      $_SESSION['class_code']=$notification['class_code'];
+      $_SESSION['email']=$email->get_original_email();
+      header('Location: ../ClassroomSystem/TeacherClassroom/index.php');
+    }
+  }
+
+  
 ?>
 
 <!DOCTYPE html>
@@ -210,18 +220,20 @@ if ($semester == -1) {
     <span class="visually-hidden">unread messages</span>
   </span></i>
                   <div id="myDropdown" class="dropdown-content">
-                    <?php
+                  <form action="" method="POST">
+                  <?php
                     foreach ($notifications as $notification) {
                     ?>
-                    <a href="#"><?php echo $notification['message']; ?></a>
+                      <a><button type="submit" name="notification<?php echo $notification['notification_id'] ?>" style="all:unset"><?php echo $notification['message']; ?></button></a>
                     <?php
                     }
                     ?>
                     <a href="#" class="amarMonChaise">
                       <div class="d-flex justify-content-around">
                       <button type="button" class="btn btn-primary btn-notification" onclick="window.location.href='ShowAllNotifications/index.php'">Show All Notification</button>
-                      <button type="button" class="btn btn-primary btn-notification">Clear</button>
+                      <button type="submit" name="clear" class="btn btn-primary btn-notification">Clear</button>
                       </div>
+                      </form>
                     </a>
                   </div>
                 </div>

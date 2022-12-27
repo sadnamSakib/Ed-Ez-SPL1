@@ -58,6 +58,14 @@ $studentID = $row['studentID'];
 if ($semester == -1) {
   $semester = '';
 }
+$notifications = $database->performQuery("SELECT * FROM notifications,classroom,student_classroom WHERE notifications.class_code=classroom.class_code AND classroom.class_code=student_classroom.class_code AND student_classroom.email='".$email->get_email()."' AND notifications.notification_type!='submit' order by notification_datetime desc LIMIT 3");
+foreach($notifications as $notification){
+  if(isset($_POST['notification'.$notification['notification_id']])){
+    $_SESSION['class_code']=$notification['class_code'];
+    $_SESSION['email']=$email->get_original_email();
+    header('Location: ../ClassroomSystem/StudentClassroom/index.php');
+  }
+}
 ?>
 
 <!DOCTYPE html>
@@ -236,18 +244,19 @@ if ($semester == -1) {
                       } else {
                         echo $result['notification_count'];
                       }
-                      $notifications = $database->performQuery("SELECT * FROM notifications,classroom,student_classroom WHERE notifications.class_code=classroom.class_code AND classroom.class_code=student_classroom.class_code AND student_classroom.email='".$email->get_email()."' AND notifications.notification_type!='submit' order by notification_datetime desc LIMIT 3");
                       ?>
                       <span class="visually-hidden">unread messages</span>
                     </span></i>
                   <div id="myDropdown" class="dropdown-content">
+                    <form action="" method="POST">
                     <?php
                     foreach ($notifications as $notification) {
                     ?>
-                      <a href="#"><?php echo $notification['message']; ?></a>
+                      <a><button type="submit" name="notification<?php echo $notification['notification_id'] ?>" style="all:unset"><?php echo $notification['message']; ?></button></a>
                     <?php
                     }
                     ?>
+                    </form>
                     <a title="Notification" class="amarMonChaise">
                       <div class="d-flex justify-content-around">
                         <button type="button" class="btn btn-primary btn-notification" onclick="window.location.href='ShowAllNotifications/index.php'">Show All Notification</button>

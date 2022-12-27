@@ -13,6 +13,14 @@ session::profile_not_set($root_path);
 session::profile_not_set($root_path);
 $validate = new InputValidation();
 $email = new EmailValidator($_SESSION['email']);
+$notifications = $database->performQuery("SELECT * FROM notifications,classroom,teacher_classroom WHERE notifications.class_code=classroom.class_code  AND teacher_classroom.email='".$email->get_email()."' AND classroom.class_code=teacher_classroom.class_code order by notification_datetime desc");
+foreach($notifications as $notification){
+    if(isset($_POST['notification'.$notification['notification_id']])){
+      $_SESSION['class_code']=$notification['class_code'];
+      $_SESSION['email']=$email->get_original_email();
+      header('Location: ../../ClassroomSystem/TeacherClassroom/index.php');
+    }
+  }
 ?>
 <!DOCTYPE html>
 <html lang="en">

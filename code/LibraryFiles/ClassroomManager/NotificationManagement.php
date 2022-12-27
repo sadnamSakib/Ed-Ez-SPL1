@@ -46,7 +46,7 @@
 
         private function addnotification(){
             if (!is_null($this->message) && $this->message !== '') {
-                $this->database->performQuery("INSERT INTO notifications(message,notification_id,notification_datetime,notification_type,class_code) VALUES('".$this->message."','" . $this->notification_id . "','".$this->system_date['DATE']."','".$this->notification_type."','".$this->classCode."');");
+                $this->database->performQuery("INSERT INTO notifications(message,notification_id,notification_datetime,notification_type,class_code,email) VALUES('".$this->message."','" . $this->notification_id . "','".$this->system_date['DATE']."','".$this->notification_type."','".$this->classCode."','".$this->email."');");
             }
         }
 

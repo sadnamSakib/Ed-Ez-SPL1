@@ -13,7 +13,14 @@ session::profile_not_set($root_path);
 session::profile_not_set($root_path);
 $validate = new InputValidation();
 $email = new EmailValidator($_SESSION['email']);
-
+$notifications = $database->performQuery("SELECT * FROM notifications,classroom,student_classroom WHERE notifications.class_code=classroom.class_code AND classroom.class_code=student_classroom.class_code AND student_classroom.email='".$email->get_email()."' AND notifications.notification_type!='submit' order by notification_datetime desc");
+foreach($notifications as $notification){
+    if(isset($_POST['notification'.$notification['notification_id']])){
+      $_SESSION['class_code']=$notification['class_code'];
+      $_SESSION['email']=$email->get_original_email();
+      header('Location: ../../ClassroomSystem/StudentClassroom/index.php');
+    }
+  }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -43,8 +50,8 @@ $email = new EmailValidator($_SESSION['email']);
                     <h5 class="card-title" style="text-align:center">All Notifications</h5>
                 </div>
                 <div class="card-body text-success">
+                <form action="" method="POST">
                 <?php 
-                    $notifications = $database->performQuery("SELECT * FROM notifications,classroom,student_classroom WHERE notifications.class_code=classroom.class_code AND classroom.class_code=student_classroom.class_code AND student_classroom.email='".$email->get_email()."' AND notifications.notification_type!='submit' order by notification_datetime desc");
                     foreach ($notifications as $notification) {
                     ?>
                     <div class="card mb-2">
@@ -52,12 +59,13 @@ $email = new EmailValidator($_SESSION['email']);
                             <h5 class="card-title" style="color:black;">New <?php echo $notification['notification_type'] ?></h5>
                             <p class="card-text" style="color:black;"><?php echo $notification['message'] ?></p>
                             <p class="card-text" style="color:black;">Date: <?php echo $notification['notification_datetime']?></p>
-                            <a href="#" class="btn btn-primary">View <?php echo $notification['notification_type']?></a>
+                            <button type="submit" class="btn btn-primary" name="notification<?php echo $notification['notification_id'] ?>">View <?php echo $notification['notification_type']?></button>
                         </div>
                     </div>
                     <?php
                     }
                     ?>
+                    </form>
                 </div>
 
         </section>
