@@ -15,8 +15,30 @@ if ($verified['Verified'] !== '1') {
 $error = null;
 $errorColor = "red";
 
+$classCode = $_SESSION['class_code'];
 $classrooms = $database->performQuery("SELECT * FROM classroom,student_classroom where classroom.class_code=student_classroom.class_code and student_classroom.email='" . $email->get_email() . "' and active='1';");
 
+  foreach ($classrooms as $i) {
+    $total_credit += (is_null($i['course_credit']) ? 0 : $i['course_credit']);
+    $classCode = $i['class_code'];
+    $database->fetch_results($attendance, "SELECT nvl(count(*),0)StudentAttendance FROM classroom_session,student_classroom_session WHERE classroom_session.session=student_classroom_session.session AND classroom_session.class_code='$classCode' AND student_classroom_session.email='" . $email->get_email() . "'");
+    $database->fetch_results($totalAttendance, "SELECT nvl(count(*),0)TotalSessions FROM classroom_session WHERE classroom_session.class_code='$classCode'");
+    $database->fetch_results($taskInfo, "SELECT (sum(nvl(marks_obtained,0))/sum(nvl(marks,1)))*90 AS percentage FROM task,task_classroom,student_task_submission WHERE task.task_id=task_classroom.task_id AND task_classroom.class_code='" . $classCode . "' AND student_task_submission.task_id=task.task_id AND task.active='1'");
+    if (is_null($taskInfo)) {
+      $percentage = 0;
+    } else {
+      $percentage = $taskInfo['percentage'];
+    }
+    if ($totalAttendance['TotalSessions'] == 0) {
+      $percentage = $taskInfo['percentage'] + 10;
+    } else {
+      $percentage = $taskInfo['percentage'] + ($attendance['StudentAttendance'] * 10) / $totalAttendance['TotalSessions'];
+    }
+    $total += (($percentage * $i['course_credit']) / 100);
+   
+  }
+  $result = ($total * 100) / $total_credit;
+  
 
 
 $database->fetch_results($row, "SELECT * FROM users INNER JOIN student ON users.email=student.email WHERE users.email = '" . $email->get_email() . "'");
@@ -248,5 +270,56 @@ if ($semester == -1) {
 
 
 </body>
+<script>
+  var myChartCircle = new Chart('chartProgress', {
+  type: 'doughnut',
+  data: {
+    datasets: [{
+      label: 'Total percentage',
+      percent:<?php echo $result ?>,
+      backgroundColor: ['#2f6d8b']
+    }]
+  },
+  plugins: [{
+      beforeInit: (chart) => {
+        const dataset = chart.data.datasets[0];
+        chart.data.labels = [dataset.label];
+        dataset.data = [dataset.percent, 100 - dataset.percent];
+      }
+    },
+    {
+      beforeDraw: (chart) => {
+        var width = chart.chart.width,
+          height = chart.chart.height,
+          ctx = chart.chart.ctx;
+        ctx.restore();
+        var fontSize = (height / 90).toFixed(2);
+        ctx.font = fontSize + "em sans-serif";
+        ctx.fillStyle = "#9b9b9b";
+        ctx.textBaseline = "middle";
 
+
+
+        var text = chart.data.datasets[0].percent.toFixed(2);
+        textX = Math.round((width - ctx.measureText(text).width) / 2.1),
+          textY = height / 2;
+        ctx.fillText(text + "%", textX, textY);
+        ctx.save();
+      }
+    }
+  ],
+  options: {
+    maintainAspectRatio: false,
+    aspectRatio: 1,
+    cutoutPercentage: 80,
+    rotation: Math.PI / 2,
+    legend: {
+      display: false,
+    },
+    tooltips: {
+      filter: tooltipItem => tooltipItem.index == 0
+    }
+  }
+});
+</script>
 </html>
