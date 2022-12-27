@@ -14,7 +14,7 @@ Those who contributed to this project:
 
 
 ## Tools used:
-
+[php](https://img.shields.io/badge/PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)
 1) HTML(Front End Skeleton)
 2) CSS(Front End Presentation)
 3) Javascript (Client-Side Scripting/Front-End)
