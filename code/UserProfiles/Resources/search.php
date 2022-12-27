@@ -9,13 +9,13 @@ if(isset($_REQUEST["term"])){
 
     if($_SESSION['tableName']==='student')
     {
-        $sql = "SELECT * FROM resources,resources_classroom,student_classroom WHERE 
+        $sql = "SELECT DISTINCT resources.resource_id,resources.resource_visibility,resources.resource_tag,resources.resource_description,resources.title FROM resources,resources_classroom,student_classroom WHERE 
     ((resources_classroom.class_code=student_classroom.class_code AND student_classroom.email='".$email->get_email()."'
     AND resources.resource_id=resources_classroom.resource_id) OR resources.resource_visibility='public')
      AND resource_tag LIKE ?";
     }
     else{
-        $sql = "SELECT * FROM resources,resources_classroom,teacher_classroom WHERE 
+        $sql = "SELECT DISTINCT resources.resource_id,resources.resource_visibility,resources.resource_tag,resources.resource_description,resources.title FROM resources,resources_classroom,teacher_classroom WHERE 
     ((resources_classroom.class_code=teacher_classroom.class_code AND teacher_classroom.email='".$email->get_email()."'
     AND resources.resource_id=resources_classroom.resource_id) OR resources.resource_visibility='public')
      AND resource_tag LIKE ?";
@@ -35,7 +35,7 @@ if(isset($_REQUEST["term"])){
                     ?>
                     <div class="card card-body my-2 mx-1 me-1 btn btn-resource uploaded-resources" style="text-align:left" id="scrollspyHeading1">
                       <button type="submit" name="<?php echo $dummy_resource['resource_id'] ?>" style="all:unset">
-                        <div class="<?php echo $dummy_resource['resource_visibility']; ?>-box mb-1"><?php echo $dummy_resource['resource_visibility']; ?></div>
+                        <div class="private-box mb-1"><?php echo $dummy_resource['resource_visibility']; ?></div>
                         <h5><?php echo $dummy_resource['title']; ?></h5>
                         <p style="font-size: 12px;">Resource Tag: <?php echo $dummy_resource['resource_tag']; ?></p>
                         <p style="font-size: 12px;"><?php echo $dummy_resource['resource_description']; ?></p>
