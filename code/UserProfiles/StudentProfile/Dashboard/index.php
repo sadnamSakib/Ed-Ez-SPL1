@@ -18,27 +18,26 @@ $errorColor = "red";
 $classCode = $_SESSION['class_code'];
 $classrooms = $database->performQuery("SELECT * FROM classroom,student_classroom where classroom.class_code=student_classroom.class_code and student_classroom.email='" . $email->get_email() . "' and active='1';");
 
-  foreach ($classrooms as $i) {
-    $total_credit += (is_null($i['course_credit']) ? 0 : $i['course_credit']);
-    $classCode = $i['class_code'];
-    $database->fetch_results($attendance, "SELECT nvl(count(*),0)StudentAttendance FROM classroom_session,student_classroom_session WHERE classroom_session.session=student_classroom_session.session AND classroom_session.class_code='$classCode' AND student_classroom_session.email='" . $email->get_email() . "'");
-    $database->fetch_results($totalAttendance, "SELECT nvl(count(*),0)TotalSessions FROM classroom_session WHERE classroom_session.class_code='$classCode'");
-    $database->fetch_results($taskInfo, "SELECT (sum(nvl(marks_obtained,0))/sum(nvl(marks,1)))*90 AS percentage FROM task,task_classroom,student_task_submission WHERE task.task_id=task_classroom.task_id AND task_classroom.class_code='" . $classCode . "' AND student_task_submission.task_id=task.task_id AND task.active='1'");
-    if (is_null($taskInfo)) {
-      $percentage = 0;
-    } else {
-      $percentage = $taskInfo['percentage'];
-    }
-    if ($totalAttendance['TotalSessions'] == 0) {
-      $percentage = $taskInfo['percentage'] + 10;
-    } else {
-      $percentage = $taskInfo['percentage'] + ($attendance['StudentAttendance'] * 10) / $totalAttendance['TotalSessions'];
-    }
-    $total += (($percentage * $i['course_credit']) / 100);
-   
+foreach ($classrooms as $i) {
+  $total_credit += (is_null($i['course_credit']) ? 0 : $i['course_credit']);
+  $classCode = $i['class_code'];
+  $database->fetch_results($attendance, "SELECT nvl(count(*),0)StudentAttendance FROM classroom_session,student_classroom_session WHERE classroom_session.session=student_classroom_session.session AND classroom_session.class_code='$classCode' AND student_classroom_session.email='" . $email->get_email() . "'");
+  $database->fetch_results($totalAttendance, "SELECT nvl(count(*),0)TotalSessions FROM classroom_session WHERE classroom_session.class_code='$classCode'");
+  $database->fetch_results($taskInfo, "SELECT (sum(nvl(marks_obtained,0))/sum(nvl(marks,1)))*90 AS percentage FROM task,task_classroom,student_task_submission WHERE task.task_id=task_classroom.task_id AND task_classroom.class_code='" . $classCode . "' AND student_task_submission.task_id=task.task_id AND task.active='1'");
+  if (is_null($taskInfo)) {
+    $percentage = 0;
+  } else {
+    $percentage = $taskInfo['percentage'];
   }
-  $result = ($total * 100) / $total_credit;
-  
+  if ($totalAttendance['TotalSessions'] == 0) {
+    $percentage = $taskInfo['percentage'] + 10;
+  } else {
+    $percentage = $taskInfo['percentage'] + ($attendance['StudentAttendance'] * 10) / $totalAttendance['TotalSessions'];
+  }
+  $total += (($percentage * $i['course_credit']) / 100);
+}
+$result = ($total * 100) / $total_credit;
+
 
 
 $database->fetch_results($row, "SELECT * FROM users INNER JOIN student ON users.email=student.email WHERE users.email = '" . $email->get_email() . "'");
@@ -66,7 +65,7 @@ if ($semester == -1) {
 
 <head>
   <meta charset="UTF-8">
-  <title>Profile</title>
+  <title>Dashboard</title>
   <link rel="icon" href="<?php echo $root_path; ?>title_icon.jpg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css" />
@@ -77,43 +76,41 @@ if ($semester == -1) {
   <link href="<?php echo $root_path; ?>boxicons-2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <script defer src="script.js"></script>
   <script>
-    document.addEventListener('DOMContentLoaded', function () {
-  var calendarEl = document.getElementById('calendar');
+    document.addEventListener('DOMContentLoaded', function() {
+      var calendarEl = document.getElementById('calendar');
 
-  var calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'listWeek',
-    themeSystem: 'bootstrap5',
-    header: {
-      left: '',
-      center: '',
-      right: ''
-    },
+      var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'listWeek',
+        themeSystem: 'bootstrap5',
+        header: {
+          left: '',
+          center: '',
+          right: ''
+        },
 
-    events: [
-        <?php 
-            $recordsTask=$database->performQuery("select * from event,task,student_classroom,task_classroom where event.event_id=task.event_id and task_classroom.task_id=task.task_id and student_classroom.email='".$email->get_email()."' and student_classroom.class_code=task_classroom.class_code;");
-            $first=false;
-            foreach($recordsTask as $i){
-              if(!$first){
-                $first=true;
-              }
-              else{
-                echo ',';
-              }
-          ?>
-        {
-          
-          title: '<?php echo $i['task_title']; ?>',
-          start: '<?php echo $i['event_start_datetime'];?>'
-          
-        }
-        <?php
+        events: [
+          <?php
+          $recordsTask = $database->performQuery("select * from event,task,student_classroom,task_classroom where event.event_id=task.event_id and task_classroom.task_id=task.task_id and student_classroom.email='" . $email->get_email() . "' and student_classroom.class_code=task_classroom.class_code;");
+          $first = false;
+          foreach ($recordsTask as $i) {
+            if (!$first) {
+              $first = true;
+            } else {
+              echo ',';
             }
+          ?> {
+
+              title: '<?php echo $i['task_title']; ?>',
+              start: '<?php echo $i['event_start_datetime']; ?>'
+
+            }
+          <?php
+          }
           ?>
-      ]
-  });
-  calendar.render();
-});
+        ]
+      });
+      calendar.render();
+    });
   </script>
 </head>
 
@@ -161,12 +158,12 @@ if ($semester == -1) {
             foreach ($classrooms as $i) {
               $classCode = $i['class_code'];
               $classTitle = $i['classroom_name'];
-              $database->fetch_results($teacher_records, "SELECT * FROM users,teacher_classroom,classroom WHERE users.email=teacher_classroom.email and classroom.class_code='$classCode'");
+              $database->fetch_results($student_records, "SELECT * FROM users,student_classroom,classroom WHERE users.email=student_classroom.email and classroom.class_code='$classCode'");
             ?>
               <div class="card">
                 <div class="card-body">
                   <h5 class="card-title"><?php echo $classTitle ?></h5>
-                  <h6 class="card-subtitle mb-2 text-muted"><?php echo $teacher_records['name'] ?></h6>
+                  <h6 class="card-subtitle mb-2 text-muted"><?php echo $student_records['name'] ?></h6>
                 </div>
               </div>
             <?php } ?>
@@ -185,18 +182,18 @@ if ($semester == -1) {
 
             <?php
             $resource = $database->performQuery("SELECT * FROM resources,resource_saved WHERE resources.resource_id=resource_saved.resource_id;");
-           
+
             foreach ($resource as $dummy_resource) {
             ?>
               <div class="card">
                 <div class="card-body">
-                <?php $visibility = $dummy_resource['resource_visibility']; ?>
-                <div class="<?php echo $visibility ?>-box mb-1"><?php echo $visibility ?></div>
+                  <?php $visibility = $dummy_resource['resource_visibility']; ?>
+                  <div class="<?php echo $visibility ?>-box mb-1"><?php echo $visibility ?></div>
                   <h5 class="card-title"><?php echo $dummy_resource['title']; ?></h5>
                   <h6 class="card-subtitle mb-2 text-muted"><?php echo $dummy_resource['resource_description']; ?></h6>
                 </div>
               </div>
-              
+
             <?php
             }
             ?>
@@ -232,17 +229,29 @@ if ($semester == -1) {
                 <div class="dropdown">
                   <i class="bx bxs-bell notification dropbtn position-relative" onclick="myFunction()">
                     <span class="position-absolute top-0 start-100 translate-middle badge badge-sm rounded-pill bg-danger ">
-                      99+
+                      <?php
+                      $database->fetch_results($result, "SELECT count(*) AS notification_count FROM notifications,classroom,student_classroom WHERE notifications.class_code=classroom.class_code AND classroom.class_code=student_classroom.class_code AND student_classroom.email='".$email->get_email()."' AND notifications.notification_type!='submit' order by notification_datetime desc");
+                      if ($result['notification_count'] > 3) {
+                        echo "3+";
+                      } else {
+                        echo $result['notification_count'];
+                      }
+                      $notifications = $database->performQuery("SELECT * FROM notifications,classroom,student_classroom WHERE notifications.class_code=classroom.class_code AND classroom.class_code=student_classroom.class_code AND student_classroom.email='".$email->get_email()."' AND notifications.notification_type!='submit' order by notification_datetime desc LIMIT 3");
+                      ?>
                       <span class="visually-hidden">unread messages</span>
                     </span></i>
-                  <div id="myDropdown" class="dropdown-content w-50">
-                    <a href="#">Link 1</a>
-                    <a href="#">Link 2</a>
-                    <a href="#">Link 3</a>
-                    <a href="#" class="amarMonChaise">
-                    <div class="d-flex justify-content-around">
-                      <button type="button" class="btn btn-primary btn-notification">Show All Notification</button>
-                      <button type="button" class="btn btn-primary btn-notification">Clear</button>
+                  <div id="myDropdown" class="dropdown-content">
+                    <?php
+                    foreach ($notifications as $notification) {
+                    ?>
+                      <a href="#"><?php echo $notification['message']; ?></a>
+                    <?php
+                    }
+                    ?>
+                    <a title="Notification" class="amarMonChaise">
+                      <div class="d-flex justify-content-around">
+                        <button type="button" class="btn btn-primary btn-notification" onclick="window.location.href='ShowAllNotifications/index.php'">Show All Notification</button>
+                        <button type="button" class="btn btn-primary btn-notification">Clear</button>
                       </div>
                     </a>
                   </div>
@@ -322,4 +331,5 @@ if ($semester == -1) {
   }
 });
 </script>
+
 </html>

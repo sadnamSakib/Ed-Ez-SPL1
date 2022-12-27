@@ -13,50 +13,7 @@ session::profile_not_set($root_path);
 session::profile_not_set($root_path);
 $validate = new InputValidation();
 $email = new EmailValidator($_SESSION['email']);
-$resource_id = null;
-$resource_id = $_SESSION['resource_id'];
-$resources = $database->performQuery("SELECT * FROM resources");
-foreach ($resources as $resource) {
-    if (isset($_POST[$resource['resource_id']])) {
-        $resource_id = $resource['resource_id'];
-    }
-}
 
-$database->fetch_results($resource, "SELECT * FROM resources,resource_uploaded WHERE resources.resource_id = '$resource_id' AND resource_uploaded.resource_id = '$resource_id'");
-$database->fetch_results($user, "SELECT * FROM users WHERE email='" . $resource['email'] . "'");
-
-if (isset($_POST['upvote']) && $resource['email'] !== $email->get_email()) {
-    $rows = $database->performQuery("SELECT * FROM resource_upvote WHERE resource_id='$resource_id' AND  email='" . $email->get_email() . "'");
-    if ($rows->num_rows == 0) {
-        $database->performQuery("INSERT INTO resource_upvote VALUES('$resource_id','" . $email->get_email() . "')");
-    } else {
-        $database->performQuery("DELETE FROM resource_upvote WHERE resource_id='$resource_id' AND email='" . $email->get_email() . "'");
-    }
-}
-
-if (isset($_POST['downvote']) && $resource['email'] !== $email->get_email()) {
-    $rows = $database->performQuery("SELECT * FROM resource_downvote WHERE resource_id='$resource_id' AND  email='" . $email->get_email() . "'");
-    if ($rows->num_rows == 0) {
-        $database->performQuery("INSERT INTO resource_downvote VALUES('$resource_id','" . $email->get_email() . "')");
-    } else {
-        $database->performQuery("DELETE FROM resource_downvote WHERE resource_id='$resource_id' AND email='" . $email->get_email() . "'");
-    }
-}
-
-if (isset($_POST['save'])) {
-    $rows = $database->performQuery("SELECT * FROM resource_saved WHERE resource_id='$resource_id' AND  email='" . $email->get_email() . "'");
-    if ($rows->num_rows == 0) {
-        $database->performQuery("INSERT INTO resource_saved VALUES('$resource_id','" . $email->get_email() . "')");
-    } else {
-        $database->performQuery("DELETE FROM resource_saved WHERE resource_id='$resource_id' AND email='" . $email->get_email() . "'");
-    }
-}
-
-$_SESSION['resource_id'] = $resource_id;
-
-
-$database->fetch_results($resource_upvote, "SELECT count(*) AS upvote FROM resource_upvote WHERE resource_id = '$resource_id'");
-$database->fetch_results($resource_downvote, "SELECT count(*) AS downvote FROM resource_downvote WHERE resource_id = '$resource_id'");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -86,20 +43,21 @@ $database->fetch_results($resource_downvote, "SELECT count(*) AS downvote FROM r
                     <h5 class="card-title" style="text-align:center">All Notifications</h5>
                 </div>
                 <div class="card-body text-success">
+                <?php 
+                    $notifications = $database->performQuery("SELECT * FROM notifications,classroom,student_classroom WHERE notifications.class_code=classroom.class_code AND classroom.class_code=student_classroom.class_code AND student_classroom.email='".$email->get_email()."' AND notifications.notification_type!='submit' order by notification_datetime desc");
+                    foreach ($notifications as $notification) {
+                    ?>
                     <div class="card mb-2">
                         <div class="card-body">
-                            <h5 class="card-title" style="color:black;">New Task</h5>
-                            <p class="card-text" style="color:black;">A new task has been assigned as assignment-1 in CSE-4303</p>
-                            <a href="#" class="btn btn-primary">View Task</a>
+                            <h5 class="card-title" style="color:black;">New <?php echo $notification['notification_type'] ?></h5>
+                            <p class="card-text" style="color:black;"><?php echo $notification['message'] ?></p>
+                            <p class="card-text" style="color:black;">Date: <?php echo $notification['notification_datetime']?></p>
+                            <a href="#" class="btn btn-primary">View <?php echo $notification['notification_type']?></a>
                         </div>
                     </div>
-                    <div class="card mb-2">
-                        <div class="card-body">
-                            <h5 class="card-title" style="color:black;">New Resource</h5>
-                            <p class="card-text" style="color:black;">A new resource has been shared in CSE-4303</p>
-                            <a href="#" class="btn btn-primary">View resource</a>
-                        </div>
-                    </div>
+                    <?php
+                    }
+                    ?>
                 </div>
 
         </section>

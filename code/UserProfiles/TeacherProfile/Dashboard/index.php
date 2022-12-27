@@ -197,16 +197,29 @@ if ($semester == -1) {
               <div class="dropdown">
                 <i class="bx bxs-bell notification dropbtn" onclick="myFunction()">
                 <span class="position-absolute top-0 start-100 translate-middle badge badge-sm rounded-pill bg-danger ">
-    99+
+    <?php
+    $database->fetch_results($result,"SELECT count(*) AS notification_count FROM notifications,classroom,teacher_classroom WHERE notifications.class_code=classroom.class_code AND teacher_classroom.email='".$email->get_email()."' AND classroom.class_code=teacher_classroom.class_code  order by notification_datetime desc");
+    if($result['notification_count']>3){
+      echo "3+";
+    }
+    else{
+      echo $result['notification_count'];
+    }
+    $notifications = $database->performQuery("SELECT * FROM notifications,classroom,teacher_classroom WHERE notifications.class_code=classroom.class_code AND teacher_classroom.email='".$email->get_email()."' AND classroom.class_code=teacher_classroom.class_code  order by notification_datetime desc LIMIT 3");
+    ?>
     <span class="visually-hidden">unread messages</span>
   </span></i>
                   <div id="myDropdown" class="dropdown-content">
-                    <a href="#">Link 1</a>
-                    <a href="#">Link 2</a>
-                    <a href="#">Link 3</a>
+                    <?php
+                    foreach ($notifications as $notification) {
+                    ?>
+                    <a href="#"><?php echo $notification['message']; ?></a>
+                    <?php
+                    }
+                    ?>
                     <a href="#" class="amarMonChaise">
                       <div class="d-flex justify-content-around">
-                      <button type="button" class="btn btn-primary btn-notification">Show All Notification</button>
+                      <button type="button" class="btn btn-primary btn-notification" onclick="window.location.href='ShowAllNotifications/index.php'">Show All Notification</button>
                       <button type="button" class="btn btn-primary btn-notification">Clear</button>
                       </div>
                     </a>

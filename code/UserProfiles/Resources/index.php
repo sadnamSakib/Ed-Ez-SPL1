@@ -38,6 +38,10 @@ if (isset($_POST['uploadSubmit'])) {
       $database->performQuery("INSERT INTO resource_uploaded VALUES('$resource_id','" . $email->get_email() . "')");
       if($visibility==="private"){
         $database->performQuery("INSERT INTO resources_classroom VALUES('$resource_id','$classCode')");
+        $link = $fileManagement->get_file_url(URLPath::getFTPServer());
+        $post_text = "A Resource has been posted: <br> Title: $title <br>  Posted at:". $system_date['DATE']." <br> Brief Description: $briefDescription <br> Resource Link: <a href=\"$link\" target=\"__blank\">Link</a>";
+        $notification = new NotificationManagement($email->get_email(), "resource", $classCode, $sessionLink, $utility, $database);
+        $postManagement = new PostManagement($post_text,$email->get_email(),$classCode,$utility,$database);
       }
     } catch (Exception $e) {
       echo $e->getMessage();

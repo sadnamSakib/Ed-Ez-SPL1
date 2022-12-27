@@ -53,7 +53,7 @@ $resources = $database->performQuery("SELECT * FROM resources,resources_classroo
                                 <?php
                                 foreach ($resources as $dummy_resource) {
                                 ?>
-                                    <div class="card card-body my-2 me-2 ms-2 btn btn-resource saved-resources saved" style="text-align:left" id="scrollspyHeading1">
+                                    <div class="card card-body my-2 me-2 ms-2 btn btn-resource saved" style="text-align:left" id="scrollspyHeading1">
                                         <button type="submit" name="<?php echo $dummy_resource['resource_id'] ?>" style="all:unset">
                                             <div class="<?php echo $dummy_resource['resource_visibility']; ?>-box mb-1"><?php echo $dummy_resource['resource_visibility']; ?></div>
                                             <h5 class="saved-resources"><?php echo $dummy_resource['title']; ?></h5>

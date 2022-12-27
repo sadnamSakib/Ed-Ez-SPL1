@@ -42,6 +42,7 @@ if (isset($_POST['taskSubmit'])) {
     $Deadline = date("d/m/Y h:i:s a", strtotime($Deadline));
     $link = $fileManagement->get_file_url(URLPath::getFTPServer());
     $post_text = "A Task has been assigned: <br> Title: $task_title <br>  Deadline: $Deadline <br> Marks: $marks <br> Question Link: <a href=\"$link\" target=\"__blank\">Link</a>";
+    $notification = new NotificationManagement($email->get_email(), "task", $classCode, $task_title, $utility, $database);
     $taskPost = new PostManagement($post_text, $email->get_email(), $classCode, $utility, $database);
   }
 }
@@ -79,6 +80,7 @@ if (isset($_POST['sessionSubmit'])) {
     $database->performQuery("DELETE FROM classroom_session WHERE session='$session'");
     $session = "No Session Links Provided";
   } else {
+    $notification = new NotificationManagement($email->get_email(), "session", $classCode, $sessionLink, $utility, $database);
     $sessionPost = new PostManagement($post_text, $email->get_email(), $classCode, $utility, $database);
   }
 }

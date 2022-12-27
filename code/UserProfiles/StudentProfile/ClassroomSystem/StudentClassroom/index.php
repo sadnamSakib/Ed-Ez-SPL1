@@ -72,10 +72,12 @@ foreach ($allTasks as $i) {
         break;
       }
       $database->fetch_results($system_date, "SELECT SYSDATE() AS DATE");
-      if ($records['event_end_datetime'] >= $system_date['DATE']) {
+      if ($records['event_end_datetime'] > $system_date['DATE']) {
         $database->performQuery("INSERT INTO student_task_submission(email,task_id,file_id,submission_status) VALUES('" . $email->get_email() . "','" . $i['task_id'] . "','" . $fileManagement->get_file_id() . "','1')");
+        $notification = new NotificationManagement($email->get_email(), 'submit', $classCode, $i['task_title'], $utility, $database,1);
       } else {
         $database->performQuery("INSERT INTO student_task_submission(email,task_id,file_id,submission_status) VALUES('" . $email->get_email() . "','" . $i['task_id'] . "','" . $fileManagement->get_file_id() . "','0')");
+        $notification = new NotificationManagement($email->get_email(), 'submit', $classCode, $i['task_title'], $utility, $database,0);
       }
       break;
     }
@@ -142,7 +144,7 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
             </div>
           </div>
         </div>
-        <button type="submit" class="btn btn-primary btn-attendance">Resources</button>
+        <a href="ResourcesList/index.php" style="all:unset"> <button type="button" class="btn btn-primary btn-create">Resources</button></a>
         </div>
         <div class="card text-bg-primary ">
           <div class="card-header task-card" style="height:50px">
