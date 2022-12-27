@@ -22,6 +22,7 @@ if (isset($_POST['uploadSubmit'])) {
   $title = $validate->post_sanitise_text('title');
   $briefDescription = $validate->post_sanitise_text('briefDescription');
   $tag = $validate->post_sanitise_text('tag');
+  $classCode=$validate->post_sanitise_text('classroom');
   $public = $_REQUEST['publicResource'];
   $private = $_REQUEST['privateResource'];
   if ($public === 'public') {
@@ -35,6 +36,9 @@ if (isset($_POST['uploadSubmit'])) {
     try {
       $database->performQuery("INSERT INTO resources VALUES('$resource_id','$title','$tag','" . $system_date['DATE'] . "','" . $fileManagement->get_file_id() . "','$visibility','$briefDescription')");
       $database->performQuery("INSERT INTO resource_uploaded VALUES('$resource_id','" . $email->get_email() . "')");
+      if($visibility==="private"){
+        $database->performQuery("INSERT INTO resources_classroom VALUES('$resource_id','$classCode')");
+      }
     } catch (Exception $e) {
       echo $e->getMessage();
     }
@@ -54,9 +58,6 @@ if (isset($_POST['uploadSubmit'])) {
   <link rel="stylesheet" href="<?php echo $root_path; ?>css/bootstrap.css" />
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <link href="<?php echo $root_path; ?>boxicons-2.1.4/css/boxicons.min.css" rel="stylesheet" />
-<script>
-
-</script>
 </head>
 <body>
   <script src="<?php echo $root_path; ?>js/bootstrap.js"></script>
