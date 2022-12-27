@@ -54,6 +54,45 @@ if ($semester == -1) {
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
   <link href="<?php echo $root_path; ?>boxicons-2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <script defer src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+  var calendarEl = document.getElementById('calendar');
+
+  var calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'listWeek',
+    themeSystem: 'bootstrap5',
+    header: {
+      left: '',
+      center: '',
+      right: ''
+    },
+
+    events: [
+        <?php 
+            $recordsTask=$database->performQuery("select * from event,task,student_classroom,task_classroom where event.event_id=task.event_id and task_classroom.task_id=task.task_id and student_classroom.email='".$email->get_email()."' and student_classroom.class_code=task_classroom.class_code;");
+            $first=false;
+            foreach($recordsTask as $i){
+              if(!$first){
+                $first=true;
+              }
+              else{
+                echo ',';
+              }
+          ?>
+        {
+          
+          title: '<?php echo $i['task_title']; ?>',
+          start: '<?php echo $i['event_start_datetime'];?>'
+          
+        }
+        <?php
+            }
+          ?>
+      ]
+  });
+  calendar.render();
+});
+  </script>
 </head>
 
 <body>
@@ -82,8 +121,8 @@ if ($semester == -1) {
                 <img src="<?php echo $src ?>" style="border-radius:75%; height:3rem ; width:3rem;">
               </div>
               <div class="col-5 my-auto">
-                <p class="my-auto align-self-start"" style=" font-weight:bold; color:white;font-size:15px"><?php echo $name ?></p>
-                <p class="my-auto align-self-start"" style=" color:white">Student</p>
+                <p class="my-auto align-self-start" style=" font-weight:bold; color:white;font-size:15px"><?php echo $name ?></p>
+                <p class="my-auto align-self-start" style=" color:white">Student</p>
               </div>
               <div class="col my-auto">
                 <i class="bx bxs-bell notification align-self-end ms-5"></i>
@@ -153,8 +192,8 @@ if ($semester == -1) {
                 <img src="<?php echo $src ?>" style="border-radius:75%; height:3rem ; width:3rem;">
               </div>
               <div class="col-6 my-auto">
-                <p class="my-auto align-self-start"" style=" font-weight:bold; color:white;font-size:20px"><?php echo $name ?></p>
-                <p class="my-auto align-self-start"" style=" color:white">Student</p>
+                <p class="my-auto align-self-start" style=" font-weight:bold; color:white;font-size:20px"><?php echo $name ?></p>
+                <p class="my-auto align-self-start" style=" color:white">Student</p>
               </div>
               <div class="col-2 my-auto">
 
@@ -198,7 +237,7 @@ if ($semester == -1) {
         </div>
         <div class="row justify-content-center">
           <div class="box w-100 mt-3">
-            <div id='calendar'></div>
+            <div id="calendar"></div>
           </div>
         </div>
 
