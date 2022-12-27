@@ -123,11 +123,12 @@ to {top: 0; opacity: 1}
   height: 50px;
   margin: auto;
   margin-left: 5px;
+  width: 75%;
 }
 .form-control.search.search-global{
   background-color: #fefefe;
   margin: auto;
-  margin-left: 5rem;
+  
   
 }
 .form-control.search.search-global:hover{
