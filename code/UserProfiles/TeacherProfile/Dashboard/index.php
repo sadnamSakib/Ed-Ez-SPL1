@@ -37,12 +37,15 @@ $teacherID = $row['teacherID'];
 if ($semester == -1) {
   $semester = '';
 }
-$notifications = $database->performQuery("SELECT * FROM notifications,classroom,teacher_classroom WHERE notifications.class_code=classroom.class_code  AND teacher_classroom.email='".$email->get_email()."' AND classroom.class_code=teacher_classroom.class_code order by notification_datetime desc");
+$notifications = $database->performQuery("SELECT * FROM notifications,classroom,teacher_classroom,notification_user WHERE notifications.notification_id=notification_user.notification_id AND notification_user.email='".$email->get_email()."'  AND  notifications.class_code=classroom.class_code  AND teacher_classroom.email='".$email->get_email()."' AND classroom.class_code=teacher_classroom.class_code order by notification_datetime desc");
 foreach($notifications as $notification){
     if(isset($_POST['notification'.$notification['notification_id']])){
       $_SESSION['class_code']=$notification['class_code'];
       $_SESSION['email']=$email->get_original_email();
       header('Location: ../ClassroomSystem/TeacherClassroom/index.php');
+    }
+    if(isset($_POST['clear'])){
+      
     }
   }
 
@@ -208,14 +211,14 @@ foreach($notifications as $notification){
                 <i class="bx bxs-bell notification dropbtn" onclick="myFunction()">
                 <span class="position-absolute top-0 start-100 translate-middle badge badge-sm rounded-pill bg-danger ">
     <?php
-    $database->fetch_results($result,"SELECT count(*) AS notification_count FROM notifications,classroom,teacher_classroom WHERE notifications.class_code=classroom.class_code AND teacher_classroom.email='".$email->get_email()."' AND classroom.class_code=teacher_classroom.class_code  order by notification_datetime desc");
+    $database->fetch_results($result,"SELECT count(*) AS notification_count FROM notifications,classroom,teacher_classroom,notification_user WHERE notifications.notification_id=notification_user.notification_id AND notification_user.email='".$email->get_email()."'  AND  notifications.class_code=classroom.class_code AND teacher_classroom.email='".$email->get_email()."' AND classroom.class_code=teacher_classroom.class_code  order by notification_datetime desc");
     if($result['notification_count']>3){
       echo "3+";
     }
     else{
       echo $result['notification_count'];
     }
-    $notifications = $database->performQuery("SELECT * FROM notifications,classroom,teacher_classroom WHERE notifications.class_code=classroom.class_code AND teacher_classroom.email='".$email->get_email()."' AND classroom.class_code=teacher_classroom.class_code  order by notification_datetime desc LIMIT 3");
+    $notifications = $database->performQuery("SELECT * FROM notifications,classroom,teacher_classroom,notification_user WHERE notifications.notification_id=notification_user.notification_id AND notification_user.email='".$email->get_email()."' AND notifications.class_code=classroom.class_code AND teacher_classroom.email='".$email->get_email()."' AND classroom.class_code=teacher_classroom.class_code  order by notification_datetime desc LIMIT 3");
     ?>
     <span class="visually-hidden">unread messages</span>
   </span></i>

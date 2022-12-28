@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 28, 2022 at 12:20 AM
+-- Generation Time: Dec 28, 2022 at 07:07 AM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -121,7 +121,17 @@ CREATE TABLE `notifications` (
   `notification_id` varchar(50) NOT NULL,
   `notification_datetime` datetime NOT NULL,
   `notification_type` set('resource','task','session','submit') NOT NULL,
-  `class_code` varchar(20) NOT NULL,
+  `class_code` varchar(20) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notification_user`
+--
+
+CREATE TABLE `notification_user` (
+  `notification_id` varchar(50) NOT NULL,
   `email` varchar(200) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -407,7 +417,15 @@ ALTER TABLE `files`
 -- Indexes for table `notifications`
 --
 ALTER TABLE `notifications`
-  ADD PRIMARY KEY (`notification_id`);
+  ADD PRIMARY KEY (`notification_id`),
+  ADD KEY `fk_notifications_classroom` (`class_code`);
+
+--
+-- Indexes for table `notification_user`
+--
+ALTER TABLE `notification_user`
+  ADD PRIMARY KEY (`notification_id`,`email`),
+  ADD KEY `fk_notification_user_notifications2` (`email`);
 
 --
 -- Indexes for table `post`
@@ -562,6 +580,19 @@ ALTER TABLE `comments`
 --
 ALTER TABLE `comment_post`
   ADD CONSTRAINT `fk_comment_post_post` FOREIGN KEY (`post_id`) REFERENCES `post` (`post_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD CONSTRAINT `fk_notifications_classroom` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `notification_user`
+--
+ALTER TABLE `notification_user`
+  ADD CONSTRAINT `fk_notification_user_notifications` FOREIGN KEY (`notification_id`) REFERENCES `notifications` (`notification_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_notification_user_notifications2` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `post`

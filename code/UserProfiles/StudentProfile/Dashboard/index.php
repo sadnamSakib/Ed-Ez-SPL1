@@ -58,7 +58,7 @@ $studentID = $row['studentID'];
 if ($semester == -1) {
   $semester = '';
 }
-$notifications = $database->performQuery("SELECT * FROM notifications,classroom,student_classroom WHERE notifications.class_code=classroom.class_code AND classroom.class_code=student_classroom.class_code AND student_classroom.email='".$email->get_email()."' AND notifications.notification_type!='submit' order by notification_datetime desc LIMIT 3");
+$notifications = $database->performQuery("SELECT * FROM notifications,classroom,student_classroom,notification_user WHERE notifications.notification_id=notification_user.notification_id AND notification_user.email='".$email->get_email()."'  AND notifications.class_code=classroom.class_code AND classroom.class_code=student_classroom.class_code AND student_classroom.email='".$email->get_email()."' AND notifications.notification_type!='submit' order by notification_datetime desc LIMIT 3");
 foreach($notifications as $notification){
   if(isset($_POST['notification'.$notification['notification_id']])){
     $_SESSION['class_code']=$notification['class_code'];
@@ -238,7 +238,7 @@ foreach($notifications as $notification){
                   <i class="bx bxs-bell notification dropbtn position-relative" onclick="myFunction()">
                     <span class="position-absolute top-0 start-100 translate-middle badge badge-sm rounded-pill bg-danger ">
                       <?php
-                      $database->fetch_results($result, "SELECT count(*) AS notification_count FROM notifications,classroom,student_classroom WHERE notifications.class_code=classroom.class_code AND classroom.class_code=student_classroom.class_code AND student_classroom.email='".$email->get_email()."' AND notifications.notification_type!='submit' order by notification_datetime desc");
+                      $database->fetch_results($result, "SELECT count(*) AS notification_count FROM notifications,classroom,student_classroom,notification_user WHERE notifications.notification_id=notification_user.notification_id AND notification_user.email='".$email->get_email()."'  AND notifications.class_code=classroom.class_code AND classroom.class_code=student_classroom.class_code AND student_classroom.email='".$email->get_email()."' AND notifications.notification_type!='submit' order by notification_datetime desc");
                       if ($result['notification_count'] > 3) {
                         echo "3+";
                       } else {
@@ -289,6 +289,9 @@ foreach($notifications as $notification){
 
 </body>
 <script>
+  <?php
+    $result = ($total * 100) / $total_credit;
+    ?>
   var myChartCircle = new Chart('chartProgress', {
   type: 'doughnut',
   data: {
