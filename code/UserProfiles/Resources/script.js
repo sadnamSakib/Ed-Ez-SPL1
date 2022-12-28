@@ -92,3 +92,21 @@ radioButton2.addEventListener('click', () => {
 	radioButton.checked = !radioButton2.checked;
   });
 
+	function validation_check(){
+		var y=document.getElementById('error');
+		var z=document.getElementById('display_error');
+		var a=document.getElementById('classroom').value;
+		if(a==="$" && radioButton.checked){
+			y.style.display="block";
+			z.innerHTML="No fields can be empty";
+			return false;
+		}
+		return true;
+	}
+	
+	const form=document.getElementById('form');
+	form.addEventListener('submit', (e) => {
+		if(validation_check()===false){
+			e.preventDefault();
+		}
+	})

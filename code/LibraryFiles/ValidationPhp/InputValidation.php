@@ -7,7 +7,7 @@
 
         function presence_check(...$args){
             foreach($args as $i){
-                if(is_null($i)){
+                if(empty($i) || is_null($i)){
                     $this->error="All Fields are required";
                     return false;
                 }

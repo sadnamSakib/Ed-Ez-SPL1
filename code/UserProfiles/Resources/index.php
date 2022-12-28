@@ -12,7 +12,7 @@ foreach (glob($root_path . 'LibraryFiles/NotificationManager/*.php') as $filenam
   require $filename;
 }
 
-
+$error = null;
 session::profile_not_set($root_path);
 $validate = new InputValidation();
 $email = new EmailValidator($_SESSION['email']);
@@ -35,9 +35,12 @@ if (isset($_POST['uploadSubmit'])) {
     $visibility = 'private';
   }
   $database->fetch_results($system_date, "SELECT SYSDATE() AS DATE");
-  if (isset($_FILES['uploadResource']['name'])) {
-    $fileManagement = new FileManagement($_FILES['uploadResource']['name'], $_FILES['uploadResource']['tmp_name'], $database, $utility);
-    try {
+  if (isset($_FILES['uploadResource']['name']) && $validate->presence_check($title,$briefDescription,$tag,$visibility)) {
+    if($visibility==='private' && !$validate->presence_check($classCode)){
+      $error = $validate->error;
+    }
+    else{
+      $fileManagement = new FileManagement($_FILES['uploadResource']['name'], $_FILES['uploadResource']['tmp_name'], $database, $utility);
       $database->performQuery("INSERT INTO resources VALUES('$resource_id','$title','$tag','" . $system_date['DATE'] . "','" . $fileManagement->get_file_id() . "','$visibility','$briefDescription')");
       $database->performQuery("INSERT INTO resource_uploaded VALUES('$resource_id','" . $email->get_email() . "')");
       if($visibility==="private"){
@@ -47,9 +50,10 @@ if (isset($_POST['uploadSubmit'])) {
         $notification = new ResourceNotification($email->get_email(), $classCode, $sessionLink, $utility, $database);
         $postManagement = new PostManagement($post_text,$email->get_email(),$classCode,$utility,$database);
       }
-    } catch (Exception $e) {
-      echo $e->getMessage();
-    }
+    } 
+  }
+  else{
+    $error = "No fields can be left empty";
   }
 }
 
@@ -121,7 +125,7 @@ if (isset($_POST['uploadSubmit'])) {
           <div class="card intro-card w-75 text-bg-secondary m-auto mb-3">
             <div class="card-header">
               <h3 class="card-title" style="text-align:center">Uploaded Resources</h3>
-              <form class="d-flex" action="" method="POST" role="search" name="uploadForm" enctype="multipart/form-data">
+              <form class="d-flex" id="form" action="" method="POST" role="search" name="uploadForm" enctype="multipart/form-data">
                 <button type="button" class="btn btn-primary btn-upload" data-bs-toggle="modal" data-bs-target="#exampleModal">Upload</button>
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -132,23 +136,26 @@ if (isset($_POST['uploadSubmit'])) {
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
-                        <div class="mb-3">
-                          <input type="text" id="title" name="title" class="form-control" placeholder="Title of the file" aria-label="Leave a comment">
+                      <div class="mb-3" id="error" style="display:<?php echo is_null($error)?'none':'block' ?>">
+                          <p style="color:red" id="display_error"><?php echo $error; ?></p>
                         </div>
                         <div class="mb-3">
-                          <input type="text" id="briefDescription" name="briefDescription" class="form-control" placeholder="Brief description" aria-label="Leave a comment">
+                          <input type="text" id="title" name="title" class="form-control resource_form_class" placeholder="Title of the file" aria-label="Leave a comment" required>
                         </div>
                         <div class="mb-3">
-                          <input type="text" id="tag" name="tag" class="form-control" placeholder="Enter a tag to identify resource" aria-label="Leave a comment">
+                          <input type="text" id="briefDescription" name="briefDescription" class="form-control resource_form_class" placeholder="Brief description" aria-label="Leave a comment"  required>
+                        </div>
+                        <div class="mb-3">
+                          <input type="text" id="tag" name="tag" class="form-control resource_form_class" placeholder="Enter a tag to identify resource" aria-label="Leave a comment"  required>
                         </div>
                         <div class="input-group">
-                          <input type="file" class="form-control" name="uploadResource" id="uploadResource" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+                          <input type="file" class="form-control resource_form_class" name="uploadResource" id="uploadResource" aria-describedby="inputGroupFileAddon04" aria-label="Upload"  required>
                         </div>
                       </div>
                       <div class="mx-4">
                         <label style="color: black">Set resource as: </label>
                         <div class="form-check form-check-inline mx-2">
-                          <input class="form-check-input" type="radio" name="publicResource" id="publicResource" value="public">
+                          <input class="form-check-input" type="radio" name="publicResource" id="publicResource" value="public" checked>
                           <label class="form-check-label" style="color: black" for="publicResource">public</label>
                         </div>
                         <div class="form-check form-check-inline">
@@ -164,7 +171,7 @@ if (isset($_POST['uploadSubmit'])) {
                           $classroom_user_classcode = $classroom_user . '.class_code';
                           $record = $database->performQuery("select * from classroom,$classroom_user WHERE $classroom_user_email = '".$email->get_email()."' AND $classroom_user_classcode = classroom.class_code");
                           ?>
-                          <option selected value="0">Select Classroom</option>
+                          <option selected value="$">Select Classroom</option>
                           <?php
                           foreach ($record as $i) {
                           ?>
