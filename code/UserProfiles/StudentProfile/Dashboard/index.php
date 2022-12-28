@@ -255,7 +255,8 @@ foreach($notifications as $notification){
                     <?php
                     foreach ($notifications as $notification) {
                     ?>
-                      <a><button type="submit" name="notification<?php echo $notification['notification_id'] ?>" style="all:unset"><?php echo $notification['message']; ?></button></a>
+                      <a><div class="d-flex"><div class="me-4"><button type="submit" name="notification<?php echo $notification['notification_id'] ?>" style="all:unset"><?php echo $notification['message']; ?></div></button><div class="close"><span><i class='bx bx-sm bx-x '></i></span></div></div> </a>
+                      
                     <?php
                     }
                     ?>
