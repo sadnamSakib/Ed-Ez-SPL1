@@ -183,6 +183,14 @@ hr.h-color{
   background-color:white!important;
   color: #000!important;
 }
+.task-card.session{
+  background-color: #4596be !important;
+  text-align: center;
+}
+.task-card.session-code{
+  background-color: #fefefe !important;
+  text-align: center;
+}
 
 form i {
   margin-left: -30px;
