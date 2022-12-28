@@ -13,14 +13,14 @@ session::profile_not_set($root_path);
 session::profile_not_set($root_path);
 $validate = new InputValidation();
 $email = new EmailValidator($_SESSION['email']);
-$notifications = $database->performQuery("SELECT * FROM notifications,classroom,student_classroom,notification_user WHERE notifications.notification_id=notification_user.notification_id AND notification_user.email='".$email->get_email()."'  AND notifications.class_code=classroom.class_code AND classroom.class_code=student_classroom.class_code AND student_classroom.email='".$email->get_email()."' AND notifications.notification_type!='submit' order by notification_datetime desc");
-foreach($notifications as $notification){
-    if(isset($_POST['notification'.$notification['notification_id']])){
-      $_SESSION['class_code']=$notification['class_code'];
-      $_SESSION['email']=$email->get_original_email();
-      header('Location: ../../ClassroomSystem/StudentClassroom/index.php');
+$notifications = $database->performQuery("SELECT * FROM notifications,classroom,student_classroom,notification_user WHERE notifications.notification_id=notification_user.notification_id AND notification_user.email='" . $email->get_email() . "'  AND notifications.class_code=classroom.class_code AND classroom.class_code=student_classroom.class_code AND student_classroom.email='" . $email->get_email() . "' AND notifications.notification_type!='submit' order by notification_datetime desc");
+foreach ($notifications as $notification) {
+    if (isset($_POST['notification' . $notification['notification_id']])) {
+        $_SESSION['class_code'] = $notification['class_code'];
+        $_SESSION['email'] = $email->get_original_email();
+        header('Location: ../../ClassroomSystem/StudentClassroom/index.php');
     }
-  }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -50,25 +50,25 @@ foreach($notifications as $notification){
                     <h5 class="card-title" style="text-align:center">All Notifications</h5>
                 </div>
                 <div class="card-body text-success">
-                <form action="" method="POST">
-                <?php 
-                    foreach ($notifications as $notification) {
-                    ?>
-                    <div class="card mb-2">
-                        <div class="card-body d-flex justify-content-around">
-                            <div>
-                            <h5 class="card-title" style="color:black;">New <?php echo $notification['notification_type'] ?></h5>
-                            <p class="card-text" style="color:black;"><?php echo $notification['message'] ?></p>
-                            <p class="card-text" style="color:black;">Date: <?php echo $notification['notification_datetime']?></p>
-                            <button type="submit" class="btn btn-primary" name="notification<?php echo $notification['notification_id'] ?>">View <?php echo $notification['notification_type']?></button>
+                    <form action="" method="POST">
+                        <?php
+                        foreach ($notifications as $notification) {
+                        ?>
+                            <div class="card mb-2">
+                                <div class="card-body d-flex justify-content-around">
+                                    <div>
+                                        <h5 class="card-title" style="color:black;">New <?php echo $notification['notification_type'] ?></h5>
+                                        <p class="card-text" style="color:black;"><?php echo $notification['message'] ?></p>
+                                        <p class="card-text" style="color:black;">Date: <?php echo $notification['notification_datetime'] ?></p>
+                                        <button type="submit" class="btn btn-primary" name="notification<?php echo $notification['notification_id'] ?>">View <?php echo $notification['notification_type'] ?></button>
+                                    </div>
+                                    <div class="close"><span><i class='bx bx-sm bx-x '></i></span>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="close"><span><i class='bx bx-sm bx-x '></i></span>
-                            </div>
-                        </div>
-                    </div>
-                    <?php
-                    }
-                    ?>
+                        <?php
+                        }
+                        ?>
                     </form>
                 </div>
 
