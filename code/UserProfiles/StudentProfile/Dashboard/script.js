@@ -65,6 +65,22 @@ window.onload = function () {
   css.innerHTML = ".typewrite > .wrap { border-right: 0.08em solid #fff}";
   document.body.appendChild(css);
 }
+
+function myFunctionsmall() {
+  document.getElementById("myDropdownsmall").classList.toggle("show");
+}
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtnsmall')) {
+    var dropdowns = document.getElementsByClassName("dropdown-contentsmall");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+};
 //Function
 function myFunction() {
   document.getElementById("myDropdown").classList.toggle("show");
@@ -83,4 +99,7 @@ window.onclick = function(event) {
     }
   }
 };
+
+
+
 
