@@ -124,7 +124,7 @@ if (isset($_POST['uploadSubmit'])) {
         <div class="col-md-6">
           <div class="card intro-card w-75 text-bg-secondary m-auto mb-3">
             <div class="card-header">
-              <h3 class="card-title" style="text-align:center"><i class='bx bx-cloud-upload'></i> Uploaded Resources</h3>
+              <h3 class="card-title" style="text-align:center">Uploaded Resources</h3>
               <form class="d-flex" action="" method="POST" role="search" name="uploadForm" enctype="multipart/form-data">
                 <button type="button" class="btn btn-primary btn-upload" data-bs-toggle="modal" data-bs-target="#exampleModal">Upload</button>
                 <!-- Modal -->
@@ -206,8 +206,6 @@ if (isset($_POST['uploadSubmit'])) {
                       <button type="submit" name="<?php echo $dummy_resource['resource_id'] ?>" style="all:unset">
                       <div class="d-flex justify-content-between">
                       <div class="<?php echo $dummy_resource['resource_visibility']; ?>-box mb-1"><?php echo $dummy_resource['resource_visibility']; ?></div>
-                      
-                      <div class="deleteResource"><i class='bx bx-md bx-x'></i></div>
                       
                       </div>
                         <h5 class="uploaded-resources"><?php echo $dummy_resource['title']; ?></h5>
