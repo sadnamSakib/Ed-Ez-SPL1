@@ -92,7 +92,7 @@ foreach ($classrooms as $classroom) {
     <section class="content-section row">
       <div class="card intro-card w-75 text-bg-secondary m-auto">
         <div class="card-header">
-          <h3 class="card-title" style="text-align:center">Gradesheet</h3>
+          <h3 class="card-title" style="text-align:center"><i class='bx bx-lg bx-bar-chart-square' style="vertical-align:middle;"></i>  Gradesheets</h3>
 
         </div>
         <div class="flex-container w-100">
