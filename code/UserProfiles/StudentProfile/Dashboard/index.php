@@ -243,17 +243,6 @@ $notifications = $database->performQuery("SELECT * FROM notifications,classroom,
                 <p class="my-auto align-self-start" style=" color:white">Student</p>
               </div>
               <div class="col-2 my-auto">
-
-                <!-- <div class="dropdown-center">
-                  <button class="btn btn-xs dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="true">
-                  <i class="bx bxs-bell notification"></i>
-                  </button>
-                  <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Action two</a></li>
-                    <li><a class="dropdown-item" href="#">Action three</a></li>
-                  </ul>
-                </div> -->
                 <div class="dropdown">
                   <i class="bx bxs-bell notification dropbtn position-relative" onclick="myFunction()">
                     <span class="position-absolute top-0 start-100 translate-middle badge badge-sm rounded-pill bg-danger ">
