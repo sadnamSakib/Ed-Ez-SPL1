@@ -173,7 +173,7 @@ $notifications = $database->performQuery("SELECT * FROM notifications,classroom,
                 <p class="my-auto align-self-start" style=" color:white">Student</p>
               </div>
               <div class="col my-auto">
-                <i class="bx bxs-bell notification dropbtn position-relative" onclick="myFunction()">
+                <i class="bx bxs-bell notification dropbtnsmall position-relative" onclick="myFunctionsmall()">
                   <span class="position-absolute top-0 start-100 translate-middle badge badge-sm rounded-pill bg-danger ">
                     <?php
                     $database->fetch_results($result, "SELECT count(*) AS notification_count FROM notifications,classroom,student_classroom,notification_user WHERE notifications.notification_id=notification_user.notification_id AND notification_user.email='" . $email->get_email() . "'  AND notifications.class_code=classroom.class_code AND classroom.class_code=student_classroom.class_code AND student_classroom.email='" . $email->get_email() . "' AND notifications.notification_type!='submit' order by notification_datetime desc");
@@ -185,6 +185,29 @@ $notifications = $database->performQuery("SELECT * FROM notifications,classroom,
                     ?>
                     <span class="visually-hidden">unread messages</span>
                   </span></i>
+                  <div id="myDropdownsmall" class="dropdown-contentsmall">
+                    <form action="" method="POST">
+                      <?php
+                      foreach ($notifications as $notification) {
+                      ?>
+                        <a>
+                          <div class="d-flex justify-content-between">
+                            <div class="me-4"><button type="submit" name="notification<?php echo $notification['notification_id'] ?>" style="all:unset"><?php echo $notification['message']; ?></div></button>
+                            <div class="close ms-3"><span><button style="all:unset" name="clear<?php echo $notification['notification_id'] ?>"><i class='bx bx-sm bx-x '></i></button></span></div>
+                          </div>
+                        </a>
+
+                      <?php
+                      }
+                      ?>
+                      <a title="Notification" class="amarMonChaise">
+                        <div class="d-flex justify-content-between">
+                          <button type="button" class="btn btn-primary btn-notification" onclick="window.location.href='ShowAllNotifications/index.php'">Show All Notification</button>
+                          <button type="submit" name="clear" class="btn btn-primary btn-notification">Clear All</button>
+                        </div>
+                      </a>
+                    </form>
+                  </div>
 
               </div>
             </div>
