@@ -240,12 +240,12 @@ foreach($notifications as $notification){
                   <?php
                     foreach ($notifications as $notification) {
                     ?>
-                      <a><div class="d-flex"><div class="me-4"><button type="submit" name="notification<?php echo $notification['notification_id'] ?>" style="all:unset"><?php echo $notification['message']; ?></div></button><div class="close"><span><button style="all:unset" name="clear<?php echo $notification['notification_id'] ?>"><i class='bx bx-sm bx-x '></i></button></span></div></div> </a>
+                      <a><div class="d-flex justify-content-between"><div class="me-4"><button type="submit" name="notification<?php echo $notification['notification_id'] ?>" style="all:unset"><?php echo $notification['message']; ?></div></button><div class="close"><span><button style="all:unset" name="clear<?php echo $notification['notification_id'] ?>"><i class='bx bx-sm bx-x '></i></button></span></div></div> </a>
                     <?php
                     }
                     ?>
                     <a href="#" class="amarMonChaise">
-                      <div class="d-flex justify-content-around">
+                      <div class="d-flex justify-content-between">
                       <button type="button" class="btn btn-primary btn-notification" onclick="window.location.href='ShowAllNotifications/index.php'">Show All Notification</button>
                       <button type="submit" name="clear" class="btn btn-primary btn-notification">Clear All</button>
                       </div>
