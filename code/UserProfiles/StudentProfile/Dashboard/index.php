@@ -65,6 +65,9 @@ foreach($notifications as $notification){
     $_SESSION['email']=$email->get_original_email();
     header('Location: ../ClassroomSystem/StudentClassroom/index.php');
   }
+  if(isset($_POST['clear'])){
+    $database->performQuery("DELETE FROM notification_user WHERE notification_user.email='" . $email->get_email() . "'");
+    }
 }
 ?>
 
