@@ -262,6 +262,10 @@ body{
     margin-right: 5px;
     margin-top: 10px;
   }
+  .close{
+    position:relative;
+    vertical-align: baseline !important;
+  }
   
   form i {
     margin-left: -30px;

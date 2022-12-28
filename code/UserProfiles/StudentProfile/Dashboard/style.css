@@ -393,7 +393,7 @@ form i {
 /* Change color of dropdown links on hover */
 .dropdown-content a:hover {background-color: #2f6d8b;
   text-decoration: none;
-  color: white;
+  color: white !important;
   }
 
 /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
@@ -431,4 +431,8 @@ form i {
   --bs-btn-active-bg: #2f6d8b;
   --bs-btn-hover-border-color: white !important;
   --bs-btn-disabled-bg: #2f6d8b;
+}
+.close{
+  position:relative;
+  vertical-align: baseline !important;
 }
