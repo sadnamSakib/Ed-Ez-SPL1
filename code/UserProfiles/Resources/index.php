@@ -204,10 +204,7 @@ if (isset($_POST['uploadSubmit'])) {
                 ?>
                     <div class="card card-body my-2 mx-1 me-1 btn btn-resource uploaded" style="text-align:left" id="scrollspyHeading1">
                       <button type="submit" name="<?php echo $dummy_resource['resource_id'] ?>" style="all:unset">
-                      <div class="d-flex justify-content-between">
                       <div class="<?php echo $dummy_resource['resource_visibility']; ?>-box mb-1"><?php echo $dummy_resource['resource_visibility']; ?></div>
-                      
-                      </div>
                         <h5 class="uploaded-resources"><?php echo $dummy_resource['title']; ?></h5>
                         <p style="font-size: 12px;">Resource Tag: <?php echo $dummy_resource['resource_tag']; ?></p>
                         <p style="font-size: 12px;"><?php echo $dummy_resource['resource_description']; ?></p>
