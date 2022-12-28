@@ -360,7 +360,7 @@ form i {
 /* Change color of dropdown links on hover */
 .dropdown-content a:hover {background-color: #2f6d8b;
 text-decoration: none;
-color: white;
+color: white !important;
 }
 a:hover{
   text-decoration: none;
