@@ -77,7 +77,7 @@ if (isset($_POST['uploadSubmit'])) {
     ?>
     <section class="content-section mx-auto px-5">
       <div class="container-fluid bg-white rounded mt-5 mb-5 search-box">
-        <input class="form-control search search-global" id="searchbar2" type="search" placeholder="Search for resources by tag..." autocomplete="off" aria-label="Search">
+        <input class="form-control search search-global" id="searchbar2" type="search" placeholder="Search by Resource Tag..." autocomplete="off" aria-label="Search">
         <div class="mx-auto w-75 result"></div>
       </div>
       <!-- Saved Resources -->
@@ -87,7 +87,7 @@ if (isset($_POST['uploadSubmit'])) {
             <div class="card-header">
               <h3 class="card-title" style="text-align:center">Saved Resources</h3>
               <form class="d-flex" role="search">
-                <input class="form-control search me-2" id="searchbar" type="search" onkeyup="search_resources()" placeholder="Search" aria-label="Search">
+                <input class="form-control search me-2" id="searchbar" type="search" onkeyup="search_resources()" placeholder="Search by Title" aria-label="Search">
                 <button class="btn btn-primary btn-search mb-2 mt-2 me-2" type="submit">Search</button>
               </form>
             </div>
@@ -159,7 +159,10 @@ if (isset($_POST['uploadSubmit'])) {
                       <div class="mb-3 mx-4 classSelector">
                         <select class="form-select" style="display:none;" aria-label="selectClassroom" name="classroom" id="classroom">
                           <?php
-                          $record = $database->performQuery("select * from classroom");
+                          $classroom_user=$_SESSION['tableName']==='student'?'student_classroom':'teacher_classroom';
+                          $classroom_user_email = $classroom_user . '.email';
+                          $classroom_user_classcode = $classroom_user . '.class_code';
+                          $record = $database->performQuery("select * from classroom,$classroom_user WHERE $classroom_user_email = '".$email->get_email()."' AND $classroom_user_classcode = classroom.class_code");
                           ?>
                           <option selected value="0">Select Classroom</option>
                           <?php
@@ -179,7 +182,7 @@ if (isset($_POST['uploadSubmit'])) {
                     </div>
                   </div>
                 </div>
-                <input class="form-control search me-2" id="searchbar-uploaded" type="search" onkeyup="search_uploaded_resources()" placeholder="Search" aria-label="Search">
+                <input class="form-control search me-2" id="searchbar-uploaded" type="search" onkeyup="search_uploaded_resources()" placeholder="Search by Title" aria-label="Search">
                 <button class="btn btn-primary btn-search mb-2 mt-2 me-2" type="submit">Search</button>
               </form>
             </div>
