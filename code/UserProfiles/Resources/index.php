@@ -199,7 +199,7 @@ if (isset($_POST['uploadSubmit'])) {
               <div class="scroll w-100">
               <form name="resource_form" id="resource_form" action="ViewResources/index.php" method="POST">
                 <?php
-                $resource = $database->performQuery("SELECT * FROM resources,resource_uploaded WHERE resources.resource_id=resource_uploaded.resource_id;");
+                $resource = $database->performQuery("SELECT * FROM resources,resource_uploaded WHERE resources.resource_id=resource_uploaded.resource_id AND resource_uploaded.email='".$email->get_email()."';");
                 foreach ($resource as $dummy_resource) {
                 ?>
                     <div class="card card-body my-2 mx-1 me-1 btn btn-resource uploaded" style="text-align:left" id="scrollspyHeading1">

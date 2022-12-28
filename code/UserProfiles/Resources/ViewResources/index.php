@@ -56,6 +56,7 @@ if(isset($_POST['save'])){
   }
   else{
     $database->performQuery("DELETE FROM resource_saved WHERE resource_id='$resource_id' AND email='".$email->get_email()."'");
+    $database->performQuery("DELETE FROM resource_frequency WHERE resource_id='$resource_id' AND email='".$email->get_email()."'");
   }
 }
 
