@@ -432,3 +432,7 @@ form i {
   --bs-btn-hover-border-color: white !important;
   --bs-btn-disabled-bg: #2f6d8b;
 }
+.close{
+  position:relative;
+  vertical-align: baseline !important;
+}
