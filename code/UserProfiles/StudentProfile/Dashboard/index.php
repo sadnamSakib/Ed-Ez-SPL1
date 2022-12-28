@@ -36,7 +36,15 @@ foreach ($classrooms as $i) {
   }
   $total += (($percentage * $i['course_credit']) / 100);
 }
-$result = ($total * 100) / $total_credit;
+try{
+  $result = ($total * 100) / $total_credit;
+}
+catch(DivisionByZeroError $e){
+  
+}
+finally{
+  $result=0;
+}
 
 
 
@@ -311,7 +319,16 @@ $notifications = $database->performQuery("SELECT * FROM notifications,classroom,
 </body>
 <script>
   <?php
-  $result = ($total * 100) / $total_credit;
+  try{
+    $result = ($total * 100) / $total_credit;
+  }
+  catch(DivisionByZeroError $e){
+
+  }
+  finally{
+    $result=0;
+  }
+  
   ?>
   var myChartCircle = new Chart('chartProgress', {
     type: 'doughnut',
