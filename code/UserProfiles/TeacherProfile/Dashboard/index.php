@@ -124,7 +124,6 @@ foreach($notifications as $notification){
             <h2 class="typewrite" data-period="500" data-type='["Welcome back , <?php echo $name ?>" , "How was your day?" ]'>
             </h2>
             <span class="wrap"></span>
-
           </div>
         </div>
         <div class=" small-profile row justify-content-center mb-3 ">
