@@ -68,7 +68,12 @@ foreach($notifications as $notification){
   if(isset($_POST['clear'])){
     $database->performQuery("DELETE FROM notification_user WHERE notification_user.email='" . $email->get_email() . "'");
     }
+  if (isset($_POST['clear' . $notification['notification_id']])) {
+      $database->performQuery("DELETE FROM notification_user WHERE notification_user.email='" . $email->get_email() . "' AND notification_id='".$notification['notification_id']."'");
+  }
+    
 }
+$notifications = $database->performQuery("SELECT * FROM notifications,classroom,student_classroom,notification_user WHERE notifications.notification_id=notification_user.notification_id AND notification_user.email='".$email->get_email()."'  AND notifications.class_code=classroom.class_code AND classroom.class_code=student_classroom.class_code AND student_classroom.email='".$email->get_email()."' AND notifications.notification_type!='submit' order by notification_datetime desc LIMIT 3");
 ?>
 
 <!DOCTYPE html>
@@ -255,18 +260,18 @@ foreach($notifications as $notification){
                     <?php
                     foreach ($notifications as $notification) {
                     ?>
-                      <a><div class="d-flex"><div class="me-4"><button type="submit" name="notification<?php echo $notification['notification_id'] ?>" style="all:unset"><?php echo $notification['message']; ?></div></button><div class="close"><span><i class='bx bx-sm bx-x '></i></span></div></div> </a>
+                      <a><div class="d-flex"><div class="me-4"><button type="submit" name="notification<?php echo $notification['notification_id'] ?>" style="all:unset"><?php echo $notification['message']; ?></div></button><div class="close"><span><button style="all:unset"  name="clear<?php echo $notification['notification_id'] ?>"><i class='bx bx-sm bx-x '></i></button></span></div></div> </a>
                       
                     <?php
                     }
                     ?>
-                    </form>
                     <a title="Notification" class="amarMonChaise">
                       <div class="d-flex justify-content-around">
                         <button type="button" class="btn btn-primary btn-notification" onclick="window.location.href='ShowAllNotifications/index.php'">Show All Notification</button>
-                        <button type="button" class="btn btn-primary btn-notification">Clear</button>
+                        <button type="submit" name="clear" class="btn btn-primary btn-notification">Clear All</button>
                       </div>
                     </a>
+                    </form>
                   </div>
                 </div>
               </div>

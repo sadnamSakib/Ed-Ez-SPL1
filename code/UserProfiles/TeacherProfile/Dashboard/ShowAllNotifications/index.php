@@ -20,7 +20,12 @@ foreach ($notifications as $notification) {
         $_SESSION['email'] = $email->get_original_email();
         header('Location: ../../ClassroomSystem/TeacherClassroom/index.php');
     }
+    if (isset($_POST['clear' . $notification['notification_id']])) {
+        $database->performQuery("DELETE FROM notification_user WHERE notification_user.email='" . $email->get_email() . "' AND notification_id='".$notification['notification_id']."'");
+    }
+
 }
+$notifications = $database->performQuery("SELECT * FROM notifications,classroom,teacher_classroom,notification_user WHERE notifications.notification_id=notification_user.notification_id AND notification_user.email='" . $email->get_email() . "'  AND notifications.class_code=classroom.class_code AND classroom.class_code=teacher_classroom.class_code AND teacher_classroom.email='" . $email->get_email() . "' AND notifications.notification_type!='submit' order by notification_datetime desc");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -60,9 +65,9 @@ foreach ($notifications as $notification) {
                                         <h5 class="card-title" style="color:black;">New <?php echo $notification['notification_type'] ?></h5>
                                         <p class="card-text" style="color:black;"><?php echo $notification['message'] ?></p>
                                         <p class="card-text" style="color:black;">Date: <?php echo $notification['notification_datetime'] ?></p>
-                                        <button type="submit" class="btn btn-primary" name="notification<?php echo $notification['notification_id'] ?>">View <?php echo $notification['notification_type'] ?></button>
+                                        <button type="submit" class="btn btn-primary" name="notification<?php echo $notification['notification_id'] ?>">Go to Classroom</button>
                                     </div>
-                                    <div class="close"><span><i class='bx bx-sm bx-x '></i></span>
+                                    <div class="close"><button name="clear<?php echo $notification['notification_id'] ?>" style="all:unset"><i class='bx bx-sm bx-x '></i></button>
                                     </div>
                                 </div>
                             </div>
