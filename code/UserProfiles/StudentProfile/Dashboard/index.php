@@ -16,7 +16,7 @@ $error = null;
 $errorColor = "red";
 
 $classCode = $_SESSION['class_code'];
-$classrooms = $database->performQuery("SELECT * FROM classroom,student_classroom where classroom.class_code=student_classroom.class_code and student_classroom.email='" . $email->get_email() . "' and active='1';");
+$classrooms = $database->performQuery("SELECT * FROM classroom,student_classroom,classroom_frequency where classroom_frequency.class_code=classroom.class_code AND classroom_frequency.email='" . $email->get_email() . "' AND classroom.class_code=student_classroom.class_code and student_classroom.email='" . $email->get_email() . "' AND active='1' ORDER BY classroom_frequency.frequency desc;");
 
 foreach ($classrooms as $i) {
   $total_credit += (is_null($i['course_credit']) ? 0 : $i['course_credit']);
@@ -58,22 +58,27 @@ $studentID = $row['studentID'];
 if ($semester == -1) {
   $semester = '';
 }
-$notifications = $database->performQuery("SELECT * FROM notifications,classroom,student_classroom,notification_user WHERE notifications.notification_id=notification_user.notification_id AND notification_user.email='".$email->get_email()."'  AND notifications.class_code=classroom.class_code AND classroom.class_code=student_classroom.class_code AND student_classroom.email='".$email->get_email()."' AND notifications.notification_type!='submit' order by notification_datetime desc LIMIT 3");
-foreach($notifications as $notification){
-  if(isset($_POST['notification'.$notification['notification_id']])){
-    $_SESSION['class_code']=$notification['class_code'];
-    $_SESSION['email']=$email->get_original_email();
+$notifications = $database->performQuery("SELECT * FROM notifications,classroom,student_classroom,notification_user WHERE notifications.notification_id=notification_user.notification_id AND notification_user.email='" . $email->get_email() . "'  AND notifications.class_code=classroom.class_code AND classroom.class_code=student_classroom.class_code AND student_classroom.email='" . $email->get_email() . "' AND notifications.notification_type!='submit' order by notification_datetime desc LIMIT 3");
+foreach ($notifications as $notification) {
+  if (isset($_POST['notification' . $notification['notification_id']])) {
+    $_SESSION['class_code'] = $notification['class_code'];
+    $_SESSION['email'] = $email->get_original_email();
     header('Location: ../ClassroomSystem/StudentClassroom/index.php');
   }
-  if(isset($_POST['clear'])){
+  if (isset($_POST['clear'])) {
     $database->performQuery("DELETE FROM notification_user WHERE notification_user.email='" . $email->get_email() . "'");
-    }
-  if (isset($_POST['clear' . $notification['notification_id']])) {
-      $database->performQuery("DELETE FROM notification_user WHERE notification_user.email='" . $email->get_email() . "' AND notification_id='".$notification['notification_id']."'");
   }
-    
+  if (isset($_POST['clear' . $notification['notification_id']])) {
+    $database->performQuery("DELETE FROM notification_user WHERE notification_user.email='" . $email->get_email() . "' AND notification_id='" . $notification['notification_id'] . "'");
+  }
+  foreach ($classrooms as $dummy_classroom) {
+    if (isset($_POST[$dummy_classroom['class_code']])) {
+      $_SESSION['class_code'] = $dummy_classroom['class_code'];
+      header('Location: ../ClassroomSystem/StudentClassroom/index.php');
+    }
+  }
 }
-$notifications = $database->performQuery("SELECT * FROM notifications,classroom,student_classroom,notification_user WHERE notifications.notification_id=notification_user.notification_id AND notification_user.email='".$email->get_email()."'  AND notifications.class_code=classroom.class_code AND classroom.class_code=student_classroom.class_code AND student_classroom.email='".$email->get_email()."' AND notifications.notification_type!='submit' order by notification_datetime desc LIMIT 3");
+$notifications = $database->performQuery("SELECT * FROM notifications,classroom,student_classroom,notification_user WHERE notifications.notification_id=notification_user.notification_id AND notification_user.email='" . $email->get_email() . "'  AND notifications.class_code=classroom.class_code AND classroom.class_code=student_classroom.class_code AND student_classroom.email='" . $email->get_email() . "' AND notifications.notification_type!='submit' order by notification_datetime desc LIMIT 3");
 ?>
 
 <!DOCTYPE html>
@@ -160,19 +165,19 @@ $notifications = $database->performQuery("SELECT * FROM notifications,classroom,
                 <p class="my-auto align-self-start" style=" color:white">Student</p>
               </div>
               <div class="col my-auto">
-              <i class="bx bxs-bell notification dropbtn position-relative" onclick="myFunction()">
-                    <span class="position-absolute top-0 start-100 translate-middle badge badge-sm rounded-pill bg-danger ">
-                      <?php
-                      $database->fetch_results($result, "SELECT count(*) AS notification_count FROM notifications,classroom,student_classroom,notification_user WHERE notifications.notification_id=notification_user.notification_id AND notification_user.email='".$email->get_email()."'  AND notifications.class_code=classroom.class_code AND classroom.class_code=student_classroom.class_code AND student_classroom.email='".$email->get_email()."' AND notifications.notification_type!='submit' order by notification_datetime desc");
-                      if ($result['notification_count'] > 3) {
-                        echo "3+";
-                      } else {
-                        echo $result['notification_count'];
-                      }
-                      ?>
-                      <span class="visually-hidden">unread messages</span>
-                    </span></i>
-                    
+                <i class="bx bxs-bell notification dropbtn position-relative" onclick="myFunction()">
+                  <span class="position-absolute top-0 start-100 translate-middle badge badge-sm rounded-pill bg-danger ">
+                    <?php
+                    $database->fetch_results($result, "SELECT count(*) AS notification_count FROM notifications,classroom,student_classroom,notification_user WHERE notifications.notification_id=notification_user.notification_id AND notification_user.email='" . $email->get_email() . "'  AND notifications.class_code=classroom.class_code AND classroom.class_code=student_classroom.class_code AND student_classroom.email='" . $email->get_email() . "' AND notifications.notification_type!='submit' order by notification_datetime desc");
+                    if ($result['notification_count'] > 3) {
+                      echo "3+";
+                    } else {
+                      echo $result['notification_count'];
+                    }
+                    ?>
+                    <span class="visually-hidden">unread messages</span>
+                  </span></i>
+
               </div>
             </div>
           </div>
@@ -181,52 +186,53 @@ $notifications = $database->performQuery("SELECT * FROM notifications,classroom,
           <h4>My Classrooms</h4>
         </div>
         <div class="row">
-          <div class="box classroomcontainer">
-            <?php
-            foreach ($classrooms as $i) {
-              $classCode = $i['class_code'];
-              $classTitle = $i['classroom_name'];
-              $database->fetch_results($student_records, "SELECT * FROM users,student_classroom,classroom WHERE users.email=student_classroom.email and classroom.class_code='$classCode'");
-            ?>
-              <div class="card">
-                <div class="card-body">
-                  <h5 class="card-title"><?php echo $classTitle ?></h5>
-                  <h6 class="card-subtitle mb-2 text-muted"><?php echo $student_records['name'] ?></h6>
+          <form action="" method="POST">
+            <div class="box classroomcontainer">
+              <?php
+              foreach ($classrooms as $i) {
+                $classCode = $i['class_code'];
+                $classTitle = $i['classroom_name'];
+                $database->fetch_results($student_records, "SELECT * FROM users,student_classroom,classroom,classroom_frequency WHERE classroom_frequency.class_code=student_classroom.class_code AND classroom_frequency.email=users.email AND users.email=student_classroom.email and classroom.class_code='$classCode' ORDER BY frequency DESC");
+              ?>
+                <div class="card">
+                  <div class="card-body">
+                    <button type="submit" style="all:unset" name="<?php echo $i['class_code'] ?>">
+                      <h5 class="card-title"><?php echo $classTitle ?></h5>
+                      <h6 class="card-subtitle mb-2 text-muted"><?php echo $student_records['name'] ?></h6>
+                    </button>
+                  </div>
                 </div>
-              </div>
-            <?php } ?>
-
-
-          </div>
+              <?php } ?>
+            </div>
+          </form>
         </div>
 
         <div class="row mb-2 mt-5">
           <h4>My Resources</h4>
         </div>
         <div class="row">
-          <div class="box classroomcontainer">
+          <form name="resource_form" id="resource_form" action="<?php echo $root_path ?>/UserProfiles/Resources/ViewResources/index.php" method="POST">
+            <div class="box classroomcontainer">
+              <?php
+              $resource = $database->performQuery("SELECT * FROM resources,resource_saved,resource_frequency WHERE resources.resource_id=resource_frequency.resource_id  AND resource_saved.email='" . $email->get_email() . "' AND resource_frequency.email='" . $email->get_email() . "' AND resources.resource_id=resource_saved.resource_id ORDER BY frequency DESC;");
 
-
-
-            <?php
-            $resource = $database->performQuery("SELECT * FROM resources,resource_saved WHERE resources.resource_id=resource_saved.resource_id;");
-
-            foreach ($resource as $dummy_resource) {
-            ?>
-              <div class="card">
-                <div class="card-body">
-                  <?php $visibility = $dummy_resource['resource_visibility']; ?>
-                  <div class="<?php echo $visibility ?>-box mb-1"><?php echo $visibility ?></div>
-                  <h5 class="card-title"><?php echo $dummy_resource['title']; ?></h5>
-                  <h6 class="card-subtitle mb-2 text-muted"><?php echo $dummy_resource['resource_description']; ?></h6>
+              foreach ($resource as $dummy_resource) {
+              ?>
+                <div class="card">
+                  <div class="card-body">
+                    <button type="submit" name="<?php echo $dummy_resource['resource_id'] ?>" style="all:unset">
+                      <?php $visibility = $dummy_resource['resource_visibility']; ?>
+                      <div class="<?php echo $visibility ?>-box mb-1"><?php echo $visibility ?></div>
+                      <h5 class="card-title"><?php echo $dummy_resource['title']; ?></h5>
+                      <h6 class="card-subtitle mb-2 text-muted"><?php echo $dummy_resource['resource_description']; ?></h6>
+                    </button>
+                  </div>
                 </div>
-              </div>
-
-            <?php
-            }
-            ?>
-
-          </div>
+              <?php
+              }
+              ?>
+            </div>
+          </form>
         </div>
       </div>
 
@@ -243,22 +249,11 @@ $notifications = $database->performQuery("SELECT * FROM notifications,classroom,
                 <p class="my-auto align-self-start" style=" color:white">Student</p>
               </div>
               <div class="col-2 my-auto">
-
-                <!-- <div class="dropdown-center">
-                  <button class="btn btn-xs dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="true">
-                  <i class="bx bxs-bell notification"></i>
-                  </button>
-                  <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                    <li><a class="dropdown-item" href="#">Action two</a></li>
-                    <li><a class="dropdown-item" href="#">Action three</a></li>
-                  </ul>
-                </div> -->
                 <div class="dropdown">
                   <i class="bx bxs-bell notification dropbtn position-relative" onclick="myFunction()">
                     <span class="position-absolute top-0 start-100 translate-middle badge badge-sm rounded-pill bg-danger ">
                       <?php
-                      $database->fetch_results($result, "SELECT count(*) AS notification_count FROM notifications,classroom,student_classroom,notification_user WHERE notifications.notification_id=notification_user.notification_id AND notification_user.email='".$email->get_email()."'  AND notifications.class_code=classroom.class_code AND classroom.class_code=student_classroom.class_code AND student_classroom.email='".$email->get_email()."' AND notifications.notification_type!='submit' order by notification_datetime desc");
+                      $database->fetch_results($result, "SELECT count(*) AS notification_count FROM notifications,classroom,student_classroom,notification_user WHERE notifications.notification_id=notification_user.notification_id AND notification_user.email='" . $email->get_email() . "'  AND notifications.class_code=classroom.class_code AND classroom.class_code=student_classroom.class_code AND student_classroom.email='" . $email->get_email() . "' AND notifications.notification_type!='submit' order by notification_datetime desc");
                       if ($result['notification_count'] > 3) {
                         echo "3+";
                       } else {
@@ -269,20 +264,25 @@ $notifications = $database->performQuery("SELECT * FROM notifications,classroom,
                     </span></i>
                   <div id="myDropdown" class="dropdown-content">
                     <form action="" method="POST">
-                    <?php
-                    foreach ($notifications as $notification) {
-                    ?>
-                      <a><div class="d-flex justify-content-between"><div class="me-4"><button type="submit" name="notification<?php echo $notification['notification_id'] ?>" style="all:unset"><?php echo $notification['message']; ?></div></button><div class="close ms-3"><span><button style="all:unset"  name="clear<?php echo $notification['notification_id'] ?>"><i class='bx bx-sm bx-x '></i></button></span></div></div> </a>
-                      
-                    <?php
-                    }
-                    ?>
-                    <a title="Notification" class="amarMonChaise">
-                      <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-primary btn-notification" onclick="window.location.href='ShowAllNotifications/index.php'">Show All Notification</button>
-                        <button type="submit" name="clear" class="btn btn-primary btn-notification">Clear All</button>
-                      </div>
-                    </a>
+                      <?php
+                      foreach ($notifications as $notification) {
+                      ?>
+                        <a>
+                          <div class="d-flex justify-content-between">
+                            <div class="me-4"><button type="submit" name="notification<?php echo $notification['notification_id'] ?>" style="all:unset"><?php echo $notification['message']; ?></div></button>
+                            <div class="close ms-3"><span><button style="all:unset" name="clear<?php echo $notification['notification_id'] ?>"><i class='bx bx-sm bx-x '></i></button></span></div>
+                          </div>
+                        </a>
+
+                      <?php
+                      }
+                      ?>
+                      <a title="Notification" class="amarMonChaise">
+                        <div class="d-flex justify-content-between">
+                          <button type="button" class="btn btn-primary btn-notification" onclick="window.location.href='ShowAllNotifications/index.php'">Show All Notification</button>
+                          <button type="submit" name="clear" class="btn btn-primary btn-notification">Clear All</button>
+                        </div>
+                      </a>
                     </form>
                   </div>
                 </div>
@@ -311,58 +311,58 @@ $notifications = $database->performQuery("SELECT * FROM notifications,classroom,
 </body>
 <script>
   <?php
-    $result = ($total * 100) / $total_credit;
-    ?>
+  $result = ($total * 100) / $total_credit;
+  ?>
   var myChartCircle = new Chart('chartProgress', {
-  type: 'doughnut',
-  data: {
-    datasets: [{
-      label: 'Total percentage',
-      percent:<?php echo $result ?>,
-      backgroundColor: ['#2f6d8b']
-    }]
-  },
-  plugins: [{
-      beforeInit: (chart) => {
-        const dataset = chart.data.datasets[0];
-        chart.data.labels = [dataset.label];
-        dataset.data = [dataset.percent, 100 - dataset.percent];
-      }
+    type: 'doughnut',
+    data: {
+      datasets: [{
+        label: 'Total percentage',
+        percent: <?php echo $result ?>,
+        backgroundColor: ['#2f6d8b']
+      }]
     },
-    {
-      beforeDraw: (chart) => {
-        var width = chart.chart.width,
-          height = chart.chart.height,
-          ctx = chart.chart.ctx;
-        ctx.restore();
-        var fontSize = (height / 90).toFixed(2);
-        ctx.font = fontSize + "em sans-serif";
-        ctx.fillStyle = "#9b9b9b";
-        ctx.textBaseline = "middle";
+    plugins: [{
+        beforeInit: (chart) => {
+          const dataset = chart.data.datasets[0];
+          chart.data.labels = [dataset.label];
+          dataset.data = [dataset.percent, 100 - dataset.percent];
+        }
+      },
+      {
+        beforeDraw: (chart) => {
+          var width = chart.chart.width,
+            height = chart.chart.height,
+            ctx = chart.chart.ctx;
+          ctx.restore();
+          var fontSize = (height / 90).toFixed(2);
+          ctx.font = fontSize + "em sans-serif";
+          ctx.fillStyle = "#9b9b9b";
+          ctx.textBaseline = "middle";
 
 
 
-        var text = chart.data.datasets[0].percent.toFixed(2);
-        textX = Math.round((width - ctx.measureText(text).width) / 2.1),
-          textY = height / 2;
-        ctx.fillText(text + "%", textX, textY);
-        ctx.save();
+          var text = chart.data.datasets[0].percent.toFixed(2);
+          textX = Math.round((width - ctx.measureText(text).width) / 2.1),
+            textY = height / 2;
+          ctx.fillText(text + "%", textX, textY);
+          ctx.save();
+        }
+      }
+    ],
+    options: {
+      maintainAspectRatio: false,
+      aspectRatio: 1,
+      cutoutPercentage: 80,
+      rotation: Math.PI / 2,
+      legend: {
+        display: false,
+      },
+      tooltips: {
+        filter: tooltipItem => tooltipItem.index == 0
       }
     }
-  ],
-  options: {
-    maintainAspectRatio: false,
-    aspectRatio: 1,
-    cutoutPercentage: 80,
-    rotation: Math.PI / 2,
-    legend: {
-      display: false,
-    },
-    tooltips: {
-      filter: tooltipItem => tooltipItem.index == 0
-    }
-  }
-});
+  });
 </script>
 
 </html>

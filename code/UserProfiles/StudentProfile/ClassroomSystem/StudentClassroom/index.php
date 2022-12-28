@@ -16,6 +16,7 @@ session::profile_not_set($root_path);
 $validate = new InputValidation();
 $classCode = $_SESSION['class_code'];
 $email = new EmailValidator($_SESSION['email']);
+$database->performQuery("UPDATE classroom_frequency SET frequency=frequency+1 WHERE class_code = '$classCode' AND email='" . $email->get_email() . "'");
 $authentication = $database->performQuery("SELECT * FROM student_classroom WHERE email='" . $email->get_email() . "' and class_code='$classCode'");
 if ($authentication->num_rows == 0) {
   session::redirectProfile('student');

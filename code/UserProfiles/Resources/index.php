@@ -101,7 +101,7 @@ if (isset($_POST['uploadSubmit'])) {
               <div class="scroll w-100">
               <form name="resource_form" id="resource_form" action="ViewResources/index.php" method="POST">
               <?php
-                $resource = $database->performQuery("SELECT * FROM resources,resource_saved WHERE resources.resource_id=resource_saved.resource_id;");
+                $resource = $database->performQuery("SELECT * FROM resources,resource_saved WHERE resources.resource_id=resource_saved.resource_id AND resource_saved.email='".$email->get_email()."';");
                 foreach ($resource as $dummy_resource) {
                 ?>
                 <div class="card card-body mx-1 my-2 me-1 btn btn-resource saved" style="text-align:left" id="scrollspyHeading1">
@@ -124,7 +124,7 @@ if (isset($_POST['uploadSubmit'])) {
         <div class="col-md-6">
           <div class="card intro-card w-75 text-bg-secondary m-auto mb-3">
             <div class="card-header">
-              <h3 class="card-title" style="text-align:center">Uploaded Resources</h3>
+              <h3 class="card-title" style="text-align:center"><i class='bx bx-cloud-upload'></i> Uploaded Resources</h3>
               <form class="d-flex" action="" method="POST" role="search" name="uploadForm" enctype="multipart/form-data">
                 <button type="button" class="btn btn-primary btn-upload" data-bs-toggle="modal" data-bs-target="#exampleModal">Upload</button>
                 <!-- Modal -->

@@ -21,7 +21,7 @@ foreach ($resources as $resource) {
     $resource_id = $resource['resource_id'];
   }
 }
-
+$database->performQuery("UPDATE resource_frequency SET frequency=frequency+1 WHERE resource_id = '$resource_id' AND email='" . $email->get_email() . "'");
 $database->fetch_results($resource, "SELECT * FROM resources,resource_uploaded WHERE resources.resource_id = '$resource_id' AND resource_uploaded.resource_id = '$resource_id'");
 $database->fetch_results($user, "SELECT * FROM users WHERE email='" . $resource['email'] . "'");
 
@@ -48,7 +48,13 @@ if(isset($_POST['downvote']) && $resource['email']!==$email->get_email()){
 if(isset($_POST['save'])){
   $rows=$database->performQuery("SELECT * FROM resource_saved WHERE resource_id='$resource_id' AND  email='".$email->get_email()."'");
   if($rows->num_rows==0){
-    $database->performQuery("INSERT INTO resource_saved VALUES('$resource_id','".$email->get_email()."')");
+    try {
+      $database->performQuery("INSERT INTO resource_saved VALUES('$resource_id','" . $email->get_email() . "')");
+      $database->performQuery("INSERT INTO resource_frequency VALUES('$resource_id','" . $email->get_email() . "',0)");
+    }
+    catch(Exception $e){
+      echo $e->getMessage();
+    }
   }
   else{
     $database->performQuery("DELETE FROM resource_saved WHERE resource_id='$resource_id' AND email='".$email->get_email()."'");

@@ -27,6 +27,7 @@ if (isset($_POST['Join'])) {
     $error = "classroom doesn't exist";
   } else if ($existenceCheck->num_rows == 0) {
     $database->performQuery("INSERT INTO teacher_classroom(email,class_code) VALUES('" . $email->get_email() . "','$classCode')");
+    $database->performQuery("INSERT INTO classroom_frequency(class_code,email) VALUES('$classCode','" . $email->get_email() . "');");
   } else {
     $error = "You are already enrolled in this classroom";
   }
@@ -52,6 +53,7 @@ if (isset($_POST['Create'])) {
     $database->performQuery("INSERT INTO classroom(class_code,classroom_name,course_code,semester,course_credit,attendance) VALUES('$classCode','$className','$courseCode','$semester','$courseCredit','$attendancePercentage')");
     $database->performQuery("INSERT INTO teacher_classroom(email,class_code) VALUES('" . $email->get_email() . "','$classCode')");
     $database->performQuery("INSERT INTO classroom_creator(email,class_code,creation_date) VALUES('" . $email->get_email() . "','$classCode','$date')");
+    $database->performQuery("INSERT INTO classroom_frequency(class_code,email) VALUES('$classCode','" . $email->get_email() . "');");
   } else {
     $error = "All the fields are required";
   }

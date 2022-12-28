@@ -293,12 +293,6 @@ hr.h-color {
   width: auto;
 }
 
-.form-control.profile {
-  margin-top: 10%;
-  width: 50%;
-
-}
-
 .btn.btn-outline-secondary {
   margin-top: 10%;
   background-color: #4596be;
@@ -312,11 +306,6 @@ hr.h-color {
   --bs-btn-active-bg: #2f6d8b;
   --bs-btn-bg: #2f6d8b;
   --bs-btn-border-color: #2f6d8b;
-}
-
-form i {
-  margin-left: -30px;
-  cursor: pointer;
 }
 
 @media (max-width: 768px) {

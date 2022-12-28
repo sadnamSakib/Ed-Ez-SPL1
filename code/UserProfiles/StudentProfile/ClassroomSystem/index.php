@@ -31,6 +31,7 @@ if (isset($_POST['Join'])) {
     $database->fetch_results($userRecords,"SELECT * FROM users,student WHERE student.email='".$email->get_email()."' AND users.email='".$email->get_email()."'");
     if($classroomRecords['semester']===$userRecords['semester']) {
       $database->performQuery("INSERT INTO student_classroom(email,class_code) VALUES('" . $email->get_email() . "','$classCode');");
+      $database->performQuery("INSERT INTO classroom_frequency(class_code,email) VALUES('$classCode','" . $email->get_email() . "');");
     }
     else{
       $error="Student is not elligible for this classroom";
@@ -159,6 +160,7 @@ foreach ($classrooms as $dummy_classroom) {
                                       $database->fetch_results($row, "SELECT * FROM classroom_creator,users WHERE classroom_creator.email=users.email AND class_code='$class_code'");
                                       ?></p>
                 <p class="card-text"><?php echo "Created By: " . $row['name']; ?></p>
+                <p class="card-text"><?php echo "Class Code: " . $class_code; ?></p>
               </div>
               <form action="" method="POST">
                 <div class="pb-5 px-5"><input type="submit" name="<?php echo $i['class_code'] ?>" value="Enter Class" class="btn btn-primary btn-go" /></div>
