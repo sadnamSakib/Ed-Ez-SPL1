@@ -172,6 +172,7 @@ $notifications = $database->performQuery("SELECT * FROM notifications,classroom,
                       ?>
                       <span class="visually-hidden">unread messages</span>
                     </span></i>
+                    
               </div>
             </div>
           </div>
@@ -271,7 +272,7 @@ $notifications = $database->performQuery("SELECT * FROM notifications,classroom,
                     <?php
                     foreach ($notifications as $notification) {
                     ?>
-                      <a><div class="d-flex"><div class="me-4"><button type="submit" name="notification<?php echo $notification['notification_id'] ?>" style="all:unset"><?php echo $notification['message']; ?></div></button><div class="close"><span><button style="all:unset"  name="clear<?php echo $notification['notification_id'] ?>"><i class='bx bx-sm bx-x '></i></button></span></div></div> </a>
+                      <a><div class="d-flex justify-content-around"><div class="me-4"><button type="submit" name="notification<?php echo $notification['notification_id'] ?>" style="all:unset"><?php echo $notification['message']; ?></div></button><div class="close ms-3"><span><button style="all:unset"  name="clear<?php echo $notification['notification_id'] ?>"><i class='bx bx-sm bx-x '></i></button></span></div></div> </a>
                       
                     <?php
                     }

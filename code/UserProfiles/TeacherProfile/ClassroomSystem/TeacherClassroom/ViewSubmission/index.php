@@ -92,7 +92,7 @@ $allTaskSubmissions=$database->performQuery("SELECT student_task_submission.subm
                     " required placeholder="<?php echo $i['marks_obtained']===null?'Enter Marks':$i['marks_obtained'] ?>">
                   </div>
                   <div>
-                <input type="submit" name="<?php echo $i['file_id'] ?>submissionView" class="btn btn-primary btn-xs btn-join me-2 m-auto" value="Submit">
+                <input type="submit" name="<?php echo $i['file_id'] ?>submissionView" class="btn btn-primary btn-xs btn-join mt-3 me-2 mb-3 m-auto" value="Submit">
                 </div>
                   </form>
                 <?php
