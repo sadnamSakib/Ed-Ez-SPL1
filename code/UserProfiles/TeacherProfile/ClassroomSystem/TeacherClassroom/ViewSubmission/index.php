@@ -67,8 +67,26 @@ $allTaskSubmissions=$database->performQuery("SELECT student_task_submission.subm
       <div class="container-fluid bg-white rounded mt-5 mb-5"></div>
       <!-- <h2 class="fs-5">Profile</h2> -->
       <div class="card intro-card w-75 text-bg-secondary m-auto mb-3">
-        <div class="card-header">
+        <div class="card-header d-flex justify-content-between">
           <h5 class="card-title" style="text-align:center">Submissions</h5>
+          <button type="button" class="btn btn-primary btn-delete" data-bs-toggle="modal" data-bs-target="#exampleModal">Delete Task</button>
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Task</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                  Are you sure you want to delete this task?
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Delete</button>
+                  </div>
+                </div>
+              </div>
+            </div>
         </div>
         <div class="card-body btn bx bxs-chevron-down w-100" type="button" data-bs-toggle="collapse" data-bs-target="#taskcollapse" aria-expanded="false" aria-controls="taskcollapse">
           </div>
