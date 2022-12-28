@@ -143,7 +143,7 @@ $notifications = $database->performQuery("SELECT * FROM notifications,classroom,
       <div class="col-md-6 mx-5">
         <div class="row mb-1">
           <div class="greetingsbox">
-            <h2 class="typewrite" data-period="500" data-type='["Welcome back , <?php echo $name ?>" , "How was your day?" , "Have you submitted all your tasks?" ]'>
+            <h2 class="typewrite" data-period="500" data-type='["Welcome back , <?php echo $name ?>" , "How was your day?" , "Have you submitted all your tasks?" ,"Stay up to date with Ed-Ez" ]'>
             </h2>
             <span class="wrap"></span>
 
@@ -160,7 +160,18 @@ $notifications = $database->performQuery("SELECT * FROM notifications,classroom,
                 <p class="my-auto align-self-start" style=" color:white">Student</p>
               </div>
               <div class="col my-auto">
-                <i class="bx bxs-bell notification align-self-end ms-5"></i>
+              <i class="bx bxs-bell notification dropbtn position-relative" onclick="myFunction()">
+                    <span class="position-absolute top-0 start-100 translate-middle badge badge-sm rounded-pill bg-danger ">
+                      <?php
+                      $database->fetch_results($result, "SELECT count(*) AS notification_count FROM notifications,classroom,student_classroom,notification_user WHERE notifications.notification_id=notification_user.notification_id AND notification_user.email='".$email->get_email()."'  AND notifications.class_code=classroom.class_code AND classroom.class_code=student_classroom.class_code AND student_classroom.email='".$email->get_email()."' AND notifications.notification_type!='submit' order by notification_datetime desc");
+                      if ($result['notification_count'] > 3) {
+                        echo "3+";
+                      } else {
+                        echo $result['notification_count'];
+                      }
+                      ?>
+                      <span class="visually-hidden">unread messages</span>
+                    </span></i>
               </div>
             </div>
           </div>

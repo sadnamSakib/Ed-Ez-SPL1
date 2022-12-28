@@ -92,7 +92,7 @@ foreach ($classrooms as $classroom) {
     <section class="content-section row">
       <div class="card intro-card w-75 text-bg-secondary m-auto">
         <div class="card-header">
-          <h3 class="card-title" style="text-align:center">Gradesheets</h3>
+          <h3 class="card-title" style="text-align:center"><i class='bx bx-lg bx-bar-chart-square' style="vertical-align:middle;"></i>  Gradesheets</h3>
 
         </div>
         <div class="flex-container w-100">
@@ -102,8 +102,16 @@ foreach ($classrooms as $classroom) {
             ?>
               <div class="card card-body mx-1 my-2 me-1 btn btn-resource saved-resources" style="text-align:left" id="scrollspyHeading1">
                 <div class="d-flex justify-content-between">
+                  <div class="my-auto">
                   <h4 class="my-auto"><?php echo $classroom['course_code'] . ': ' . $classroom['classroom_name'] ?></h4>
-                  <form action="" method="POST"><button type="submit" class="btn btn-primary btn-gradeDownload my-3" name="<?php echo $classroom['class_code'] ?>">Download</button></form>
+                  </div>
+                  <div class="buttonsffs" style="display:inline-block">
+                  <form action="" method="POST">
+                    <button type="submit" class="btn btn-primary btn-gradeDownload my-3" name="<?php echo $classroom['class_code'] ?>">Attendance</button>
+                  <button type="submit" class="btn btn-primary btn-gradeDownload my-3" name="<?php echo $classroom['class_code'] ?>">Gradesheet</button>
+                </form>
+
+                  </div>
                 </div>
               </div>
             <?php
