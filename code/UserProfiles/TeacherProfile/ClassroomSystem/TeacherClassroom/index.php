@@ -9,6 +9,11 @@ require $root_path . 'LibraryFiles/ValidationPhp/InputValidation.php';
 foreach (glob($root_path . 'LibraryFiles/ClassroomManager/*.php') as $filename) {
   require $filename;
 }
+
+foreach (glob($root_path . 'LibraryFiles/NotificationManager/*.php') as $filename) {
+  require $filename;
+}
+
 session::profile_not_set($root_path);
 $validate = new InputValidation();
 $classCode = $_SESSION['class_code'];
@@ -42,7 +47,7 @@ if (isset($_POST['taskSubmit'])) {
     $Deadline = date("d/m/Y h:i:s a", strtotime($Deadline));
     $link = $fileManagement->get_file_url(URLPath::getFTPServer());
     $post_text = "A Task has been assigned: <br> Title: $task_title <br>  Deadline: $Deadline <br> Marks: $marks <br> Question Link: <a href=\"$link\" target=\"__blank\">Link</a>";
-    $notification = new NotificationManagement($email->get_email(), "task", $classCode, $task_title, $utility, $database);
+    $notification = new TaskNotification($email->get_email(), $classCode, $task_title, $utility, $database);
     $taskPost = new PostManagement($post_text, $email->get_email(), $classCode, $utility, $database);
   }
 }
@@ -80,7 +85,7 @@ if (isset($_POST['sessionSubmit'])) {
     $database->performQuery("DELETE FROM classroom_session WHERE session='$session'");
     $session = "No Session Links Provided";
   } else {
-    $notification = new NotificationManagement($email->get_email(), "session", $classCode, $sessionLink, $utility, $database);
+    $notification = new SessionNotification($email->get_email(), $classCode, $utility, $database);
     $sessionPost = new PostManagement($post_text, $email->get_email(), $classCode, $utility, $database);
   }
 }
@@ -105,6 +110,7 @@ $database->fetch_results($classroom_records, "SELECT * FROM classroom WHERE clas
 $database->fetch_results($teacher_records, "SELECT * FROM users WHERE email = '" . $email->get_email() . "'");
 if (isset($_REQUEST['post_msg'])) {
   $postManagement = new PostManagement($validate->post_sanitise_text('post_value'), $email->get_email(), $classCode, $utility, $database);
+  $notification = new PostNotification($email->get_email(), $classCode, $utility, $database);
 }
 
 $posts = $database->performQuery("SELECT * FROM post,post_classroom WHERE post.post_id=post_classroom.post_id and post_classroom.class_code='$classCode' and active='1' order by post_datetime desc;");
@@ -112,6 +118,7 @@ foreach ($posts as $i) {
   $post_id = $i['post_id'];
   if (isset($_REQUEST[$post_id . 'comment_msg'])) {
     $commentManager = new CommentManagement($validate->post_sanitise_text($post_id . 'comment_text'), $post_id, $email->get_email(), $utility, $database);
+    $notification = new CommentNotification($email->get_email(), $classCode, $utility, $database);
     unset($_REQUEST[$post_id . 'comment_msg']);
   }
 }

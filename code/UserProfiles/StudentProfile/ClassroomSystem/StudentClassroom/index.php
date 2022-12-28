@@ -9,6 +9,9 @@ require $root_path . 'LibraryFiles/ValidationPhp/InputValidation.php';
 foreach (glob($root_path . 'LibraryFiles/ClassroomManager/*.php') as $filename) {
   require $filename;
 }
+foreach (glob($root_path . 'LibraryFiles/NotificationManager/*.php') as $filename) {
+  require $filename;
+}
 session::profile_not_set($root_path);
 $validate = new InputValidation();
 $classCode = $_SESSION['class_code'];
@@ -32,56 +35,62 @@ foreach ($allComments as $j) {
     $database->performQuery("DELETE FROM comments WHERE comment_id='$i'");
   }
 }
-
-$database->fetch_results($classroom_records, "SELECT * FROM classroom WHERE class_code = '$classCode' and active='1'");
-$database->fetch_results($teacher_records, "SELECT * FROM users,teacher_classroom,classroom WHERE users.email=teacher_classroom.email and classroom.class_code='$classCode'");
-if (isset($_REQUEST['post_msg'])) {
-  $postManagement = new PostManagement($validate->post_sanitise_text('post_value'), $email->get_email(), $classCode, $utility, $database);
-}
-
-$errorAttendance = null;
-if (isset($_POST['AttendanceSubmit'])) {
-  $sessionCode = $validate->post_sanitise_regular_input('SessionCode');
-  $row = $database->performQuery("SELECT * FROM student_classroom_session WHERE email='" . $email->get_email() . "' AND session='$sessionCode'");
-  if ($row->num_rows > 0) {
-    $errorAttendance = "Attendance Already Given";
-  } else {
-    $database->performQuery("INSERT INTO student_classroom_session VALUES('" . $email->get_email() . "','$sessionCode')");
+try {
+  $database->fetch_results($classroom_records, "SELECT * FROM classroom WHERE class_code = '$classCode' and active='1'");
+  $database->fetch_results($teacher_records, "SELECT * FROM users,teacher_classroom,classroom WHERE users.email=teacher_classroom.email and classroom.class_code='$classCode'");
+  if (isset($_REQUEST['post_msg'])) {
+    $notification = new PostNotification($email->get_email(), $classCode, $utility, $database);
+    $postManagement = new PostManagement($validate->post_sanitise_text('post_value'), $email->get_email(), $classCode, $utility, $database);
   }
-}
 
-$posts = $database->performQuery("SELECT * FROM post,post_classroom WHERE post.post_id=post_classroom.post_id and post_classroom.class_code='$classCode' and active='1' order by post_datetime desc;");
-foreach ($posts as $i) {
-  $post_id = $i['post_id'];
-  if (isset($_REQUEST[$post_id . 'comment_msg'])) {
-    $commentManager = new CommentManagement($validate->post_sanitise_text($post_id . 'comment_text'), $post_id, $email->get_email(), $utility, $database);
-    unset($_REQUEST[$post_id . 'comment_msg']);
-  }
-}
-$submission_error = null;
-$allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHERE task.event_id=event.event_id AND task.task_id=task_classroom.task_id AND task_classroom.class_code='$classCode' order by event.event_end_datetime ASC");
-foreach ($allTasks as $i) {
-  if (isset($_POST[$i['task_id'] . 'submit'])) {
-    if (isset($_FILES[$i['task_id'] . 'ans']['name'])) {
-      $fileManagement = new FileManagement($_FILES[$i['task_id'] . 'ans']['name'], $_FILES[$i['task_id'] . 'ans']['tmp_name'], $database, $utility);
-      $taskID = $i['task_id'];
-      $database->fetch_results($records, "SELECT * FROM task,event WHERE task.task_id='$taskID' AND task.event_id=event.event_id");
-      $submissions = $database->performQuery("SELECT * FROM student_task_submission WHERE task_id='" . $i['task_id'] . "' AND email='" . $email->get_email() . "'");
-      if ($submissions->num_rows > 0) {
-        $submission_error = "Task already submitted";
-        break;
-      }
-      $database->fetch_results($system_date, "SELECT SYSDATE() AS DATE");
-      if ($records['event_end_datetime'] > $system_date['DATE']) {
-        $database->performQuery("INSERT INTO student_task_submission(email,task_id,file_id,submission_status) VALUES('" . $email->get_email() . "','" . $i['task_id'] . "','" . $fileManagement->get_file_id() . "','1')");
-        $notification = new NotificationManagement($email->get_email(), 'submit', $classCode, $i['task_title'], $utility, $database,1);
-      } else {
-        $database->performQuery("INSERT INTO student_task_submission(email,task_id,file_id,submission_status) VALUES('" . $email->get_email() . "','" . $i['task_id'] . "','" . $fileManagement->get_file_id() . "','0')");
-        $notification = new NotificationManagement($email->get_email(), 'submit', $classCode, $i['task_title'], $utility, $database,0);
-      }
-      break;
+  $errorAttendance = null;
+  if (isset($_POST['AttendanceSubmit'])) {
+    $sessionCode = $validate->post_sanitise_regular_input('SessionCode');
+    $row = $database->performQuery("SELECT * FROM student_classroom_session WHERE email='" . $email->get_email() . "' AND session='$sessionCode'");
+    if ($row->num_rows > 0) {
+      $errorAttendance = "Attendance Already Given";
+    } else {
+      $database->performQuery("INSERT INTO student_classroom_session VALUES('" . $email->get_email() . "','$sessionCode')");
+      $notification = new AttendanceNotification($email->get_email(), $classCode, $utility, $database, 1);
     }
   }
+
+  $posts = $database->performQuery("SELECT * FROM post,post_classroom WHERE post.post_id=post_classroom.post_id and post_classroom.class_code='$classCode' and active='1' order by post_datetime desc;");
+  foreach ($posts as $i) {
+    $post_id = $i['post_id'];
+    if (isset($_REQUEST[$post_id . 'comment_msg'])) {
+      $notification = new CommentNotification($email->get_email(), $classCode, $utility, $database);
+      $commentManager = new CommentManagement($validate->post_sanitise_text($post_id . 'comment_text'), $post_id, $email->get_email(), $utility, $database);
+      unset($_REQUEST[$post_id . 'comment_msg']);
+    }
+  }
+  $submission_error = null;
+  $allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHERE task.event_id=event.event_id AND task.task_id=task_classroom.task_id AND task_classroom.class_code='$classCode' order by event.event_end_datetime ASC");
+  foreach ($allTasks as $i) {
+    if (isset($_POST[$i['task_id'] . 'submit'])) {
+      if (isset($_FILES[$i['task_id'] . 'ans']['name'])) {
+        $fileManagement = new FileManagement($_FILES[$i['task_id'] . 'ans']['name'], $_FILES[$i['task_id'] . 'ans']['tmp_name'], $database, $utility);
+        $taskID = $i['task_id'];
+        $database->fetch_results($records, "SELECT * FROM task,event WHERE task.task_id='$taskID' AND task.event_id=event.event_id");
+        $submissions = $database->performQuery("SELECT * FROM student_task_submission WHERE task_id='" . $i['task_id'] . "' AND email='" . $email->get_email() . "'");
+        if ($submissions->num_rows > 0) {
+          $submission_error = "Task already submitted";
+          break;
+        }
+        $database->fetch_results($system_date, "SELECT SYSDATE() AS DATE");
+        if ($records['event_end_datetime'] > $system_date['DATE']) {
+          $database->performQuery("INSERT INTO student_task_submission(email,task_id,file_id,submission_status) VALUES('" . $email->get_email() . "','" . $i['task_id'] . "','" . $fileManagement->get_file_id() . "','1')");
+          $notification = new SubmitNotification($email->get_email(), $classCode, $i['task_title'], $utility, $database, 1);
+        } else {
+          $database->performQuery("INSERT INTO student_task_submission(email,task_id,file_id,submission_status) VALUES('" . $email->get_email() . "','" . $i['task_id'] . "','" . $fileManagement->get_file_id() . "','0')");
+          $notification = new SubmitNotification($email->get_email(), $classCode, $i['task_title'], $utility, $database, 0);
+        }
+        break;
+      }
+    }
+  }
+} catch (Exception) {
+  echo $e->getMessage();
 }
 
 $allPost = $database->performQuery("SELECT * FROM post WHERE active='1'");

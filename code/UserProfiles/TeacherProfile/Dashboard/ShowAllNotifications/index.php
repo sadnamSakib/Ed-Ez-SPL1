@@ -50,7 +50,8 @@ foreach($notifications as $notification){
                     <h5 class="card-title" style="text-align:center">All Notifications</h5>
                 </div>
                 <div class="card-body text-success">
-                    <?php 
+                <form action="" method="POST">
+                <?php 
                     foreach ($notifications as $notification) {
                     ?>
                     <div class="card mb-2">
@@ -58,12 +59,13 @@ foreach($notifications as $notification){
                             <h5 class="card-title" style="color:black;">New <?php echo $notification['notification_type'] ?></h5>
                             <p class="card-text" style="color:black;"><?php echo $notification['message'] ?></p>
                             <p class="card-text" style="color:black;">Date: <?php echo $notification['notification_datetime']?></p>
-                            <a href="#" class="btn btn-primary">View <?php echo $notification['notification_type']?></a>
+                            <button type="submit" class="btn btn-primary" name="notification<?php echo $notification['notification_id'] ?>">View <?php echo $notification['notification_type']?></button>
                         </div>
                     </div>
                     <?php
                     }
                     ?>
+                    </form>
                 </div>
 
         </section>

@@ -8,6 +8,10 @@ require $root_path . 'LibraryFiles/Utility/Utility.php';
 foreach (glob($root_path . 'LibraryFiles/ClassroomManager/*.php') as $filename) {
   require $filename;
 }
+foreach (glob($root_path . 'LibraryFiles/NotificationManager/*.php') as $filename) {
+  require $filename;
+}
+
 
 session::profile_not_set($root_path);
 $validate = new InputValidation();
@@ -40,7 +44,7 @@ if (isset($_POST['uploadSubmit'])) {
         $database->performQuery("INSERT INTO resources_classroom VALUES('$resource_id','$classCode')");
         $link = $fileManagement->get_file_url(URLPath::getFTPServer());
         $post_text = "A Resource has been posted: <br> Title: $title <br>  Posted at:". $system_date['DATE']." <br> Brief Description: $briefDescription <br> Resource Link: <a href=\"$link\" target=\"__blank\">Link</a>";
-        $notification = new NotificationManagement($email->get_email(), "resource", $classCode, $sessionLink, $utility, $database);
+        $notification = new ResourceNotification($email->get_email(), $classCode, $sessionLink, $utility, $database);
         $postManagement = new PostManagement($post_text,$email->get_email(),$classCode,$utility,$database);
       }
     } catch (Exception $e) {
