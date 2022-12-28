@@ -60,7 +60,7 @@ $notifications = $database->performQuery("SELECT * FROM notifications,classroom,
                         foreach ($notifications as $notification) {
                         ?>
                             <div class="card mb-2">
-                                <div class="card-body d-flex justify-content-around">
+                                <div class="card-body d-flex justify-content-between">
                                     <div>
                                         <h5 class="card-title" style="color:black;">New <?php echo $notification['notification_type'] ?></h5>
                                         <p class="card-text" style="color:black;"><?php echo $notification['message'] ?></p>
