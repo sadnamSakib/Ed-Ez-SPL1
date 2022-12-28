@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 28, 2022 at 08:47 AM
+-- Generation Time: Dec 28, 2022 at 08:17 PM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -47,6 +47,18 @@ CREATE TABLE `classroom_creator` (
   `email` varchar(200) NOT NULL,
   `class_code` varchar(20) NOT NULL,
   `creation_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `classroom_frequency`
+--
+
+CREATE TABLE `classroom_frequency` (
+  `class_code` varchar(20) NOT NULL,
+  `email` varchar(200) NOT NULL,
+  `frequency` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -120,7 +132,7 @@ CREATE TABLE `notifications` (
   `message` text NOT NULL,
   `notification_id` varchar(50) NOT NULL,
   `notification_datetime` datetime NOT NULL,
-  `notification_type` set('resource','task','session','submit') NOT NULL,
+  `notification_type` text NOT NULL,
   `class_code` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -169,10 +181,10 @@ CREATE TABLE `post_classroom` (
 CREATE TABLE `resources` (
   `resource_id` varchar(50) NOT NULL,
   `title` text NOT NULL,
-  `resource_tag` text DEFAULT NULL,
-  `post_date_time` datetime DEFAULT NULL,
-  `file_id` text DEFAULT NULL,
-  `resource_visibility` set('private','public') DEFAULT NULL,
+  `resource_tag` text NOT NULL,
+  `post_date_time` datetime NOT NULL,
+  `file_id` text NOT NULL,
+  `resource_visibility` set('private','public') NOT NULL,
   `resource_description` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -196,6 +208,18 @@ CREATE TABLE `resources_classroom` (
 CREATE TABLE `resource_downvote` (
   `resource_id` varchar(50) NOT NULL,
   `email` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `resource_frequency`
+--
+
+CREATE TABLE `resource_frequency` (
+  `resource_id` varchar(50) NOT NULL,
+  `email` varchar(200) NOT NULL,
+  `frequency` int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -380,6 +404,13 @@ ALTER TABLE `classroom_creator`
   ADD KEY `fk_classroom_creator_classroom` (`class_code`);
 
 --
+-- Indexes for table `classroom_frequency`
+--
+ALTER TABLE `classroom_frequency`
+  ADD PRIMARY KEY (`class_code`,`email`),
+  ADD KEY `fk_classroom_frequency_user2` (`email`);
+
+--
 -- Indexes for table `classroom_session`
 --
 ALTER TABLE `classroom_session`
@@ -462,10 +493,17 @@ ALTER TABLE `resource_downvote`
   ADD KEY `fk_resource_downvote_users` (`email`);
 
 --
+-- Indexes for table `resource_frequency`
+--
+ALTER TABLE `resource_frequency`
+  ADD PRIMARY KEY (`resource_id`,`email`),
+  ADD KEY `fk_resource_frequency_user2` (`email`);
+
+--
 -- Indexes for table `resource_saved`
 --
 ALTER TABLE `resource_saved`
-  ADD PRIMARY KEY (`resource_id`),
+  ADD PRIMARY KEY (`resource_id`,`email`),
   ADD KEY `fk_resource_saved_users` (`email`);
 
 --
@@ -562,6 +600,13 @@ ALTER TABLE `classroom_creator`
   ADD CONSTRAINT `fk_classroom_creator_users` FOREIGN KEY (`email`) REFERENCES `teacher` (`email`) ON DELETE CASCADE;
 
 --
+-- Constraints for table `classroom_frequency`
+--
+ALTER TABLE `classroom_frequency`
+  ADD CONSTRAINT `fk_classroom_frequency_user` FOREIGN KEY (`class_code`) REFERENCES `classroom` (`class_code`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_classroom_frequency_user2` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE;
+
+--
 -- Constraints for table `classroom_session`
 --
 ALTER TABLE `classroom_session`
@@ -620,6 +665,13 @@ ALTER TABLE `resources_classroom`
 ALTER TABLE `resource_downvote`
   ADD CONSTRAINT `fk_resource_downvote_resources` FOREIGN KEY (`resource_id`) REFERENCES `resources` (`resource_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_resource_downvote_users` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `resource_frequency`
+--
+ALTER TABLE `resource_frequency`
+  ADD CONSTRAINT `fk_resource_frequency_user` FOREIGN KEY (`resource_id`) REFERENCES `resources` (`resource_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_resource_frequency_user2` FOREIGN KEY (`email`) REFERENCES `users` (`email`) ON DELETE CASCADE;
 
 --
 -- Constraints for table `resource_saved`

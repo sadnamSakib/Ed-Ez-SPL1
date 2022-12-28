@@ -10,10 +10,10 @@ class session{
 
     public static function redirectProfile($tableName){
         if($tableName==='teacher'){
-            header("Location: ../../UserProfiles/TeacherProfile/index.php");
+            header("Location: ../../UserProfiles/TeacherProfile/Dashboard/index.php");
         }
         else{
-            header("Location: ../../UserProfiles/StudentProfile/index.php");
+            header("Location: ../../UserProfiles/StudentProfile/Dashboard/index.php");
         }
     }
 

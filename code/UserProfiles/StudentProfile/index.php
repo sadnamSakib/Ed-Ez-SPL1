@@ -117,7 +117,7 @@ if ($semester == -1) {
         <div class="col-md-5 border-end">
           <div class="p-3 py-5">
             <div class="d-flex justify-content-between align-items-center mb-3">
-              <h4>Student Profile</h4>
+              <h4><i class='bx bx-user-circle pe-2'></i>Student Profile</h4>
             </div>
             <form id='form' action="" method="POST">
               <div id="errorPass form-label" style="color:<?php echo $errorColor ?>;<?php echo $error===null?'none':'block'; ?>"><?php echo $error ?></div>
