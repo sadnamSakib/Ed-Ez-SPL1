@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 28, 2022 at 08:17 PM
+-- Generation Time: Dec 28, 2022 at 11:56 PM
 -- Server version: 10.4.25-MariaDB
 -- PHP Version: 8.1.10
 
@@ -34,7 +34,8 @@ CREATE TABLE `classroom` (
   `semester` int(11) NOT NULL,
   `active` tinyint(1) NOT NULL DEFAULT 1,
   `course_credit` double NOT NULL,
-  `attendance` double NOT NULL
+  `attendance` double NOT NULL,
+  `late_attendance_percentage` double DEFAULT 100
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -286,7 +287,8 @@ CREATE TABLE `student_classroom` (
 
 CREATE TABLE `student_classroom_session` (
   `email` varchar(200) NOT NULL,
-  `session` varchar(10) NOT NULL
+  `session` varchar(10) NOT NULL,
+  `status` set('present','late') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
