@@ -14,15 +14,15 @@ $validate = new InputValidation();
 $classCode = $_SESSION['class_code'];
 $classrooms = $database->performQuery("SELECT * FROM classroom,teacher_classroom where classroom.class_code=teacher_classroom.class_code and teacher_classroom.email='" . $email->get_email() . "' and active='1';");
 foreach ($classrooms as $classroom) {
-  if (isset($_POST[$classroom['class_code']])) {
-    $csvHandler = new CSVHandler($classroom['class_code']);
+  if (isset($_POST['gradesheet' . $classroom['class_code']])) {
+    $csvHandler = new CSVHandler('gradesheet' . $classroom['class_code'],"TeacherGradesheet");
     $classCode = $classroom['class_code'];
     $tasks = $database->performQuery("SELECT * FROM task,task_classroom WHERE task.task_id=task_classroom.task_id AND task_classroom.class_code='$classCode' AND task.active='1' order by task.task_title asc");
     $totalMarks = 0;
     $task_array = ['Name', 'Student ID'];
     foreach ($tasks as $task) {
       array_push($task_array, $task['task_title']);
-      $totalMarks+=$task['marks'];
+      $totalMarks += $task['marks'];
     }
     array_push($task_array, 'Attendance', 'Total Marks', 'Percentage');
     $csvHandler->write($task_array);
@@ -45,21 +45,47 @@ foreach ($classrooms as $classroom) {
         } else {
           $attendancePercentage = ($attendance['StudentAttendance'] * $classroom['attendance']) / $totalAttendance['TotalSessions'];
         }
-        array_push($user_marks,$attendancePercentage);
-        array_push($user_marks,$total);
-        if($totalMarks!==0){
+        array_push($user_marks, $attendancePercentage);
+        array_push($user_marks, $total);
+        if ($totalMarks !== 0) {
           $totalMarks = ($total * 90) / $totalMarks;
-        }
-        else{
+        } else {
           $totalMarks = 0;
         }
-        array_push($user_marks, $totalMarks+$attendancePercentage);
+        array_push($user_marks, $totalMarks + $attendancePercentage);
         $csvHandler->write($user_marks);
         $csvHandler->download();
       }
     } catch (Exception $e) {
       echo $e->getMessage();
     }
+  }
+  if (isset($_POST['attendance' . $classroom['class_code']])) {
+    $csvHandler = new CSVHandler('attendance' . $classroom['class_code'],"TeacherAttendance");
+    $classCode = $classroom['class_code'];
+    $session_array = ['Name', 'Student ID'];
+    $sessions = $database->performQuery("SELECT * FROM classroom_session,student_classroom_session WHERE classroom_session.session=student_classroom_session.session AND classroom_session.class_code='$classCode' ORDER BY classroom_session.deadline ASC");
+    foreach ($sessions as $session) {
+      array_push($session_array,(new DateTime($session['deadline']))->format('Y-m-d H:i'));
+    }
+    $csvHandler->write($session_array);
+    try {
+      $users = $database->performQuery("SELECT DISTINCT student.email,student.studentID,users.name from classroom,student_classroom,users,student WHERE classroom.class_code=student_classroom.class_code AND users.email=student_classroom.email AND student.email=users.email");
+      foreach ($users as $user) {
+        $result = null;
+        $attendances = [$user['name'], is_null($user['studentID']) ? 'N/A' : $user['studentID']];
+        foreach ($sessions as $session) {
+          $result = null;
+          $database->fetch_results($result, "SELECT * FROM classroom_session,student_classroom_session WHERE classroom_session.session=student_classroom_session.session AND student_classroom_session.session='".$session['session']."' AND classroom_session.class_code='$classCode' AND  student_classroom_session.email='" . $user['email'] . "' ");
+          is_null($result) ? array_push($attendances, 'A') : array_push($attendances, $result['status'] === 'present' ? 'P' : 'L');
+        }
+        $csvHandler->write($attendances);
+      }
+      $csvHandler->download();
+    } catch (Exception $e) {
+      echo $e->getMessage();
+    }
+
   }
 }
 ?>
@@ -107,8 +133,8 @@ foreach ($classrooms as $classroom) {
                   </div>
                   <div class="buttonsffs" style="display:inline-block">
                   <form action="" method="POST">
-                    <button type="submit" class="btn btn-primary btn-gradeDownload my-3" name="<?php echo $classroom['class_code'] ?>">Attendance</button>
-                  <button type="submit" class="btn btn-primary btn-gradeDownload my-3" name="<?php echo $classroom['class_code'] ?>">Gradesheet</button>
+                    <button type="submit" class="btn btn-primary btn-gradeDownload my-3" name="attendance<?php echo $classroom['class_code'] ?>">Attendance</button>
+                  <button type="submit" class="btn btn-primary btn-gradeDownload my-3" name="gradesheet<?php echo $classroom['class_code'] ?>">Gradesheet</button>
                 </form>
 
                   </div>

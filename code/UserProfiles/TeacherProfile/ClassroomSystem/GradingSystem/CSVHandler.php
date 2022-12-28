@@ -4,8 +4,8 @@
         private $directory;
         private $newFile;
         private $location;
-        function __construct($directory){
-            $this->filename = "GradeSheet";
+        function __construct($directory,$filename){
+            $this->filename = $filename;
             $this->directory = $directory;
             $this->init();
         }
