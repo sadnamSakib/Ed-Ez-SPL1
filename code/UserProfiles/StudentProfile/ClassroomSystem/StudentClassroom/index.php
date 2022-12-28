@@ -167,9 +167,9 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
             <?php
             foreach ($allTasks as $i) {
             ?>
-              <div class="card card-body my-2 btn" data-bs-toggle="modal" data-bs-target="#<?php echo $i['task_id'] . "modal" ?>" data-bs-whatever="@fat">
+              <div class="card card-body my-2 btn" data-bs-toggle="modal" data-bs-target="#<?php echo $i['task_id'] . "modal" ?>" data-bs-whatever="@fat"><?php echo $i['task_title'] ?></div>
                 <div class="modal fade" id="<?php echo $i['task_id'] . "modal" ?>" tabindex="-1" aria-labelledby="<?php echo $i['task_id'] ?>" aria-hidden="true">
-                  <div class="modal-dialog">
+                  <div class="modal-dialog align-content-center">
                     <div class="modal-content">
                       <div class="modal-header">
                         <h1 class="modal-title fs-5" id="<?php echo $i['task_id'] ?>"><?php echo $i['task_title'] ?></h1>
@@ -234,8 +234,8 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
                     </div>
                   </div>
                 </div>
-                <?php echo $i['task_title'] ?>
-              </div>
+                
+              
             <?php
             }
             ?>
