@@ -121,7 +121,7 @@ foreach($notifications as $notification){
       <div class="col-md-6 mx-5">
         <div class="row mb-1">
           <div class="greetingsbox">
-            <h2 class="typewrite" data-period="500" data-type='["Welcome back , <?php echo $name ?>" , "How was your day?" , "Have you submitted all your tasks?" ]'>
+            <h2 class="typewrite" data-period="500" data-type='["Welcome back , <?php echo $name ?>" , "How was your day?" ]'>
             </h2>
             <span class="wrap"></span>
 
