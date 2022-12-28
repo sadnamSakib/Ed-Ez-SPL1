@@ -23,7 +23,7 @@ $authentication = $database->performQuery("SELECT * FROM teacher_classroom WHERE
 if ($authentication->num_rows == 0) {
   session::redirectProfile('teacher');
 }
-
+$error = null;
 if (isset($_POST['taskSubmit'])) {
   $task_id = $utility->generateRandomString(50);
   $existence = $database->performQuery("SELECT * FROM task where task_id='$task_id'");
@@ -39,21 +39,42 @@ if (isset($_POST['taskSubmit'])) {
   $instructions = $validate->post_sanitise_regular_input('instruction');
   $database->fetch_results($row, "select * from users where email='" . $email->get_email() . "'");
   $institution = $row['institution'];
+  $database->fetch_results($sysdate, "SELECT SYSDATE() AS DATE");
+  $current_datetime = new DateTime($sysdate['DATE']);
+  $current_datetime=$current_datetime->format('Y-m-d H:i');
+  $Deadline = new DateTime($Deadline);
+  $Deadline=$Deadline->format('Y-m-d H:i');
   if (isset($_FILES['taskName']['name'])) {
-    $eventManagement = new EventManagement(EventManagement::get_system_date($database), $Deadline, $database, $utility);
-    $fileManagement = new FileManagement($_FILES['taskName']['name'], $_FILES['taskName']['tmp_name'], $database, $utility);
-    $insertquery = "INSERT INTO task(task_id,task_title,event_id,institution,semester,marks,file_id,instructions) VALUES('$task_id','$task_title','" . $eventManagement->get_event_id() . "','$institution','$semester','$marks','" . $fileManagement->get_file_id() . "','$instructions')";
-    $database->performQuery($insertquery);
-    $database->performQuery("INSERT INTO task_classroom(task_id,class_code) VALUES('$task_id','$classCode')");
-    $Deadline = date("d/m/Y h:i:s a", strtotime($Deadline));
-    $link = $fileManagement->get_file_url(URLPath::getFTPServer());
-    $post_text = "A Task has been assigned: <br> Title: $task_title <br>  Deadline: $Deadline <br> Marks: $marks <br> Question Link: <a href=\"$link\" target=\"__blank\">Link</a>";
-    $notification = new TaskNotification($email->get_email(), $classCode, $task_title, $utility, $database);
-    $taskPost = new PostManagement($post_text, $email->get_email(), $classCode, $utility, $database);
+    if ($current_datetime >= $Deadline) {
+      $error = "Deadline exceeded even before task can be created";
+    } else {
+      $eventManagement = new EventManagement(EventManagement::get_system_date($database), $Deadline, $database, $utility);
+      $fileManagement = new FileManagement($_FILES['taskName']['name'], $_FILES['taskName']['tmp_name'], $database, $utility);
+      $insertquery = "INSERT INTO task(task_id,task_title,event_id,institution,semester,marks,file_id,instructions) VALUES('$task_id','$task_title','" . $eventManagement->get_event_id() . "','$institution','$semester','$marks','" . $fileManagement->get_file_id() . "','$instructions')";
+      $database->performQuery($insertquery);
+      $database->performQuery("INSERT INTO task_classroom(task_id,class_code) VALUES('$task_id','$classCode')");
+      $Deadline = date("d/m/Y h:i:s a", strtotime($Deadline));
+      $link = $fileManagement->get_file_url(URLPath::getFTPServer());
+      $post_text = "A Task has been assigned: <br> Title: $task_title <br>  Deadline: $Deadline <br> Marks: $marks <br> Question Link: <a href=\"$link\" target=\"__blank\">Link</a>";
+      $notification = new TaskNotification($email->get_email(), $classCode, $task_title, $utility, $database);
+      $taskPost = new PostManagement($post_text, $email->get_email(), $classCode, $utility, $database);
+    }
+  } else {
+    $error = "File not found";
   }
 }
-
-$session = "No ongoing sessions";
+$session = $_SESSION['session'];
+if (is_null($session)) {
+  $session = "No ongoing session";
+} else {
+  $database->fetch_results($result, "SELECT * FROM classroom_session WHERE session='$session'");
+  $database->fetch_results($sysdate, "SELECT SYSDATE() AS DATE");
+  $current_datetime = $sysdate['DATE'];
+  if ($current_datetime >= $result['deadline']) {
+    $session = "No ongoing session";
+  }
+}
+$session = $session == null ? "No ongoing sessions" : $session;
 $sessionError = false;
 if (isset($_POST['sessionSubmit'])) {
   $session = $utility->generateRandomString(10);
@@ -64,30 +85,54 @@ if (isset($_POST['sessionSubmit'])) {
   }
   $startTime = $_REQUEST['sessionStart'];
   $endTime = $_REQUEST['sessionEnd'];
-  $eventManagement = new EventManagement($startTime, $endTime, $database, $utility);
-  $deadline = $_REQUEST['attendanceDeadline'];
-  $database->performQuery("INSERT INTO classroom_session VALUES('$classCode','$session','" . $eventManagement->get_event_id() . "','$deadline')");
-  $post_text = "A Classroom Session Has Been Posted";
-  $online = $_REQUEST['online'];
-  $offline = $_REQUEST['offline'];
-  $sessionLink = null;
-  if ($online === "online") {
-    $sessionLink = $_REQUEST['SessionLink'];
-    if ($sessionLink == null || $sessionLink === "") {
-      $sessionError = true;
-    }
-    $sessionLink = "<a href=\"$sessionLink\" target=\"__blank\">[Click Here]</a>";
-    $post_text = $post_text . ", Online Session Link: " . $sessionLink . ". ";
-  } else {
-    $post_text = $post_text . " Session is an offline session. ";
+  $database->fetch_results($sysdate, "SELECT SYSDATE() AS DATE");
+  $current_datetime = new DateTime($sysdate['DATE']);
+  $current_datetime=$current_datetime->format('Y-m-d H:i');
+  $startTime = new DateTime($startTime);
+  $startTime=$startTime->format('Y-m-d H:i');
+  $endTime = new DateTime($endTime);
+  $endTime=$endTime->format('Y-m-d H:i');
+  if(strtotime($current_datetime)>=strtotime($startTime)){
+    $session = "The time set is incorrect";
   }
-  $post_text = $post_text . "<br> Start Date and Time: $startTime <br> End Date and Time: $endTime <br>";
-  if ($online === "online" && $sessionError == true) {
-    $database->performQuery("DELETE FROM classroom_session WHERE session='$session'");
-    $session = "No Session Links Provided";
+  else if (strtotime($startTime) >= strtotime($endTime)) {
+    $session = "The time set is incorrect";
   } else {
-    $notification = new SessionNotification($email->get_email(), $classCode, $utility, $database);
-    $sessionPost = new PostManagement($post_text, $email->get_email(), $classCode, $utility, $database);
+    $eventManagement = new EventManagement($startTime, $endTime, $database, $utility);
+    $deadline = $_REQUEST['attendanceDeadline'];
+    $deadline = new DateTime($deadline);
+    $deadline=$deadline->format('Y-m-d H:i');
+    if (strtotime($deadline) <= strtotime($startTime)) {
+      $session = "The time set is incorrect";
+    }
+    else if(strtotime($deadline)>strtotime($endTime)){
+      $session = "The time set is incorrect";
+    } else {
+      $database->performQuery("INSERT INTO classroom_session VALUES('$classCode','$session','" . $eventManagement->get_event_id() . "','$deadline')");
+      $post_text = "A Classroom Session Has Been Posted";
+      $online = $_REQUEST['online'];
+      $offline = $_REQUEST['offline'];
+      $sessionLink = null;
+      if ($online === "online") {
+        $sessionLink = $_REQUEST['SessionLink'];
+        if ($sessionLink == null || $sessionLink === "") {
+          $sessionError = true;
+        }
+        $sessionLink = "<a href=\"$sessionLink\" target=\"__blank\">[Click Here]</a>";
+        $post_text = $post_text . ", Online Session Link: " . $sessionLink . ". ";
+      } else {
+        $post_text = $post_text . " Session is an offline session. ";
+      }
+      $post_text = $post_text . "<br> Start Date and Time: $startTime <br> End Date and Time: $endTime <br>";
+      if ($online === "online" && $sessionError == true) {
+        $database->performQuery("DELETE FROM classroom_session WHERE session='$session'");
+        $session = "No Session Links Provided";
+      } else {
+        $notification = new SessionNotification($email->get_email(), $classCode, $utility, $database);
+        $sessionPost = new PostManagement($post_text, $email->get_email(), $classCode, $utility, $database);
+      }
+      $_SESSION['session'] = $session;
+    }
   }
 }
 
@@ -140,7 +185,6 @@ $allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHE
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="<?php echo $root_path; ?>css/bootstrap.css" />
   <link href="<?php echo $root_path; ?>boxicons-2.1.4/css/boxicons.min.css" rel="stylesheet" />
-  <script src="script.js"></script>
   <script src="<?php echo $root_path; ?>js/bootstrap.min.js"></script>
   <?php require 'dropdownstyle.php'; ?>
   <?php require 'dropdownscript.php'; ?>
@@ -158,122 +202,112 @@ $allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHE
           <button class="btn btn-primary btn-create dropbtn" onclick="myFunction()">Create <i class='bx bx-chevron-down'></i></button>
           <div id="myDropdown" class="dropdown-content">
             <a href="#" data-bs-toggle="modal" data-bs-target="#examplemodal1" data-bs-whatever="@fat">Create Task
-              
+
             </a>
             <a href="#" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@fat">Create Session
-              
+
             </a>
           </div>
         </div>
         <a href="ResourcesList/index.php" style="all:unset"> <button type="button" class="btn btn-primary btn-create">Resources</button></a>
-         <!-- task modal -->
-         <div class="modal fade" id="examplemodal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h1 class="modal-title fs-5" id="exampleModalLabel">Create Task</h1>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                      <div id="error" style="display:none">
-                      </div>
-                      <form action="" method="POST" name="taskForm" id="taskForm" enctype="multipart/form-data">
-                        <div class="mb-3">
-                          <label for="TaskTitle">Task Title :</label>
-                          <input type="text" class="form-control" id="TaskTitle" name="TaskTitle" placeholder="Enter Task Title" required>
-                        </div>
-                        <div class="mb-3">
-                          <label for="taskDateTime">Deadline :</label>
-                          <input type="datetime-local" id="Deadline" name="Deadline" class="form-control" onclick="
-                            var dateString=new Date();
-                            this.setAttribute('min',dateString);" required>
-                        </div>
-                        <div class="mb-3">
-                          <label for="Marks">Marks :</label>
-                          <input type="number" class="form-control" id="taskMarks" name="Marks" placeholder="Enter Marks" onclick="
+        <!-- task modal -->
+        <div class="modal fade" id="examplemodal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Create Task</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form action="" method="POST" name="taskForm" id="taskForm" enctype="multipart/form-data">
+                  <div class="mb-3">
+                    <label for="TaskTitle">Task Title :</label>
+                    <input type="text" class="form-control" id="TaskTitle" name="TaskTitle" placeholder="Enter Task Title" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="taskDateTime">Deadline :</label>
+                    <input type="datetime-local" id="Deadline" name="Deadline" class="form-control" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="Marks">Marks :</label>
+                    <input type="number" class="form-control" id="taskMarks" name="Marks" placeholder="Enter Marks" onclick="
                         var value=document.getElementById('taskMarks');
                         this.setAttribute('min',1);
                         this.setAttribute('max',4000);
                         " required>
-                        </div>
-                        <div class="mb-3">
-                          <label for="message-text" class="col-form-label">Instruction :</label>
-                          <textarea class="form-control" id="message-text" name="instruction" required></textarea>
-                        </div>
-                        <div class="input-group mb-2">
-                          <div class="custom-file">
-                            <label class="mb-2" for="taskName">Upload Question Paper :</label>
-                            <input type="file" id="taskName" name="taskName" class="custom-file-input" accept=".pdf" required />
-                          </div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <input type="submit" name="taskSubmit" value="Create Task" class="btn btn-primary btn-join">
-                    </div>
-                    </form>
                   </div>
-                </div>
-              </div>
-                <!-- session modal -->
-              <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h1 class="modal-title fs-5" id="exampleModalLabel">Create Session</h1>
-                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                      <form action='' method='POST' id='sessionForm' name='sessionForm'>
-                        <div class="mb-3">
-                          <label for="online">Online Session</label>
-                          <input type="radio" name="online" value="online" id="online" onclick="document.getElementById('sessionURL').style.display='block';document.getElementById('offline').checked=false;">
-                        </div>
-                        <div class="mb-3">
-                          <label for="offline">Offline Session</label>
-                          <input type="radio" name="offline" value="offline" id="offline" onclick="document.getElementById('sessionURL').style.display='none';document.getElementById('online').checked=false;">
-                        </div>
-                        <div class="mb-3" style="display:none" id="sessionURL">
-                          <label for="SessionLink">Session Link :</label>
-                          <input type="text" class="form-control" id="SessionLink" name="SessionLink" placeholder="Enter Session Link">
-                        </div>
-                        <div class="mb-3">
-                          <label for="startTime">Start Date and Time :</label>
-                          <input type="datetime-local" id="sessionStart" name="sessionStart" class="form-control" onclick="
-                            var dateString2=new Date();
-                            this.setAttribute('min',dateString2);" required>
-                        </div>
-                        <div class="mb-3">
-                          <label for="attendanceDeadline">Attendance Deadline :</label>
-                          <input type="datetime-local" id="attendanceDeadline" name="attendanceDeadline" class="form-control" onclick="
-                            var startDateTime1=document.getElementById('sessionStart').value;
-                            this.setAttribute('min',startDateTime1);" required>
-                        </div>
-                        <div class="mb-3">
-                          <label for="endTime">End Date and Time :</label>
-                          <input type="datetime-local" id="sessionEnd" name="sessionEnd" class="form-control" onclick="
-                            var startDateTime=document.getElementById('sessionStart').value;
-                            this.setAttribute('min',startDateTime);" required>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <input type="submit" name="sessionSubmit" value="Create Session" class="btn btn-primary btn-join">
-                    </div>
-                    </form>
+                  <div class="mb-3">
+                    <label for="message-text" class="col-form-label">Instruction :</label>
+                    <textarea class="form-control" id="message-text" name="instruction" required></textarea>
                   </div>
-                </div>
+                  <div class="input-group mb-2">
+                    <div class="custom-file">
+                      <label class="mb-2" for="taskName">Upload Question Paper :</label>
+                      <input type="file" id="taskName" name="taskName" class="custom-file-input" accept=".pdf" required />
+                    </div>
+                  </div>
               </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <input type="submit" name="taskSubmit" value="Create Task" class="btn btn-primary btn-join">
+              </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <!-- session modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Create Session</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form action='' method='POST' id='sessionForm' name='sessionForm'>
+                  <div class="mb-3">
+                    <label for="online">Online Session</label>
+                    <input type="radio" name="online" value="online" id="online" onclick="document.getElementById('sessionURL').style.display='block';document.getElementById('offline').checked=false;">
+                  </div>
+                  <div class="mb-3">
+                    <label for="offline">Offline Session</label>
+                    <input type="radio" name="offline" value="offline" id="offline" onclick="document.getElementById('sessionURL').style.display='none';document.getElementById('online').checked=false;">
+                  </div>
+                  <div class="mb-3" style="display:none" id="sessionURL">
+                    <label for="SessionLink">Session Link :</label>
+                    <input type="text" class="form-control" id="SessionLink" name="SessionLink" placeholder="Enter Session Link">
+                  </div>
+                  <div class="mb-3">
+                    <label for="startTime">Start Date and Time :</label>
+                    <input type="datetime-local" id="sessionStart" name="sessionStart" class="form-control" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="attendanceDeadline">Attendance Deadline :</label>
+                    <input type="datetime-local" id="attendanceDeadline" name="attendanceDeadline" class="form-control" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="endTime">End Date and Time :</label>
+                    <input type="datetime-local" id="sessionEnd" name="sessionEnd" class="form-control" required>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <input type="submit" name="sessionSubmit" value="Create Session" class="btn btn-primary btn-join">
+              </div>
+              </form>
+            </div>
+          </div>
+        </div>
 
         <div class="card text-bg-primary mb-3">
-        <div class="card-header task-card session" style="height:50px;">
-          <span class="h4 m-auto" style="vertical-align:middle;">Session Code  </span>
-        </div>
-        <div class="card-body task-card session-code">
-        <span class="m-auto" style="font-size:medium; color:<?php echo $sessionError === true ? 'red' : 'black' ?>"> <?php echo $session; ?></span>
-        </div>
+          <div class="card-header task-card session" style="height:50px;">
+            <span class="h4 m-auto" style="vertical-align:middle;">Session Code </span>
+          </div>
+          <div class="card-body task-card session-code">
+            <span class="m-auto" style="font-size:medium; color:<?php echo $sessionError === true ? 'red' : 'black' ?>"> <?php echo $session; ?></span>
+          </div>
 
-      </div>
+        </div>
         <div class="card text-bg-primary mb-3">
           <div class="card-body task-card" style="height:50px">
             <h4 style="text-align:center">Assigned Tasks</h4>
@@ -283,9 +317,13 @@ $allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHE
             </div>
             <div class="collapse multi-collapse" id="taskcollapse">
               <?php
+              if(!is_null($error)){
+                echo "<div class=\"card-text\" style=\"text-align:center\">$error</div>";
+              }
               if ($allTasks->num_rows == 0) {
                 echo "<div class=\"card-text\" style=\"text-align:center\">No assigned tasks.</div>";
-              } else {
+              }
+              else {
                 foreach ($allTasks as $i) {
                   echo "<div class=\"collapse multi-collapse\" id=\"taskcollapse\"><div class=\"card card-body my-2 btn\" style=\"text-align:center\"><input type='submit' style='border:none;background:none;padding:0' name='" . $i['task_id'] . "submit' value='" . $i['task_title'] . "'></div></div>";
 
@@ -447,5 +485,5 @@ $allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHE
   </div>
 
 </body>
-
+<script defer src="script.js"></script>
 </html>

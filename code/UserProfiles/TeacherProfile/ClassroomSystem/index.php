@@ -48,9 +48,10 @@ if (isset($_POST['Create'])) {
   $attendancePercentage = $validate->post_sanitise_regular_input('attendancePercentage');
   $courseCredit=$validate->post_sanitise_regular_input('courseCredit');
   $semester = $validate->post_sanitise_number('semester');
+  $lateAttendancePercentage = $validate->post_sanitise_regular_input('late_attendance_percentage');
   if ($className !== null && $courseCode !== null && $semester !== null && $attendancePercentage !== null && $courseCredit !== null) {
     $date = date('Y-m-d H:i:s');
-    $database->performQuery("INSERT INTO classroom(class_code,classroom_name,course_code,semester,course_credit,attendance) VALUES('$classCode','$className','$courseCode','$semester','$courseCredit','$attendancePercentage')");
+    $database->performQuery("INSERT INTO classroom(class_code,classroom_name,course_code,semester,course_credit,attendance,late_attendance_percentage) VALUES('$classCode','$className','$courseCode','$semester','$courseCredit','$attendancePercentage','$lateAttendancePercentage')");
     $database->performQuery("INSERT INTO teacher_classroom(email,class_code) VALUES('" . $email->get_email() . "','$classCode')");
     $database->performQuery("INSERT INTO classroom_creator(email,class_code,creation_date) VALUES('" . $email->get_email() . "','$classCode','$date')");
     $database->performQuery("INSERT INTO classroom_frequency(class_code,email) VALUES('$classCode','" . $email->get_email() . "');");
@@ -180,13 +181,19 @@ foreach ($classrooms as $dummy_classroom) {
                     ">
                       </div>
                       <div class="mb-3">
-                        <input type="number" id="attendancePercentage" name="attendancePercentage" step="0.01" class="form-control" placeholder="Enter Attendance Percentage" aria-label="Leave a comment" onclick="
-                    var value=document.getElementById('courseCredit');
+                        <input type="number" id="attendancePercentage" name="attendancePercentage" step="0.01" class="form-control" placeholder="Enter Percentage Marks for Attendance" aria-label="Leave a comment" onclick="
+                    var value=document.getElementById('attendancePercentage');
                     this.setAttribute('min',0);
                     this.setAttribute('max',100);
                     ">
                       </div>
-
+                      <div class="mb-3">
+                        <input type="number" id="late_attendance_percentage" name="late_attendance_percentage" step="0.01" class="form-control" placeholder="Enter Percentage Attendance for Late Entry" aria-label="Leave a comment" onclick="
+                    var value=document.getElementById('late_attendance_percentage');
+                    this.setAttribute('min',0);
+                    this.setAttribute('max',100);
+                    ">
+                      </div>
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

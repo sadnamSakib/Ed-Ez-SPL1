@@ -2,59 +2,37 @@ if (window.history.replaceState) {
   window.history.replaceState(null, null, window.location.href);
 }
 
+
+var now=new Date();
+document.getElementById("sessionStart").min=now.toISOString().substring(0, 16);
+document.getElementById("attendanceDeadline").min=now.toISOString().substring(0, 16);
+document.getElementById("sessionEnd").min=now.toISOString().substring(0, 16);
+document.getElementById("Deadline").min=now.toISOString().substring(0, 16);
+
 // Close the dropdown if the user clicks outside of it
-window.addEventListener('dblclick',function(event) {
+window.addEventListener('dblclick', function (event) {
   if (!event.target.matches('.dropbtn')) {
     close_dropdown();
   }
 });
 
-function close_dropdown(){
+function close_dropdown() {
   var dropdowns = document.getElementsByClassName("dropdown-content");
-    var i;
-    for (i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
-      if (openDropdown.classList.contains('show')) {
-        openDropdown.classList.remove('show');
-      }
+  var i;
+  for (i = 0; i < dropdowns.length; i++) {
+    var openDropdown = dropdowns[i];
+    if (openDropdown.classList.contains('show')) {
+      openDropdown.classList.remove('show');
     }
+  }
 }
-
-const quizForm=document.getElementById('quizForm');
-const assignmentForm=document.getElementById('assignmentForm');
-
-quizForm.addEventListener('submit',(e) =>{
-  let messages=[];
-  const startTime=document.getElementById('quizStart');
-  const endTime=document.getElementById('quizEnd');
-  const marks=document.getElementById('quizMarks');
-  const quizName=document.getElementById('quizName');
-  if(startTime.value===null){
-    messages.push('Start Time must be entered for quiz');
-  }
-  if(endTime.value===null){
-    messages.push('end Time must be entered for quiz');
-  }
-  if(marks.value===null){
-    messages.push('Marks must be entered for quiz');
-  }
-  if(quizName.value===null){
-    messages.push('quiz must have a question');
-  }
-  if(messages.length>0){
-    e.preventDefault();
-    error.document.display='block';
-    const error=document.getElementById('error');
-    error.innerText=messages.join(', ');
-  }
-})
 //Function
 function myFunction() {
   document.getElementById("myDropdown").classList.toggle("show");
 }
 
 // Close the dropdown menu if the user clicks outside of it
-window.onclick = function(event) {
+window.onclick = function (event) {
   if (!event.target.matches('.dropbtn')) {
     var dropdowns = document.getElementsByClassName("dropdown-content");
     var i;

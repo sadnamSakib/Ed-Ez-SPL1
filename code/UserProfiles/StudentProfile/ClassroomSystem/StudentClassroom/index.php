@@ -51,8 +51,36 @@ try {
     if ($row->num_rows > 0) {
       $errorAttendance = "Attendance Already Given";
     } else {
-      $database->performQuery("INSERT INTO student_classroom_session VALUES('" . $email->get_email() . "','$sessionCode')");
-      $notification = new AttendanceNotification($email->get_email(), $classCode, $utility, $database, 1);
+      $database->fetch_results($sysdate, "SELECT SYSDATE() AS DATE");
+      $current_datetime = new DateTime($sysdate['DATE']);
+      $current_datetime=$current_datetime->format('Y-m-d H:i');
+     $database->fetch_results($session_information,"SELECT * FROM classroom_session WHERE session='$sessionCode'");
+      $database->fetch_results($event_details, "SELECT * FROM event WHERE event_id='" . $session_information['event_id'] . "'");
+      $startTime=$event_details['event_start_datetime'];
+      $endTime = $event_details['event_end_datetime'];
+      $startTime = new DateTime($startTime);
+      $startTime=$startTime->format('Y-m-d H:i');
+      $endTime = new DateTime($endTime);
+      $endTime=$endTime->format('Y-m-d H:i');
+      $deadline=$session_information['deadline'];
+      $deadline = new DateTime($deadline);
+      $deadline=$deadline->format('Y-m-d H:i');
+      if(strtotime($current_datetime)>=strtotime($startTime) && strtotime($current_datetime)<strtotime($deadline)){
+        $database->performQuery("INSERT INTO student_classroom_session VALUES('" . $email->get_email() . "','$sessionCode','present')");
+        $notification = new AttendanceNotification($email->get_email(), $classCode, $utility, $database, 1);
+        $errorAttendance = "Attendance given successfully as present";
+      }
+      else if(strtotime($current_datetime)>=strtotime($startTime) && strtotime($current_datetime)<strtotime($endTime)){
+        $database->performQuery("INSERT INTO student_classroom_session VALUES('" . $email->get_email() . "','$sessionCode','late')");
+        $notification = new AttendanceNotification($email->get_email(), $classCode, $utility, $database, 0);
+        $errorAttendance = "Attendance given successfully as late";
+      }
+      else if(strtotime($current_datetime)<strtotime($startTime)){
+        $errorAttendance = "Session has not yet started";
+      }
+      else{
+        $errorAttendance = "Session is over";
+      }
     }
   }
 
