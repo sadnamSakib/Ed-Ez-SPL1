@@ -384,7 +384,7 @@ $allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHE
                   echo "<i onclick=\"" . $post_ID . "dropdownbtn()\" class=\"dropbtn bx bx-dots-horizontal-rounded\"></i>";
                 }
                 ?>
-                <div id="<?php echo $post_ID; ?>myDropdown" class="dropdown-content dropdown-menu">
+                <div id="<?php echo $post_ID; ?>myDropdown" class="dropdown-menu">
                   <form id="<?php echo $post_ID; ?>deletePost" action="" method="POST">
                     <button type="button" class="btn btn-light dropdown-item d-flex" onclick='<?php echo $post_ID; ?>displayModal()' id='<?php echo $post_ID; ?>deletebtn'>Delete</button>
                     <div id="<?php echo $post_ID; ?>myModal" class="modal">
@@ -438,7 +438,7 @@ $allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHE
                         echo "<i onclick=\"" . $comment_id . "dropdownbtn()\" class=\"dropbtn bx bx-dots-horizontal-rounded\"></i>";
                       }
                       ?>
-                      <div id="<?php echo $comment_id; ?>myDropdown" class="dropdown-content dropdown-menu">
+                      <div id="<?php echo $comment_id; ?>myDropdown" class="dropdown-menu">
                         <form id="<?php echo $comment_id; ?>deleteComment" action="" method="POST">
                           <button type="button" class="btn btn-light dropdown-item d-flex" onclick='<?php echo $comment_id; ?>displayModal()' id='<?php echo $comment_id; ?>deletebtn'>Delete</button>
                           <div id="<?php echo $comment_id; ?>myModal" class="modal">
