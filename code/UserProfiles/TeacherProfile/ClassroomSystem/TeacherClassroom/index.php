@@ -427,7 +427,7 @@ $allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHE
               $database->fetch_results($user_comment, "SELECT * FROM users WHERE email='$users_email'");
             ?>
               <div class="card p-1">
-                <div class="card-header">
+                <div class="card-header" style="background-color:#4596be; color:white;">
                   Commented by <?php echo $user_comment['name']; ?>
                   at <?php echo date("d/m/Y h:i:s a", strtotime($j['comment_datetime'])); ?>
                 </div>
