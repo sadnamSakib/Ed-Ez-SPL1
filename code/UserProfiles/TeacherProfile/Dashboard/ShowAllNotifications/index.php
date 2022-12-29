@@ -25,7 +25,7 @@ foreach ($notifications as $notification) {
     }
 
 }
-$notifications = $database->performQuery("SELECT * FROM notifications,classroom,teacher_classroom,notification_user WHERE notifications.notification_id=notification_user.notification_id AND notification_user.email='" . $email->get_email() . "'  AND notifications.class_code=classroom.class_code AND classroom.class_code=teacher_classroom.class_code AND teacher_classroom.email='" . $email->get_email() . "' AND notifications.notification_type!='submit' order by notification_datetime desc");
+$notifications = $database->performQuery("SELECT * FROM notifications,classroom,teacher_classroom,notification_user WHERE notifications.notification_id=notification_user.notification_id AND notification_user.email='" . $email->get_email() . "'  AND notifications.class_code=classroom.class_code AND classroom.class_code=teacher_classroom.class_code AND teacher_classroom.email='" . $email->get_email() . "' order by notification_datetime desc");
 ?>
 <!DOCTYPE html>
 <html lang="en">
