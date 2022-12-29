@@ -75,21 +75,21 @@ $upvote = $database->performQuery("SELECT * FROM resource_upvote WHERE resource_
 $downvote = $database->performQuery("SELECT * FROM resource_downvote WHERE resource_id='$resource_id' AND  email='" . $email->get_email() . "'");
 $saved=$database->performQuery("SELECT * FROM resource_saved WHERE resource_id='$resource_id' AND  email='".$email->get_email()."'");
 if($saved->num_rows > 0){
-  $saved_color = 'blue';
+  $saved_color = 'black';
 }
 else{
   $saved_color = 'white';
 }
 
 if($upvote->num_rows > 0){
-  $upvote_color = 'blue';
+  $upvote_color = 'black';
 }
 else{
   $upvote_color = 'white';
 }
 
 if($downvote->num_rows > 0){
-  $downvote_color = 'blue';
+  $downvote_color = 'black';
 }
 else{
   $downvote_color = 'white';
@@ -174,7 +174,7 @@ $database->fetch_results($resource_downvote, "SELECT count(*) AS downvote FROM r
                 <label for="downvote"><?php echo is_null($resource_downvote['downvote']) ? 0 : $resource_downvote['downvote'] ?></label>
               </div>
               <div>
-                <button type="submit" id="save" name="save" class='bx btn bx-sm bxs-save' style="color:<?php echo $saved_color; ?>"></button>
+                <button type="submit" id="save" name="save" class='bx btn bx-sm bxs-bookmark-plus' style="color:<?php echo $saved_color; ?>"></button>
               </div>
             </div>
           </form>
