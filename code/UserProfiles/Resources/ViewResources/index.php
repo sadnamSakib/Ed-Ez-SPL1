@@ -60,6 +60,11 @@ if(isset($_POST['save'])){
   }
 }
 
+if(isset($_POST['delete'])){
+  $database->performQuery("DELETE FROM resources WHERE resource_id='$resource_id'");
+  header("Location: ../index.php");
+}
+
 $_SESSION['resource_id'] = $resource_id;
 
 
@@ -96,21 +101,32 @@ $database->fetch_results($resource_downvote, "SELECT count(*) AS downvote FROM r
         <div class="card intro-card w-75 text-bg-secondary m-auto mb-3">
           <div class="card-header d-flex justify-content-between">
             <h5 class="card-title" style="text-align:left">Shared By <?php echo $user['name'] ?> <?php echo $resource['post_date_time'] ?></h5>
+            <?php
+                    $userResource=$database->performQuery("SELECT * FROM resource_uploaded WHERE resource_uploaded.resource_id='$resource_id' AND resource_uploaded.email='" . $email->get_email() . "'");
+                    if($userResource->num_rows>0){
+                      ?>
             <button type="button" class="btn btn-primary btn-delete" data-bs-toggle="modal" data-bs-target="#exampleModal">Delete Resource</button>
+            <?php
+                    }
+                    ?>
             <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                   <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Resource</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    
+                      <h1 class="modal-title fs-5" id="exampleModalLabel">Delete Resource</h1>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
+                  <form action="" method="POST">
                   <div class="modal-body">
                   Are you sure you want to delete this resource?
                   </div>
                   <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Delete</button>
+                    
+                    <button type="submit" class="btn btn-primary" name="delete">Delete</button>
                   </div>
+                  </form>
                 </div>
               </div>
             </div>
