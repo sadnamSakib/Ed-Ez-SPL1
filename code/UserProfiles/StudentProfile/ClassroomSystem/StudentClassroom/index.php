@@ -140,8 +140,6 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <link href="<?php echo $root_path; ?>boxicons-2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <script defer src="script.js"></script>
-  <?php require 'dropdownscript.php'; ?>
-  <?php require 'dropdownstyle.php'; ?>
 </head>
 
 <body>
@@ -428,5 +426,6 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
 
 
 </body>
-
+<?php require 'dropdownscript.php'; ?>
+<?php require 'dropdownstyle.php'; ?>
 </html>
