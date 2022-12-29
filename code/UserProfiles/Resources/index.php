@@ -29,7 +29,7 @@ if (isset($_POST['uploadSubmit'])) {
   $classCode=$validate->post_sanitise_text('classroom');
   $public = $_REQUEST['publicResource'];
   $private = $_REQUEST['privateResource'];
-  if ($public === 'public') {
+  if ($public === "public") {
     $visibility = 'public';
   } else {
     $visibility = 'private';
