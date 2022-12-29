@@ -56,12 +56,15 @@ foreach ($classrooms as $classroom) {
         }
         array_push($user_marks, $totalMarks + $attendancePercentage);
         $csvHandler->write($user_marks);
-        $csvHandler->download();
       }
     } catch (Exception $e) {
       echo $e->getMessage();
     }
+    $csvHandler->download();
   }
+}
+
+foreach($classrooms as $classroom){
   if (isset($_POST['attendance' . $classroom['class_code']])) {
     $csvHandler = new CSVHandler('attendance' . $classroom['class_code'],"TeacherAttendance");
     $classCode = $classroom['class_code'];
@@ -83,10 +86,10 @@ foreach ($classrooms as $classroom) {
         }
         $csvHandler->write($attendances);
       }
-      $csvHandler->download();
     } catch (Exception $e) {
       echo $e->getMessage();
     }
+    $csvHandler->download();
 
   }
 }
