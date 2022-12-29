@@ -170,7 +170,7 @@ foreach ($posts as $i) {
 }
 $allPost = $database->performQuery("SELECT * FROM post WHERE active='1';");
 $allComments = $database->performQuery("SELECT * FROM comments,comment_post WHERE comments.comment_id=comment_post.comment_id AND comments.active='1'");
-$allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHERE task.event_id=event.event_id AND task.task_id=task_classroom.task_id AND task_classroom.class_code='$classCode' order by event.event_end_datetime ASC");
+$allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHERE task.event_id=event.event_id AND task.task_id=task_classroom.task_id AND task_classroom.class_code='$classCode' AND task.active='1' order by event.event_end_datetime ASC");
 ?>
 
 <!DOCTYPE html>

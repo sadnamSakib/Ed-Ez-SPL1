@@ -94,7 +94,7 @@ try {
     }
   }
   $submission_error = null;
-  $allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHERE task.event_id=event.event_id AND task.task_id=task_classroom.task_id AND task_classroom.class_code='$classCode' order by event.event_end_datetime ASC");
+  $allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHERE task.event_id=event.event_id AND task.task_id=task_classroom.task_id AND task_classroom.class_code='$classCode' AND task.active='1' order by event.event_end_datetime ASC");
   foreach ($allTasks as $i) {
     if (isset($_POST[$i['task_id'] . 'submit'])) {
       if (isset($_FILES[$i['task_id'] . 'ans']['name'])) {
@@ -191,8 +191,8 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
           <div class="card-body ">
 
             <?php
-            $database->fetch_results($record, "SELECT nvl(count(*),0)CountTask FROM task,task_classroom,event WHERE task.event_id=event.event_id AND task.task_id=task_classroom.task_id AND task_classroom.class_code='$classCode' order by event.event_end_datetime ASC");
-            $database->fetch_results($value, "SELECT nvl(count(*),0)SubmissionCount FROM (SELECT distinct student_task_submission.email,student_task_submission.task_id FROM task,student_task_submission,task_classroom WHERE task.task_id=task_classroom.task_id AND task_classroom.class_code='$classCode' AND task.task_id=student_task_submission.task_id AND email='" . $email->get_email() . "') AS nested;");
+            $database->fetch_results($record, "SELECT nvl(count(*),0)CountTask FROM task,task_classroom,event WHERE task.event_id=event.event_id AND task.task_id=task_classroom.task_id AND task_classroom.class_code='$classCode' AND task.active='1'  order by event.event_end_datetime ASC");
+            $database->fetch_results($value, "SELECT nvl(count(*),0)SubmissionCount FROM (SELECT distinct student_task_submission.email,student_task_submission.task_id FROM task,student_task_submission,task_classroom WHERE task.task_id=task_classroom.task_id AND task_classroom.class_code='$classCode' AND task.task_id=student_task_submission.task_id AND task.active='1' AND email='" . $email->get_email() . "') AS nested;");
             ?>
             <p class="card-text" style="text-align:center"><?php echo $record['CountTask'] - $value['SubmissionCount'] != 0 ? $record['CountTask'] - $value['SubmissionCount'] . " Tasks Pending" : "No Tasks Pending" ?></p>
           </div>

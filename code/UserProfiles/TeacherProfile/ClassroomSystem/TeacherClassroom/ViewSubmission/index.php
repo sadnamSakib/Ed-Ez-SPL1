@@ -26,6 +26,15 @@ if($searchTaskResult==null){
 else{
   $_SESSION['searchTask']=$searchTaskResult;
 }
+if(isset($_POST['delete'])){
+  $result = '';
+  $database->fetch_results($result, "SELECT * FROM task WHERE task_id='$searchTaskResult'");
+  $event_id=$result['event_id'];
+  $database->performQuery("UPDATE task SET task.active='0' WHERE task_id='$searchTaskResult'");
+  echo $event_id;
+  $database->performQuery("DELETE FROM event WHERE event_id='$event_id'");
+  header("Location: ../index.php");
+}
 
 $allTaskSubmissions=$database->performQuery("SELECT student_task_submission.submission_status as submission_status, users.name as name,task.marks as marks,student_task_submission.marks_obtained as marks_obtained,users.email as email,student_task_submission.file_id as file_id,student_task_submission.task_id as task_id from student_task_submission,users,task WHERE task.task_id=student_task_submission.task_id AND student_task_submission.task_id='$searchTaskResult' AND users.email=student_task_submission.email");
 foreach($allTaskSubmissions as $i){
@@ -81,8 +90,10 @@ $allTaskSubmissions=$database->performQuery("SELECT student_task_submission.subm
                   Are you sure you want to delete this task?
                   </div>
                   <div class="modal-footer">
+                    <form action="" method="POST">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Delete</button>
+                    <button type="submit" class="btn btn-primary" name="delete">Delete</button>
+                    </form>
                   </div>
                 </div>
               </div>

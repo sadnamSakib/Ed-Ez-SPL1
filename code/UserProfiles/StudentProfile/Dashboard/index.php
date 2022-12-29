@@ -21,18 +21,20 @@ $classrooms = $database->performQuery("SELECT * FROM classroom,student_classroom
 foreach ($classrooms as $i) {
   $total_credit += (is_null($i['course_credit']) ? 0 : $i['course_credit']);
   $classCode = $i['class_code'];
+  $attendancePercentage =  $i['attendance'];
+  $unattendedMarks = 100 - $attendancePercentage;
   $database->fetch_results($attendance, "SELECT nvl(count(*),0)StudentAttendance FROM classroom_session,student_classroom_session WHERE classroom_session.session=student_classroom_session.session AND classroom_session.class_code='$classCode' AND student_classroom_session.email='" . $email->get_email() . "'");
   $database->fetch_results($totalAttendance, "SELECT nvl(count(*),0)TotalSessions FROM classroom_session WHERE classroom_session.class_code='$classCode'");
-  $database->fetch_results($taskInfo, "SELECT (sum(nvl(marks_obtained,0))/sum(nvl(marks,1)))*90 AS percentage FROM task,task_classroom,student_task_submission WHERE task.task_id=task_classroom.task_id AND task_classroom.class_code='" . $classCode . "' AND student_task_submission.task_id=task.task_id AND task.active='1'");
+  $database->fetch_results($taskInfo, "SELECT (sum(nvl(marks_obtained,0))/sum(nvl(marks,1)))*$unattendedMarks AS percentage FROM task,task_classroom,student_task_submission WHERE task.task_id=task_classroom.task_id AND task_classroom.class_code='" . $classCode . "' AND student_task_submission.task_id=task.task_id AND task.active='1'");
   if (is_null($taskInfo)) {
     $percentage = 0;
   } else {
     $percentage = $taskInfo['percentage'];
   }
   if ($totalAttendance['TotalSessions'] == 0) {
-    $percentage = $taskInfo['percentage'] + 10;
+    $percentage = $taskInfo['percentage'] + $i['attendance'];
   } else {
-    $percentage = $taskInfo['percentage'] + ($attendance['StudentAttendance'] * 10) / $totalAttendance['TotalSessions'];
+    $percentage = $taskInfo['percentage'] + ($attendance['StudentAttendance'] * $i['attendance']) / $totalAttendance['TotalSessions'];
   }
   $total += (($percentage * $i['course_credit']) / 100);
 }
