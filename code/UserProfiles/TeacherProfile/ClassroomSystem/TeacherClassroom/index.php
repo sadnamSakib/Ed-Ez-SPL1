@@ -186,8 +186,6 @@ $allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHE
   <link rel="stylesheet" href="<?php echo $root_path; ?>css/bootstrap.css" />
   <link href="<?php echo $root_path; ?>boxicons-2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <script src="<?php echo $root_path; ?>js/bootstrap.min.js"></script>
-  <?php require 'dropdownstyle.php'; ?>
-  <?php require 'dropdownscript.php'; ?>
 </head>
 
 <body>
@@ -486,4 +484,6 @@ $allTasks = $database->performQuery("SELECT * FROM task,task_classroom,event WHE
 
 </body>
 <script defer src="script.js"></script>
+<?php require 'dropdownstyle.php'; ?>
+  <?php require 'dropdownscript.php'; ?>
 </html>

@@ -1,4 +1,24 @@
 <?php
+foreach ($allComments as $i) {
+    $comment_selector = $i['comment_id'];
+?>
+    <script>
+        function <?php echo $comment_selector; ?>dropdownbtn() {
+            document.getElementById("<?php echo $comment_selector; ?>myDropdown").classList.toggle("show");
+        }
+        function <?php echo $comment_selector; ?>closeModal() {
+                document.getElementById('<?php echo $comment_selector; ?>myModal').style.display = 'none';
+                document.getElementById("<?php echo $comment_selector; ?>myDropdown").classList.toggle("show");
+              }
+          
+              function <?php echo $comment_selector; ?>displayModal() {
+                document.getElementById('<?php echo $comment_selector; ?>myModal').style.display = 'block';
+              }
+    </script>
+<?php
+}
+?>
+<?php
 foreach ($allPost as $i) {
     $post_selector = $i['post_id'];
 ?>
@@ -19,23 +39,3 @@ foreach ($allPost as $i) {
 }
 ?>
 
-<?php
-foreach ($allComments as $i) {
-    $comment_selector = $i['comment_id'];
-?>
-    <script>
-        function <?php echo $comment_selector; ?>dropdownbtn() {
-            document.getElementById("<?php echo $comment_selector; ?>myDropdown").classList.toggle("show");
-        }
-        function <?php echo $comment_selector; ?>closeModal() {
-                document.getElementById('<?php echo $comment_selector; ?>myModal').style.display = 'none';
-                document.getElementById("<?php echo $comment_selector; ?>myDropdown").classList.toggle("show");
-              }
-          
-              function <?php echo $comment_selector; ?>displayModal() {
-                document.getElementById('<?php echo $comment_selector; ?>myModal').style.display = 'block';
-              }
-    </script>
-<?php
-}
-?>

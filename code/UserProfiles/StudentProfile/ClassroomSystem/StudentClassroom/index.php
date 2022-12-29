@@ -396,6 +396,7 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
                                 </div>
                               </div>
                             </form>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -426,6 +427,7 @@ $allComments = $database->performQuery("SELECT * FROM comments WHERE active='1'"
 
 
 </body>
+<script defer src="script.js"></script>
 <?php require 'dropdownscript.php'; ?>
 <?php require 'dropdownstyle.php'; ?>
 </html>
