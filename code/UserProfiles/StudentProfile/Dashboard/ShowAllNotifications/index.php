@@ -51,7 +51,7 @@ $notifications = $database->performQuery("SELECT * FROM notifications,classroom,
         <section class="content-section m-auto px-5 py-3">
             <div class="card intro-card w-75 text-bg-secondary m-auto mb-3">
                 <div class="card-header">
-                    <h5 class="card-title" style="text-align:center">All Notifications</h5>
+                    <h5 class="card-title" style="text-align:center; font-size: 30px;"><i class='bx bx-md bxs-bell mt-2'></i>All Notifications</h5>
                 </div>
                 <div class="card-body text-success">
                     <form action="" method="POST">
