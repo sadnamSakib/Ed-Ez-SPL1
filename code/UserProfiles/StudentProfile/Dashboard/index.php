@@ -16,40 +16,30 @@ $error = null;
 $errorColor = "red";
 
 $classCode = $_SESSION['class_code'];
+$classrooms = $database->performQuery("SELECT * FROM classroom,student_classroom where classroom.class_code=student_classroom.class_code and student_classroom.email='" . $email->get_email() . "' and active='1';");
+  foreach ($classrooms as $i) {
+    $total_credit += (is_null($i['course_credit']) ? 0 : $i['course_credit']);
+    $classCode = $i['class_code'];
+    $database->fetch_results($attendance, "SELECT nvl(count(*),0)StudentAttendance FROM classroom_session,student_classroom_session WHERE classroom_session.session=student_classroom_session.session AND classroom_session.class_code='$classCode' AND student_classroom_session.email='" . $email->get_email() . "'");
+    $database->fetch_results($totalAttendance, "SELECT nvl(count(*),0)TotalSessions FROM classroom_session WHERE classroom_session.class_code='$classCode'");
+    $totalMarksWithoutAttendance=100-$i['attendance'];
+    $database->fetch_results($lateAttendance,"SELECT nvl(count(*),0) AS LateAttendance FROM classroom_session,student_classroom_session WHERE classroom_session.session=student_classroom_session.session AND classroom_session.class_code='$classCode' AND student_classroom_session.email='" . $email->get_email() . "' AND student_classroom_session.status='late'");
+    $database->fetch_results($taskInfo, "SELECT (sum(nvl(marks_obtained,0))/sum(nvl(marks,1)))*$totalMarksWithoutAttendance AS percentage FROM task,task_classroom,student_task_submission WHERE task.task_id=task_classroom.task_id AND task_classroom.class_code='" . $classCode . "' AND student_task_submission.task_id=task.task_id AND student_task_submission.email='".$email->get_email()."' AND task.active='1'");
+    $database->fetch_results($classroomInformation, "SELECT * FROM classroom WHERE class_code='$classCode'");
+    $attendancePresent = $attendance['StudentAttendance'] - $lateAttendance['LateAttendance'] + ($classroomInformation['late_attendance_percentage']*$lateAttendance['LateAttendance'])/100;
+    if (is_null($taskInfo)) {
+      $percentage = 0;
+    } else {
+      $percentage = $taskInfo['percentage'];
+    }
+    if ($totalAttendance['TotalSessions'] == 0) {
+      $percentage = $taskInfo['percentage'] + $i['attendance'];
+    } else {
+      $percentage = $taskInfo['percentage'] + ($attendancePresent* $i['attendance']) / $totalAttendance['TotalSessions'];
+    }
+    $total += (($percentage * $i['course_credit']) / 100);
+  }
 $classrooms = $database->performQuery("SELECT * FROM classroom,student_classroom,classroom_frequency where classroom_frequency.class_code=classroom.class_code AND classroom_frequency.email='" . $email->get_email() . "' AND classroom.class_code=student_classroom.class_code and student_classroom.email='" . $email->get_email() . "' AND active='1' ORDER BY classroom_frequency.frequency desc;");
-
-foreach ($classrooms as $i) {
-  $total_credit += (is_null($i['course_credit']) ? 0 : $i['course_credit']);
-  $classCode = $i['class_code'];
-  $attendancePercentage =  $i['attendance'];
-  $unattendedMarks = 100 - $attendancePercentage;
-  $database->fetch_results($attendance, "SELECT nvl(count(*),0)StudentAttendance FROM classroom_session,student_classroom_session WHERE classroom_session.session=student_classroom_session.session AND classroom_session.class_code='$classCode' AND student_classroom_session.email='" . $email->get_email() . "'");
-  $database->fetch_results($totalAttendance, "SELECT nvl(count(*),0)TotalSessions FROM classroom_session WHERE classroom_session.class_code='$classCode'");
-  $database->fetch_results($taskInfo, "SELECT (sum(nvl(marks_obtained,0))/sum(nvl(marks,1)))*$unattendedMarks AS percentage FROM task,task_classroom,student_task_submission WHERE task.task_id=task_classroom.task_id AND task_classroom.class_code='" . $classCode . "' AND student_task_submission.task_id=task.task_id AND task.active='1'");
-  if (is_null($taskInfo)) {
-    $percentage = 0;
-  } else {
-    $percentage = $taskInfo['percentage'];
-  }
-  if ($totalAttendance['TotalSessions'] == 0) {
-    $percentage = $taskInfo['percentage'] + $i['attendance'];
-  } else {
-    $percentage = $taskInfo['percentage'] + ($attendance['StudentAttendance'] * $i['attendance']) / $totalAttendance['TotalSessions'];
-  }
-  $total += (($percentage * $i['course_credit']) / 100);
-}
-try{
-  $result = ($total * 100) / $total_credit;
-}
-catch(DivisionByZeroError $e){
-  
-}
-finally{
-  $result=0;
-}
-
-
-
 $database->fetch_results($row, "SELECT * FROM users INNER JOIN student ON users.email=student.email WHERE users.email = '" . $email->get_email() . "'");
 
 $var = $row['profile_picture'];
@@ -81,11 +71,11 @@ foreach ($notifications as $notification) {
   if (isset($_POST['clear' . $notification['notification_id']])) {
     $database->performQuery("DELETE FROM notification_user WHERE notification_user.email='" . $email->get_email() . "' AND notification_id='" . $notification['notification_id'] . "'");
   }
-  foreach ($classrooms as $dummy_classroom) {
-    if (isset($_POST[$dummy_classroom['class_code']])) {
-      $_SESSION['class_code'] = $dummy_classroom['class_code'];
-      header('Location: ../ClassroomSystem/StudentClassroom/index.php');
-    }
+}
+foreach ($classrooms as $dummy_classroom) {
+  if (isset($_POST[$dummy_classroom['class_code']])) {
+    $_SESSION['class_code'] = $dummy_classroom['class_code'];
+    header('Location: ../ClassroomSystem/StudentClassroom/index.php');
   }
 }
 $notifications = $database->performQuery("SELECT * FROM notifications,classroom,student_classroom,notification_user WHERE notifications.notification_id=notification_user.notification_id AND notification_user.email='" . $email->get_email() . "'  AND notifications.class_code=classroom.class_code AND classroom.class_code=student_classroom.class_code AND student_classroom.email='" . $email->get_email() . "' AND notifications.notification_type!='submit' order by notification_datetime desc LIMIT 3");
@@ -344,15 +334,12 @@ $notifications = $database->performQuery("SELECT * FROM notifications,classroom,
 </body>
 <script>
   <?php
-  try{
-    $result = ($total * 100) / $total_credit;
-  }
-  catch(DivisionByZeroError $e){
-
-  }
-  finally{
-    $result=0;
-  }
+try{
+  $result = ($total * 100) / $total_credit;
+}
+catch(DivisionByZeroError $e){
+    $result = 0;
+}
   
   ?>
   var myChartCircle = new Chart('chartProgress', {

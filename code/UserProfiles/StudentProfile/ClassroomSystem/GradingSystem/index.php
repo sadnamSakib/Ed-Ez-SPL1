@@ -22,7 +22,10 @@ if (isset($_POST['DownloadCSV'])) {
     $database->fetch_results($attendance, "SELECT nvl(count(*),0)StudentAttendance FROM classroom_session,student_classroom_session WHERE classroom_session.session=student_classroom_session.session AND classroom_session.class_code='$classCode' AND student_classroom_session.email='" . $email->get_email() . "'");
     $database->fetch_results($totalAttendance, "SELECT nvl(count(*),0)TotalSessions FROM classroom_session WHERE classroom_session.class_code='$classCode'");
     $totalMarksWithoutAttendance=100-$i['attendance'];
+    $database->fetch_results($lateAttendance,"SELECT nvl(count(*),0) AS LateAttendance FROM classroom_session,student_classroom_session WHERE classroom_session.session=student_classroom_session.session AND classroom_session.class_code='$classCode' AND student_classroom_session.email='" . $email->get_email() . "' AND student_classroom_session.status='late'");
     $database->fetch_results($taskInfo, "SELECT (sum(nvl(marks_obtained,0))/sum(nvl(marks,1)))*$totalMarksWithoutAttendance AS percentage FROM task,task_classroom,student_task_submission WHERE task.task_id=task_classroom.task_id AND task_classroom.class_code='" . $classCode . "' AND student_task_submission.task_id=task.task_id AND student_task_submission.email='".$email->get_email()."' AND task.active='1'");
+    $database->fetch_results($classroomInformation, "SELECT * FROM classroom WHERE class_code='$classCode'");
+    $attendancePresent = $attendance['StudentAttendance'] - $lateAttendance['LateAttendance'] + ($classroomInformation['late_attendance_percentage']*$lateAttendance['LateAttendance'])/100;
     if (is_null($taskInfo)) {
       $percentage = 0;
     } else {
@@ -31,7 +34,7 @@ if (isset($_POST['DownloadCSV'])) {
     if ($totalAttendance['TotalSessions'] == 0) {
       $percentage = $taskInfo['percentage'] + $i['attendance'];
     } else {
-      $percentage = $taskInfo['percentage'] + ($attendance['StudentAttendance'] * $i['attendance']) / $totalAttendance['TotalSessions'];
+      $percentage = $taskInfo['percentage'] + ($attendancePresent* $i['attendance']) / $totalAttendance['TotalSessions'];
     }
     $total += (($percentage * $i['course_credit']) / 100);
     $csvHandler->write($i['classroom_name'],$percentage);
@@ -79,21 +82,25 @@ if (isset($_POST['DownloadCSV'])) {
         $total_credit = 0;
         foreach ($classrooms as $i) {
           $total_credit += (is_null($i['course_credit']) ? 0 : $i['course_credit']);
-          $classCode = $i['class_code'];
-          $database->fetch_results($attendance, "SELECT nvl(count(*),0)StudentAttendance FROM classroom_session,student_classroom_session WHERE classroom_session.session=student_classroom_session.session AND classroom_session.class_code='$classCode' AND student_classroom_session.email='" . $email->get_email() . "'");
-          $database->fetch_results($totalAttendance, "SELECT nvl(count(*),0)TotalSessions FROM classroom_session WHERE classroom_session.class_code='$classCode'");
-          $database->fetch_results($taskInfo, "SELECT (sum(nvl(marks_obtained,0))/sum(nvl(marks,1)))*90 AS percentage FROM task,task_classroom,student_task_submission WHERE task.task_id=task_classroom.task_id AND task_classroom.class_code='" . $classCode . "' AND student_task_submission.task_id=task.task_id AND task.active='1'");
-          if (is_null($taskInfo)) {
-            $percentage = 0;
-          } else {
-            $percentage = $taskInfo['percentage'];
-          }
-          if ($totalAttendance['TotalSessions'] == 0) {
-            $percentage = $taskInfo['percentage'] + 10;
-          } else {
-            $percentage = $taskInfo['percentage'] + ($attendance['StudentAttendance'] * 10) / $totalAttendance['TotalSessions'];
-          }
-          $total += (($percentage * $i['course_credit']) / 100);
+    $classCode = $i['class_code'];
+    $database->fetch_results($attendance, "SELECT nvl(count(*),0)StudentAttendance FROM classroom_session,student_classroom_session WHERE classroom_session.session=student_classroom_session.session AND classroom_session.class_code='$classCode' AND student_classroom_session.email='" . $email->get_email() . "'");
+    $database->fetch_results($totalAttendance, "SELECT nvl(count(*),0)TotalSessions FROM classroom_session WHERE classroom_session.class_code='$classCode'");
+    $totalMarksWithoutAttendance=100-$i['attendance'];
+    $database->fetch_results($lateAttendance,"SELECT nvl(count(*),0) AS LateAttendance FROM classroom_session,student_classroom_session WHERE classroom_session.session=student_classroom_session.session AND classroom_session.class_code='$classCode' AND student_classroom_session.email='" . $email->get_email() . "' AND student_classroom_session.status='late'");
+    $database->fetch_results($taskInfo, "SELECT (sum(nvl(marks_obtained,0))/sum(nvl(marks,1)))*$totalMarksWithoutAttendance AS percentage FROM task,task_classroom,student_task_submission WHERE task.task_id=task_classroom.task_id AND task_classroom.class_code='" . $classCode . "' AND student_task_submission.task_id=task.task_id AND student_task_submission.email='".$email->get_email()."' AND task.active='1'");
+    $database->fetch_results($classroomInformation, "SELECT * FROM classroom WHERE class_code='$classCode'");
+    $attendancePresent = $attendance['StudentAttendance'] - $lateAttendance['LateAttendance'] + ($classroomInformation['late_attendance_percentage']*$lateAttendance['LateAttendance'])/100;
+    if (is_null($taskInfo)) {
+      $percentage = 0;
+    } else {
+      $percentage = $taskInfo['percentage'];
+    }
+    if ($totalAttendance['TotalSessions'] == 0) {
+      $percentage = $taskInfo['percentage'] + $i['attendance'];
+    } else {
+      $percentage = $taskInfo['percentage'] + ($attendancePresent* $i['attendance']) / $totalAttendance['TotalSessions'];
+    }
+    $total += (($percentage * $i['course_credit']) / 100);
         ?>
           <label><?php echo  $i['classroom_name']; ?></label>
           <div class="progress my-2">

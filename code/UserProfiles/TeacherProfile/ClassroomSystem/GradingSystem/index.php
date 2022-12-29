@@ -40,10 +40,12 @@ foreach ($classrooms as $classroom) {
         }
         $database->fetch_results($attendance, "SELECT nvl(count(*),0)StudentAttendance FROM classroom_session,student_classroom_session WHERE classroom_session.session=student_classroom_session.session AND classroom_session.class_code='$classCode' AND student_classroom_session.email='" . $user['email'] . "'");
         $database->fetch_results($totalAttendance, "SELECT nvl(count(*),0)TotalSessions FROM classroom_session WHERE classroom_session.class_code='$classCode'");
+        $database->fetch_results($lateAttendance,"SELECT nvl(count(*),0) AS LateAttendance FROM classroom_session,student_classroom_session WHERE classroom_session.session=student_classroom_session.session AND classroom_session.class_code='$classCode' AND student_classroom_session.email='" . $user['email'] . "' AND student_classroom_session.status='late'");
+        $attendancePresent = $attendance['StudentAttendance'] - $lateAttendance['LateAttendance'] + ($classroom['late_attendance_percentage']*$lateAttendance['LateAttendance'])/100;
         if ($totalAttendance['TotalSessions'] == 0) {
           $attendancePercentage = $classroom['attendance'];
         } else {
-          $attendancePercentage = ($attendance['StudentAttendance'] * $classroom['attendance']) / $totalAttendance['TotalSessions'];
+          $attendancePercentage = ($attendancePresent* $classroom['attendance']) / $totalAttendance['TotalSessions'];
         }
         array_push($user_marks, $attendancePercentage);
         array_push($user_marks, $total);
