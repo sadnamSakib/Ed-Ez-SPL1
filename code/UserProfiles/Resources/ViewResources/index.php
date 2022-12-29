@@ -25,27 +25,33 @@ $database->performQuery("UPDATE resource_frequency SET frequency=frequency+1 WHE
 $database->fetch_results($resource, "SELECT * FROM resources,resource_uploaded WHERE resources.resource_id = '$resource_id' AND resource_uploaded.resource_id = '$resource_id'");
 $database->fetch_results($user, "SELECT * FROM users WHERE email='" . $resource['email'] . "'");
 
+$upvote = $database->performQuery("SELECT * FROM resource_upvote WHERE resource_id='$resource_id' AND  email='" . $email->get_email() . "'");
+$downvote = $database->performQuery("SELECT * FROM resource_downvote WHERE resource_id='$resource_id' AND  email='" . $email->get_email() . "'");
 if (isset($_POST['upvote']) && $resource['email'] !== $email->get_email()) {
-  $rows = $database->performQuery("SELECT * FROM resource_upvote WHERE resource_id='$resource_id' AND  email='" . $email->get_email() . "'");
-  if ($rows->num_rows == 0) {
+  if ($upvote->num_rows == 0) {
     $database->performQuery("INSERT INTO resource_upvote VALUES('$resource_id','" . $email->get_email() . "')");
+    if($downvote->num_rows >0){
+      $database->performQuery("DELETE FROM resource_downvote WHERE resource_id='$resource_id' AND email='" . $email->get_email() . "'");
+    }
   } else {
     $database->performQuery("DELETE FROM resource_upvote WHERE resource_id='$resource_id' AND email='" . $email->get_email() . "'");
   }
 }
 
 if (isset($_POST['downvote']) && $resource['email'] !== $email->get_email()) {
-  $rows = $database->performQuery("SELECT * FROM resource_downvote WHERE resource_id='$resource_id' AND  email='" . $email->get_email() . "'");
-  if ($rows->num_rows == 0) {
+  if ($downvote->num_rows == 0) {
     $database->performQuery("INSERT INTO resource_downvote VALUES('$resource_id','" . $email->get_email() . "')");
+    if($upvote->num_rows >0){
+      $database->performQuery("DELETE FROM resource_upvote WHERE resource_id='$resource_id' AND email='" . $email->get_email() . "'");
+    }
   } else {
     $database->performQuery("DELETE FROM resource_downvote WHERE resource_id='$resource_id' AND email='" . $email->get_email() . "'");
   }
 }
 
+$saved=$database->performQuery("SELECT * FROM resource_saved WHERE resource_id='$resource_id' AND  email='".$email->get_email()."'");
 if(isset($_POST['save'])){
-  $rows=$database->performQuery("SELECT * FROM resource_saved WHERE resource_id='$resource_id' AND  email='".$email->get_email()."'");
-  if($rows->num_rows==0){
+  if($saved->num_rows==0){
     try {
       $database->performQuery("INSERT INTO resource_saved VALUES('$resource_id','" . $email->get_email() . "')");
       $database->performQuery("INSERT INTO resource_frequency VALUES('$resource_id','" . $email->get_email() . "',0)");
@@ -65,6 +71,29 @@ if(isset($_POST['delete'])){
   header("Location: ../index.php");
 }
 
+$upvote = $database->performQuery("SELECT * FROM resource_upvote WHERE resource_id='$resource_id' AND  email='" . $email->get_email() . "'");
+$downvote = $database->performQuery("SELECT * FROM resource_downvote WHERE resource_id='$resource_id' AND  email='" . $email->get_email() . "'");
+$saved=$database->performQuery("SELECT * FROM resource_saved WHERE resource_id='$resource_id' AND  email='".$email->get_email()."'");
+if($saved->num_rows > 0){
+  $saved_color = 'blue';
+}
+else{
+  $saved_color = 'white';
+}
+
+if($upvote->num_rows > 0){
+  $upvote_color = 'blue';
+}
+else{
+  $upvote_color = 'white';
+}
+
+if($downvote->num_rows > 0){
+  $downvote_color = 'blue';
+}
+else{
+  $downvote_color = 'white';
+}
 $_SESSION['resource_id'] = $resource_id;
 
 
@@ -139,13 +168,13 @@ $database->fetch_results($resource_downvote, "SELECT count(*) AS downvote FROM r
           <form name="Review" action="" method="POST">
             <div class="card-footer d-flex justify-content-between border-success">
               <div>
-                <button type="submit" id="upvote" name="upvote" class="bx btn bx-sm  bxs-up-arrow me-2"></button>
+                <button type="submit" id="upvote" name="upvote" class="bx btn bx-sm  bxs-up-arrow me-2" style="color:<?php echo $upvote_color; ?>"></button>
                 <label for="upvote"><?php echo is_null($resource_upvote['upvote']) ? 0 : $resource_upvote['upvote'] ?></label>
-                <button type="submit" id="downvote" name="downvote" class='bx btn bx-sm  bxs-down-arrow'></button>
+                <button type="submit" id="downvote" name="downvote" class='bx btn bx-sm  bxs-down-arrow' style="color:<?php echo $downvote_color; ?>"></button>
                 <label for="downvote"><?php echo is_null($resource_downvote['downvote']) ? 0 : $resource_downvote['downvote'] ?></label>
               </div>
               <div>
-                <button type="submit" id="save" name="save" class='bx btn bx-sm bxs-save'></button>
+                <button type="submit" id="save" name="save" class='bx btn bx-sm bxs-save' style="color:<?php echo $saved_color; ?>"></button>
               </div>
             </div>
           </form>
