@@ -15,7 +15,7 @@ $temp = hash('sha512', $_SESSION['email']);
 
 <head>
   <meta charset="UTF-8">
-  <title>Classroom</title>
+  <title>Schedule</title>
   <link rel="icon" href="<?php echo $root_path; ?>title_icon.jpg" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
