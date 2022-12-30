@@ -10,7 +10,7 @@ class SubmitNotification extends NotificationManagement
     } else {
       $this->message = $this->message . " on time";
     }
-    $this->addnotification('submit');
+    $this->addnotification('submission');
   }
 
   protected function addnotification($notification_type)
